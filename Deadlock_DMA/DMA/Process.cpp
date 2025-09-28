@@ -18,12 +18,21 @@ bool Process::GetProcessInfo(const std::string& ProcessName, DMA_Connection* Con
 
 	PopulateModules(Conn);
 
+	std::println("Client Base: 0x{:X}", GetClientBase());
+
 	return true;
 }
 
 const uintptr_t Process::GetBaseAddress() const
 {
-	return m_Modules.at("deadlock.exe");
+	using namespace ConstStrings;
+	return m_Modules.at(Game);
+}
+
+const uintptr_t Process::GetClientBase() const
+{
+	using namespace ConstStrings;
+	return m_Modules.at(Client);
 }
 
 const DWORD Process::GetPID() const
@@ -38,9 +47,11 @@ const uintptr_t Process::GetModuleAddress(const std::string& ModuleName)
 
 bool Process::PopulateModules(DMA_Connection* Conn)
 {
-	m_Modules["deadlock.exe"] = VMMDLL_ProcessGetModuleBaseU(Conn->GetHandle(), this->m_PID, "deadlock.exe");
+	using namespace ConstStrings;
 
-	m_Modules["client.dll"] = VMMDLL_ProcessGetModuleBaseU(Conn->GetHandle(), this->m_PID, "client.dll");
+	m_Modules[Game] = VMMDLL_ProcessGetModuleBaseU(Conn->GetHandle(), this->m_PID, Game.c_str());
+
+	m_Modules[Client] = VMMDLL_ProcessGetModuleBaseU(Conn->GetHandle(), this->m_PID, Client.c_str());
 
 	for (auto& [Name, Address] : m_Modules)
 		std::println("Module `{}` at address 0x{:X}", Name, Address);

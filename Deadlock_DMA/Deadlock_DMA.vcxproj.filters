@@ -65,7 +65,16 @@
     <ClInclude Include="Deadlock\Classes\CCitadelPlayerPawn.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Deadlock\Classes\Vector3.h">
+    <ClInclude Include="Deadlock\Engine\Vector3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Deadlock\Engine\Vector2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Deadlock\Engine\Matrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Deadlock\Engine\Vector4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

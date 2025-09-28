@@ -1,5 +1,11 @@
 #pragma once
 
+namespace ConstStrings
+{
+	const std::string Game = "Deadlock.exe";
+	const std::string Client = "client.dll";
+}
+
 class Process
 {
 private:
@@ -9,6 +15,7 @@ private:
 public:
 	bool GetProcessInfo(const std::string& ProcessName, DMA_Connection* Conn);
 	const uintptr_t GetBaseAddress() const;
+	const uintptr_t GetClientBase() const;
 	const DWORD GetPID() const;
 	const uintptr_t GetModuleAddress(const std::string& ModuleName);
 
@@ -29,7 +36,7 @@ public:
 		VMMDLL_Scatter_CloseHandle(vmsh);
 
 		if (BytesRead != sizeof(T))
-			throw std::runtime_error("Failed to read memory");
+			std::println("Incomplete read: {}/{}", BytesRead, sizeof(T));
 
 		return Buffer;
 	}
