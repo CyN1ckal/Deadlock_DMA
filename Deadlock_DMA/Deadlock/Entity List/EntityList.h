@@ -29,6 +29,9 @@ private:
 	static inline std::unordered_map<uintptr_t, CCitadelPlayerController> m_PlayerControllers{};
 
 	static inline std::vector<uintptr_t> m_PlayerPawn_Addresses{};
+
+public:
+	static inline std::mutex PlayerPawnsMutex{};
 	static inline std::unordered_map<uintptr_t, CCitadelPlayerPawn> m_PlayerPawns{};
 
 public: /* Debug features */

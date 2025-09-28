@@ -7,6 +7,8 @@
 
 #include "vmmdll.h"
 
+#include "Scheduler.hpp"
+
 #include "DMA/DMA.h"
 #include "DMA/Process.h"
 

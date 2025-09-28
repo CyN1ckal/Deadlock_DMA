@@ -117,6 +117,8 @@ void EntityList::UpdatePlayerControllers(DMA_Connection* Conn, Process* Proc)
 
 void EntityList::UpdatePlayerPawns(DMA_Connection* Conn, Process* Proc)
 {
+	std::scoped_lock Lock(PlayerPawnsMutex);
+
 	m_PlayerPawns.clear();
 
 	auto vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
