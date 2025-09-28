@@ -10,6 +10,7 @@ public:
 	bool GetProcessInfo(const std::string& ProcessName, DMA_Connection* Conn);
 	const uintptr_t GetBaseAddress() const;
 	const DWORD GetPID() const;
+	const uintptr_t GetModuleAddress(const std::string& ModuleName);
 
 private:
 	bool PopulateModules(DMA_Connection* Conn);

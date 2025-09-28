@@ -31,6 +31,11 @@ const DWORD Process::GetPID() const
 	return m_PID;
 }
 
+const uintptr_t Process::GetModuleAddress(const std::string& ModuleName)
+{
+	return m_Modules.at(ModuleName);
+}
+
 bool Process::PopulateModules(DMA_Connection* Conn)
 {
 	m_Modules["deadlock.exe"] = VMMDLL_ProcessGetModuleBaseU(Conn->GetHandle(), this->m_PID, "deadlock.exe");

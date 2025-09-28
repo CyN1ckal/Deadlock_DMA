@@ -30,6 +30,9 @@
     <ClCompile Include="Deadlock\Deadlock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Deadlock\Entity List\EntityList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -45,6 +48,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Deadlock\Offsets.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Deadlock\Entity List\EntityList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Deadlock\Classes\CBaseEntity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

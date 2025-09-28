@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Deadlock\Deadlock.cpp" />
+    <ClCompile Include="Deadlock\Entity List\EntityList.cpp" />
     <ClCompile Include="DMA\DMA.cpp" />
     <ClCompile Include="DMA\Process.cpp" />
     <ClCompile Include="main.cpp" />
@@ -163,7 +164,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Deadlock\Classes\CBaseEntity.h" />
     <ClInclude Include="Deadlock\Deadlock.h" />
+    <ClInclude Include="Deadlock\Entity List\EntityList.h" />
     <ClInclude Include="Deadlock\Offsets.h" />
     <ClInclude Include="DMA\DMA.h" />
     <ClInclude Include="DMA\Process.h" />
