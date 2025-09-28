@@ -22,14 +22,6 @@ bool Deadlock::Initialize(DMA_Connection* Conn)
 
 	EntityList::UpdatePlayerPawns(Conn, &Process);
 
-	EntityList::PrintPlayerPawns();
-
-	Deadlock::UpdateViewMatrix(Conn);
-
-	Vector2 ScreenPosition;
-	WorldToScreen(Vector3{ 0.0f,0.0f,0.0f }, ScreenPosition);
-	std::println("Screen Position: X: {}, Y: {}", ScreenPosition.x, ScreenPosition.y);
-
 	return false;
 }
 
@@ -40,6 +32,7 @@ Process& Deadlock::Proc()
 
 void Deadlock::UpdateViewMatrix(DMA_Connection* Conn)
 {
+	std::scoped_lock Lock(ViewMatrixMutex);
 	uintptr_t ViewMatrixAddress = Proc().GetClientBase() + Offsets::ViewMatrix;
 	m_ViewMatrix = Proc().ReadMem<Matrix44>(Conn, ViewMatrixAddress);
 }
@@ -47,6 +40,8 @@ void Deadlock::UpdateViewMatrix(DMA_Connection* Conn)
 const Vector2 ScreenSize{ 1920.0f, 1080.0f };
 bool Deadlock::WorldToScreen(const Vector3& Pos, Vector2& ScreenPos)
 {
+	std::scoped_lock Lock(ViewMatrixMutex);
+
 	ScreenPos.x = m_ViewMatrix.m00 * Pos.x + m_ViewMatrix.m01 * Pos.y + m_ViewMatrix.m02 * Pos.z + m_ViewMatrix.m03;
 	ScreenPos.y = m_ViewMatrix.m10 * Pos.x + m_ViewMatrix.m11 * Pos.y + m_ViewMatrix.m12 * Pos.z + m_ViewMatrix.m13;
 
