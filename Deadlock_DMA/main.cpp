@@ -8,6 +8,11 @@ int main()
 
 	Deadlock::Initialize(Conn);
 
+	std::println("Press END to exit...");
+
+	while(!GetAsyncKeyState(VK_END))
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
 	Conn->EndConnection();
 
 	system("pause");

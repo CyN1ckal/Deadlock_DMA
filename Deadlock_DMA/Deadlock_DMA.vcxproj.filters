@@ -56,5 +56,17 @@
     <ClInclude Include="Deadlock\Classes\CBaseEntity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Deadlock\Classes\CCitadelPlayerController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Deadlock\Classes\CEntityListEntry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Deadlock\Classes\CCitadelPlayerPawn.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Deadlock\Classes\Vector3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

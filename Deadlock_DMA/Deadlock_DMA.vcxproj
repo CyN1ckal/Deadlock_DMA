@@ -165,6 +165,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Deadlock\Classes\CBaseEntity.h" />
+    <ClInclude Include="Deadlock\Classes\CCitadelPlayerController.h" />
+    <ClInclude Include="Deadlock\Classes\CCitadelPlayerPawn.h" />
+    <ClInclude Include="Deadlock\Classes\CEntityListEntry.h" />
+    <ClInclude Include="Deadlock\Classes\Vector3.h" />
     <ClInclude Include="Deadlock\Deadlock.h" />
     <ClInclude Include="Deadlock\Entity List\EntityList.h" />
     <ClInclude Include="Deadlock\Offsets.h" />

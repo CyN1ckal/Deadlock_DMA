@@ -6,13 +6,23 @@
 
 bool Deadlock::Initialize(DMA_Connection* Conn)
 {
-	Proc().GetProcessInfo("deadlock.exe", Conn);
+	auto Process = Deadlock::Proc();
 
-	EntityList::UpdateCrucialInformation(Conn, &Proc());
+	Process.GetProcessInfo("deadlock.exe", Conn);
 
-	EntityList::UpdateEntityMap(Conn, &Proc());
+	EntityList::UpdateCrucialInformation(Conn, &Process);
 
-	EntityList::PrintPlayerControllers();
+	EntityList::UpdateEntityMap(Conn, &Process);
+
+	EntityList::UpdatePlayerControllerAddresses();
+
+	EntityList::UpdatePlayerControllers(Conn, &Process);
+
+	EntityList::UpdatePlayerPawnAddresses();
+
+	EntityList::UpdatePlayerPawns(Conn, &Process);
+
+	EntityList::PrintPlayerPawns();	
 
 	return false;
 }
