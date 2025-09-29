@@ -1,6 +1,15 @@
 #include "pch.h"
 #include "EntityList.h"
 
+void EntityList::FullUpdate(DMA_Connection* Conn, Process* Proc)
+{
+	UpdateCrucialInformation(Conn, Proc);
+	UpdateEntityMap(Conn, Proc);
+	UpdatePlayerControllerAddresses();
+	UpdatePlayerControllers(Conn, Proc);
+	UpdatePlayerPawnAddresses();
+}
+
 void EntityList::UpdateCrucialInformation(DMA_Connection* Conn, Process* Proc)
 {
 	UpdateEntitySystemAddress(Conn, Proc);

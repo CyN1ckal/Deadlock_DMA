@@ -9,6 +9,8 @@ inline constexpr size_t MAX_ENTITIES = 512;
 class EntityList
 {
 public:
+	static void FullUpdate(DMA_Connection* Conn, Process* Proc);
+
 	static void UpdateCrucialInformation(DMA_Connection* Conn, Process* Proc);
 	static void UpdateEntitySystemAddress(DMA_Connection* Conn, Process* Proc);
 	static void UpdateEntityListAddr(DMA_Connection* Conn, Process* Proc);
