@@ -5,6 +5,7 @@
 #include "Deadlock/Classes/CCitadelPlayerPawn.h"
 
 inline constexpr size_t MAX_ENTITIES = 512;
+inline constexpr size_t MAX_ENTITY_LISTS = 32;
 
 class EntityList
 {
@@ -13,7 +14,7 @@ public:
 
 	static void UpdateCrucialInformation(DMA_Connection* Conn, Process* Proc);
 	static void UpdateEntitySystemAddress(DMA_Connection* Conn, Process* Proc);
-	static void UpdateEntityListAddr(DMA_Connection* Conn, Process* Proc);
+	static void GetEntityListAddresses(DMA_Connection* Conn, Process* Proc);
 
 	static void UpdateEntityMap(DMA_Connection* Conn, Process* Proc);
 	static void UpdatePlayerControllerAddresses();
@@ -24,8 +25,8 @@ public:
 
 private:
 	static inline uintptr_t m_EntitySystem_Address = 0;
-	static inline uintptr_t m_EntityList_Address = 0;
-	static inline std::array<CEntityListEntry, MAX_ENTITIES> m_CompleteEntityList{};
+	static inline std::array<uintptr_t, MAX_ENTITY_LISTS> m_EntityList_Addresses{};
+	static inline std::array<std::array<CEntityListEntry, MAX_ENTITIES>, MAX_ENTITY_LISTS> m_CompleteEntityList{};
 
 	static inline std::vector<uintptr_t> m_PlayerController_Addresses{};
 	static inline std::unordered_map<uintptr_t, CCitadelPlayerController> m_PlayerControllers{};
