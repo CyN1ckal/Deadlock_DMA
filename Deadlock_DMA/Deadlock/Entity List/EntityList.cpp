@@ -7,14 +7,15 @@ void EntityList::FullUpdate(DMA_Connection* Conn, Process* Proc)
 	UpdateEntityMap(Conn, Proc);
 	UpdatePlayerControllerAddresses();
 	UpdatePlayerControllers(Conn, Proc);
-	UpdatePlayerPawnAddresses();
+
+	UpdatePlayerPawnAddresses();	
 }
 
 void EntityList::UpdateCrucialInformation(DMA_Connection* Conn, Process* Proc)
 {
 	UpdateEntitySystemAddress(Conn, Proc);
 
-	UpdateEntityListAddr(Conn, Proc);
+	GetEntityListAddresses(Conn, Proc);
 }
 
 void EntityList::UpdateEntitySystemAddress(DMA_Connection* Conn, Process* Proc)
@@ -24,30 +25,50 @@ void EntityList::UpdateEntitySystemAddress(DMA_Connection* Conn, Process* Proc)
 	std::println("Entity System Address: 0x{:X}", m_EntitySystem_Address);
 }
 
-void EntityList::UpdateEntityListAddr(DMA_Connection* Conn, Process* Proc)
+void EntityList::GetEntityListAddresses(DMA_Connection* Conn, Process* Proc)
 {
-	uintptr_t EntityListPointer = m_EntitySystem_Address + 0x10;
-	m_EntityList_Address = Proc->ReadMem<uintptr_t>(Conn, EntityListPointer);
-	std::println("Entity List Address: 0x{:X}", m_EntityList_Address);
-}
+	m_EntityList_Addresses.fill({});
 
-void EntityList::UpdateEntityMap(DMA_Connection* Conn, Process* Proc)
-{
-	m_CompleteEntityList.fill({});
-
-	size_t TotalSize = sizeof(CEntityListEntry) * MAX_ENTITIES;
-	DWORD BytesRead = 0;
+	uintptr_t StartEntityListArray = m_EntitySystem_Address + 0x10;
 
 	auto vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
-	VMMDLL_Scatter_PrepareEx(vmsh, m_EntityList_Address, TotalSize, reinterpret_cast<BYTE*>(m_CompleteEntityList.data()), &BytesRead);
+	for (int i = 0; i < MAX_ENTITY_LISTS; i++)
+	{
+		auto& WriteAddr = m_EntityList_Addresses[i];
+		auto Addr = StartEntityListArray + (i * sizeof(uintptr_t));
+		VMMDLL_Scatter_PrepareEx(vmsh, Addr, sizeof(uintptr_t), reinterpret_cast<BYTE*>(&WriteAddr), nullptr);
+	}
 
 	VMMDLL_Scatter_Execute(vmsh);
 
 	VMMDLL_Scatter_CloseHandle(vmsh);
+}
 
-	if (BytesRead != TotalSize)
-		std::println("Incomplete entity list read: {}/{}", BytesRead, TotalSize);
+void EntityList::UpdateEntityMap(DMA_Connection* Conn, Process* Proc)
+{
+	for (auto& Arr : m_CompleteEntityList)
+		Arr.fill({});
+
+	size_t EntityListSize = sizeof(CEntityListEntry) * MAX_ENTITIES;
+
+	auto vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
+
+	DWORD BytesRead[MAX_ENTITY_LISTS]{ 0 };
+
+	for (int i = 0; i < MAX_ENTITY_LISTS; i++)
+	{
+		auto& Addr = m_EntityList_Addresses[i];
+		auto& WriteAddr = m_CompleteEntityList[i][0];
+
+		if (Addr == 0) continue;
+
+		VMMDLL_Scatter_PrepareEx(vmsh, Addr, EntityListSize, reinterpret_cast<BYTE*>(&WriteAddr), &BytesRead[i]);
+	}
+
+	VMMDLL_Scatter_Execute(vmsh);
+
+	VMMDLL_Scatter_CloseHandle(vmsh);
 }
 
 void EntityList::UpdatePlayerControllerAddresses()
@@ -56,15 +77,11 @@ void EntityList::UpdatePlayerControllerAddresses()
 
 	for (int i = 1; i < 32; i++)
 	{
-		auto& Entry = m_CompleteEntityList[i];
+		auto& Entry = m_CompleteEntityList[0][i];
 
 		if (Entry.NamePtr == 0)	continue;
 
-		if (i > 0 && i < 32)
-		{
-			m_PlayerController_Addresses.push_back(Entry.pEntity);
-			continue;
-		}
+		m_PlayerController_Addresses.push_back(Entry.pEntity);
 	}
 }
 
@@ -74,13 +91,15 @@ void EntityList::UpdatePlayerPawnAddresses()
 
 	for (auto& [addr, pc] : m_PlayerControllers)
 	{
-		if (!pc.hPawn)	continue;
+		if (!pc.hPawn || pc.hPawn == 0x7FFF) continue;
 
 		auto PawnEntityIndex = pc.GetPawnEntityIndex();
+		auto ListIndex = PawnEntityIndex / MAX_ENTITIES;
+		auto EntityIndex = PawnEntityIndex % MAX_ENTITIES;
 
-		if (PawnEntityIndex >= MAX_ENTITIES) continue;
+		if (PawnEntityIndex >= MAX_ENTITIES  * MAX_ENTITY_LISTS) continue;
 
-		auto& Entry = m_CompleteEntityList[PawnEntityIndex];
+		auto& Entry = m_CompleteEntityList[ListIndex][EntityIndex];
 
 		if (Entry.pEntity == 0)	continue;
 
