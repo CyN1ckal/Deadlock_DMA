@@ -89,7 +89,7 @@ void EntityList::UpdatePlayerPawnAddresses()
 
 	for (auto& [addr, pc] : m_PlayerControllers)
 	{
-		if (!pc.m_hPawn.IsIncomplete()) continue;
+		if (!pc.m_hPawn.IsValid()) continue;
 		auto ListIndex = pc.m_hPawn.GetEntityListIndex();
 		auto EntityIndex = pc.m_hPawn.GetEntityEntryIndex();
 
@@ -171,7 +171,7 @@ void EntityList::UpdatePlayerPawns(DMA_Connection* Conn, Process* Proc)
 
 uintptr_t EntityList::GetEntityAddressFromHandle(CHandle Handle)
 {
-	if (!Handle.IsIncomplete()) return 0;
+	if (!Handle.IsValid()) return 0;
 
 	auto ListIndex = Handle.GetEntityListIndex();
 	auto EntityIndex = Handle.GetEntityEntryIndex();

@@ -1,6 +1,7 @@
 #pragma once
 #include "CBaseEntity.h"
 #include "Deadlock/Engine/CHandle.h"
+#include "Deadlock/Const/HeroMap.hpp"
 
 class CCitadelPlayerController : public CBaseEntity
 {
@@ -13,6 +14,15 @@ public:
 
 public:
 	const bool IsDead() const { return m_CurrentHealth <= 0; }
+	const std::string_view GetHeroName() const
+	{
+		auto it = HeroNames::HeroNameMap.find(m_HeroID);
+
+		if (it != HeroNames::HeroNameMap.end())
+			return it->second;
+
+		return "Unknown";
+	}
 
 public:
 	template<typename T>

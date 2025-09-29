@@ -19,6 +19,7 @@ int main()
 	s.every("UpdatePlayerPawns", std::chrono::milliseconds(50), EntityList::UpdatePlayerPawns, Conn, &Deadlock::Proc());
 	s.every("UpdatePlayerControllers", std::chrono::milliseconds(50), EntityList::UpdatePlayerControllers, Conn, &Deadlock::Proc());
 	s.every("FullUpdate", std::chrono::seconds(5), EntityList::FullUpdate, Conn, &Deadlock::Proc());
+	s.every("UpdateLocalPlayerControllerAddress", std::chrono::seconds(15), Deadlock::UpdateLocalPlayerControllerAddress, Conn);
 
 	while (!GetAsyncKeyState(VK_END))
 	{

@@ -22,6 +22,8 @@ bool Deadlock::Initialize(DMA_Connection* Conn)
 
 	EntityList::UpdatePlayerPawns(Conn, &Process);
 
+	UpdateLocalPlayerControllerAddress(Conn);
+
 	return false;
 }
 
@@ -64,4 +66,12 @@ bool Deadlock::WorldToScreen(const Vector3& Pos, Vector2& ScreenPos)
 	ScreenPos.y = y;
 
 	return true;
+}
+
+bool Deadlock::UpdateLocalPlayerControllerAddress(DMA_Connection* Conn)
+{
+	uintptr_t LocalPlayerControllerAddress = Proc().GetClientBase() + Offsets::LocalController;
+	m_LocalPlayerControllerAddress = Proc().ReadMem<uintptr_t>(Conn, LocalPlayerControllerAddress);
+
+	return false;
 }

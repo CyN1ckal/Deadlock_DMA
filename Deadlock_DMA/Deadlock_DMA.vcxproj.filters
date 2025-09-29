@@ -66,6 +66,9 @@
     <ClCompile Include="GUI\Debug\Player List\Player List.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Deadlock\Classes\CBaseEntity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -147,6 +150,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Deadlock\Engine\CHandle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Deadlock\Const\HeroMap.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

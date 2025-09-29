@@ -3,6 +3,7 @@
 #include "Main Window.h"
 
 #include "GUI/Fuser/Fuser.h"
+#include "GUI/Fuser/ESP/ESP.h"
 #include "GUI/Debug/Player List/Player List.h"
 
 bool MainWindow::CreateDeviceD3D(HWND hWnd)
@@ -158,7 +159,9 @@ bool MainWindow::OnFrame()
 
 	Fuser::OnFrame();
 
-	PlayerList::Render();
+	ESP::RenderSettings();
+
+	//PlayerList::Render();
 
 	PostFrame();
 

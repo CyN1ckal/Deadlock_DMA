@@ -1,6 +1,6 @@
 #pragma once
 #include "Deadlock/Engine/Vector3.h"
-
+#
 class CBaseEntity
 {
 public:
@@ -12,6 +12,7 @@ public:
 public:
 	const bool IsIncomplete() const { return Flags & 0x1; }
 	void SetInvalid() { Flags |= 0x1; }
+	bool IsFriendly() const;
 
 public:
 	template<typename T>
