@@ -3,6 +3,7 @@
 #include "Main Window.h"
 
 #include "GUI/Fuser/Fuser.h"
+#include "GUI/Debug/Player List/Player List.h"
 
 bool MainWindow::CreateDeviceD3D(HWND hWnd)
 {
@@ -156,6 +157,8 @@ bool MainWindow::OnFrame()
 	ImGui::End();
 
 	Fuser::OnFrame();
+
+	PlayerList::Render();
 
 	PostFrame();
 

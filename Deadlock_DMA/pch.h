@@ -21,3 +21,6 @@
 
 #include "Deadlock/Offsets.h"
 #include "Deadlock/Deadlock.h"
+
+inline constexpr size_t MAX_ENTITIES = 512;
+inline constexpr size_t MAX_ENTITY_LISTS = 32;
