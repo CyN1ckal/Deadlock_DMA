@@ -253,6 +253,7 @@
     <ClCompile Include="Deadlock\Entity List\EntityList.cpp" />
     <ClCompile Include="DMA\DMA.cpp" />
     <ClCompile Include="DMA\Process.cpp" />
+    <ClCompile Include="GUI\Debug\Player List\Player List.cpp" />
     <ClCompile Include="GUI\Fuser\ESP\ESP.cpp" />
     <ClCompile Include="GUI\Fuser\Fuser.cpp" />
     <ClCompile Include="GUI\Main Window\Main Window.cpp" />
@@ -277,6 +278,7 @@
     <ClInclude Include="Deadlock\Classes\CCitadelPlayerController.h" />
     <ClInclude Include="Deadlock\Classes\CCitadelPlayerPawn.h" />
     <ClInclude Include="Deadlock\Classes\CEntityListEntry.h" />
+    <ClInclude Include="Deadlock\Engine\CHandle.h" />
     <ClInclude Include="Deadlock\Engine\Matrix.h" />
     <ClInclude Include="Deadlock\Engine\Vector2.h" />
     <ClInclude Include="Deadlock\Engine\Vector3.h" />
@@ -286,6 +288,7 @@
     <ClInclude Include="Deadlock\Offsets.h" />
     <ClInclude Include="DMA\DMA.h" />
     <ClInclude Include="DMA\Process.h" />
+    <ClInclude Include="GUI\Debug\Player List\Player List.h" />
     <ClInclude Include="GUI\Fuser\ESP\ESP.h" />
     <ClInclude Include="GUI\Fuser\Fuser.h" />
     <ClInclude Include="GUI\Main Window\Main Window.h" />

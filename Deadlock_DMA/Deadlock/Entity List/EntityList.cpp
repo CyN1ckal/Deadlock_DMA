@@ -54,8 +54,6 @@ void EntityList::UpdateEntityMap(DMA_Connection* Conn, Process* Proc)
 
 	auto vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
-	DWORD BytesRead[MAX_ENTITY_LISTS]{ 0 };
-
 	for (int i = 0; i < MAX_ENTITY_LISTS; i++)
 	{
 		auto& Addr = m_EntityList_Addresses[i];
@@ -63,7 +61,7 @@ void EntityList::UpdateEntityMap(DMA_Connection* Conn, Process* Proc)
 
 		if (Addr == 0) continue;
 
-		VMMDLL_Scatter_PrepareEx(vmsh, Addr, EntityListSize, reinterpret_cast<BYTE*>(&WriteAddr), &BytesRead[i]);
+		VMMDLL_Scatter_PrepareEx(vmsh, Addr, EntityListSize, reinterpret_cast<BYTE*>(&WriteAddr), nullptr);
 	}
 
 	VMMDLL_Scatter_Execute(vmsh);
@@ -91,13 +89,9 @@ void EntityList::UpdatePlayerPawnAddresses()
 
 	for (auto& [addr, pc] : m_PlayerControllers)
 	{
-		if (!pc.hPawn || pc.hPawn == 0x7FFF) continue;
-
-		auto PawnEntityIndex = pc.GetPawnEntityIndex();
-		auto ListIndex = PawnEntityIndex / MAX_ENTITIES;
-		auto EntityIndex = PawnEntityIndex % MAX_ENTITIES;
-
-		if (PawnEntityIndex >= MAX_ENTITIES  * MAX_ENTITY_LISTS) continue;
+		if (!pc.m_hPawn.IsIncomplete()) continue;
+		auto ListIndex = pc.m_hPawn.GetEntityListIndex();
+		auto EntityIndex = pc.m_hPawn.GetEntityEntryIndex();
 
 		auto& Entry = m_CompleteEntityList[ListIndex][EntityIndex];
 
@@ -116,17 +110,19 @@ void EntityList::PrintPlayerControllerAddresses()
 void EntityList::PrintPlayerControllers()
 {
 	for (auto& [addr, pc] : m_PlayerControllers)
-		std::println("PlayerController: 0x{0:X} | hPawn: {1:X} {2:X}", addr, pc.GetPawnEntityIndex(), pc.GameSceneNodeAddress);
+		std::println("PlayerController: 0x{0:X} | hPawn: {1:X} {2:X}", addr, pc.m_hPawn.GetEntityEntryIndex(), pc.GameSceneNodeAddress);
 }
 
 void EntityList::PrintPlayerPawns()
 {
 	for (auto& [addr, pawn] : m_PlayerPawns)
-		std::println("PlayerPawn: 0x{0:X} | GameSceneNode: {1:X} | Health: {2}\n   Position {3:.0f} {4:.0f} {5:.0f}", addr, pawn.GameSceneNodeAddress, pawn.Health, pawn.Position.x, pawn.Position.y, pawn.Position.z);
+		std::println("PlayerPawn: 0x{0:X} | GameSceneNode: {1:X}", addr, pawn.GameSceneNodeAddress);
 }
 
 void EntityList::UpdatePlayerControllers(DMA_Connection* Conn, Process* Proc)
 {
+	std::scoped_lock Lock(PlayerControllerMutex);
+
 	m_PlayerControllers.clear();
 
 	auto vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
@@ -155,6 +151,7 @@ void EntityList::UpdatePlayerPawns(DMA_Connection* Conn, Process* Proc)
 	{
 		auto&& Pawn = m_PlayerPawns[pcAddr];
 		CBaseEntity::Read_1(vmsh, Pawn, pcAddr);
+		CCitadelPlayerPawn::Read(vmsh, Pawn, pcAddr);
 	}
 
 	VMMDLL_Scatter_Execute(vmsh);
@@ -170,4 +167,14 @@ void EntityList::UpdatePlayerPawns(DMA_Connection* Conn, Process* Proc)
 	VMMDLL_Scatter_Execute(vmsh);
 
 	VMMDLL_Scatter_CloseHandle(vmsh);
+}
+
+uintptr_t EntityList::GetEntityAddressFromHandle(CHandle Handle)
+{
+	if (!Handle.IsIncomplete()) return 0;
+
+	auto ListIndex = Handle.GetEntityListIndex();
+	auto EntityIndex = Handle.GetEntityEntryIndex();
+
+	return m_CompleteEntityList[ListIndex][EntityIndex].pEntity;
 }

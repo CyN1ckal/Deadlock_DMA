@@ -6,7 +6,7 @@
 
 void ESP::OnFrame()
 {
-	std::scoped_lock lock(EntityList::PlayerPawnsMutex);
+	std::scoped_lock lock(EntityList::PlayerPawnsMutex, EntityList::PlayerControllerMutex);
 
 	auto DrawList = ImGui::GetWindowDrawList();
 	auto WindowPos = ImGui::GetWindowPos();
@@ -15,19 +15,21 @@ void ESP::OnFrame()
 
 	for (auto& [Addr, Pawn] : EntityList::m_PlayerPawns)
 	{
+		auto& Controller = EntityList::m_PlayerControllers[EntityList::GetEntityAddressFromHandle(Pawn.hController)];
+
+		if (Controller.IsDead()) continue;
+
 		Vector2 ScreenPos{};
 		if (!Deadlock::WorldToScreen(Pawn.Position, ScreenPos)) continue;
 
-		std::string HealthString = std::to_string(Pawn.Health);
+		std::string HealthString = std::format("[{0:d}] {1:d}HP", Controller.m_CurrentLevel, Controller.m_CurrentHealth);
 		auto TextSize = ImGui::CalcTextSize(HealthString.c_str());
-
-		ImGui::SetCursorPos(ImVec2(ScreenPos.x - (TextSize.x / 2.0f), ScreenPos.y));
 
 		ImVec2 UpperLeft = ImVec2(ScreenPos.x - (TextSize.x / 2.0f) + WindowPos.x, ScreenPos.y + WindowPos.y);
 		ImVec2 LowerRight = ImVec2(ScreenPos.x + (TextSize.x / 2.0f) + WindowPos.x, ScreenPos.y + TextSize.y + WindowPos.y);
-
 		DrawList->AddRectFilled(UpperLeft, LowerRight, IM_COL32(25, 25, 25, 255));
 
+		ImGui::SetCursorPos(ImVec2(ScreenPos.x - (TextSize.x / 2.0f), ScreenPos.y));
 		ImGui::Text(HealthString.c_str());
 
 		//DrawList->AddCircleFilled(ImVec2(ScreenPos.x + WindowPos.x, ScreenPos.y + WindowPos.y), 5.0f, IM_COL32(255, 0, 0, 255));
