@@ -26,9 +26,11 @@ void ESP::OnFrame()
 		std::string HealthString = std::format("{0:d} {1:s} {2:d}HP", Controller.m_CurrentLevel, Controller.GetHeroName(), Controller.m_CurrentHealth);
 		auto TextSize = ImGui::CalcTextSize(HealthString.c_str());
 
+		auto BackgroundColor = Controller.IsFriendly() ? FriendlyColor : EnemyColor;
+
 		ImVec2 UpperLeft = ImVec2(ScreenPos.x - (TextSize.x / 2.0f) + WindowPos.x, ScreenPos.y + WindowPos.y);
 		ImVec2 LowerRight = ImVec2(ScreenPos.x + (TextSize.x / 2.0f) + WindowPos.x, ScreenPos.y + TextSize.y + WindowPos.y);
-		DrawList->AddRectFilled(UpperLeft, LowerRight, IM_COL32(25, 25, 25, 255));
+		DrawList->AddRectFilled(UpperLeft, LowerRight, ImGui::GetColorU32(BackgroundColor));
 
 		ImGui::SetCursorPos(ImVec2(ScreenPos.x - (TextSize.x / 2.0f), ScreenPos.y));
 		ImGui::Text(HealthString.c_str());
