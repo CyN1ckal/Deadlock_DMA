@@ -4,7 +4,7 @@
 #include "Deadlock/Classes/CCitadelPlayerController.h"
 #include "Deadlock/Classes/CCitadelPlayerPawn.h"
 
-class EntityList
+class FirstEntityList
 {
 public:
 	static void FullUpdate(DMA_Connection* Conn, Process* Proc);

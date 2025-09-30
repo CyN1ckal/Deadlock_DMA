@@ -28,7 +28,7 @@ public:
 	template<typename T>
 	static void Read_1(VMMDLL_SCATTER_HANDLE vmsh, T& Controller, uintptr_t EntityAddress)
 	{
-		uintptr_t PawnHandleAddress = EntityAddress + Offsets::m_hPawn;
+		uintptr_t PawnHandleAddress = EntityAddress + Offsets::Controller::m_hPawn;
 		VMMDLL_Scatter_PrepareEx(vmsh, PawnHandleAddress, sizeof(CHandle), reinterpret_cast<BYTE*>(&Controller.m_hPawn), nullptr);
 
 		uintptr_t PlayerDataAddress = EntityAddress + Offsets::Controller::PlayerData;
