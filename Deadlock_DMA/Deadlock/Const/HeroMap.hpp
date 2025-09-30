@@ -51,7 +51,7 @@ namespace HeroNames
 		{20,Ivy},
 		{12,Kelvin},
 		{4,LadyGeist},
-		{30,Lash},
+		{31,Lash},
 		{8,McGinnis},
 		{63,Mina},
 		{52,Mirage},
