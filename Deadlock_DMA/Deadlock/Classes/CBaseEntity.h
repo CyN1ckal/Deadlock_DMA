@@ -18,7 +18,7 @@ public:
 	template<typename T>
 	static void Read_1(VMMDLL_SCATTER_HANDLE vmsh, T& Entity, uintptr_t EntityAddress)
 	{
-		uintptr_t GameSceneNodePtr = EntityAddress + Offsets::GameSceneNode;
+		uintptr_t GameSceneNodePtr = EntityAddress + Offsets::BaseEntity::GameSceneNode;
 		VMMDLL_Scatter_PrepareEx(vmsh, GameSceneNodePtr, sizeof(uintptr_t), reinterpret_cast<BYTE*>(&Entity.GameSceneNodeAddress), nullptr);
 
 		uintptr_t TeamNumPtr = EntityAddress + Offsets::BaseEntity::TeamNum;
@@ -34,7 +34,7 @@ public:
 			return;
 		}
 
-		uintptr_t PositionAddress = Entity.GameSceneNodeAddress + Offsets::Position;
+		uintptr_t PositionAddress = Entity.GameSceneNodeAddress + Offsets::SceneNode::Position;
 		VMMDLL_Scatter_PrepareEx(vmsh, PositionAddress, sizeof(Vector3), reinterpret_cast<BYTE*>(&Entity.Position), nullptr);
 	}
 };

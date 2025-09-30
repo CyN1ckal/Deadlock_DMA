@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "EntityList.h"
 
-void EntityList::FullUpdate(DMA_Connection* Conn, Process* Proc)
+void FirstEntityList::FullUpdate(DMA_Connection* Conn, Process* Proc)
 {
 	UpdateCrucialInformation(Conn, Proc);
 	UpdateEntityMap(Conn, Proc);
@@ -11,21 +11,21 @@ void EntityList::FullUpdate(DMA_Connection* Conn, Process* Proc)
 	UpdatePlayerPawnAddresses();	
 }
 
-void EntityList::UpdateCrucialInformation(DMA_Connection* Conn, Process* Proc)
+void FirstEntityList::UpdateCrucialInformation(DMA_Connection* Conn, Process* Proc)
 {
 	UpdateEntitySystemAddress(Conn, Proc);
 
 	GetEntityListAddresses(Conn, Proc);
 }
 
-void EntityList::UpdateEntitySystemAddress(DMA_Connection* Conn, Process* Proc)
+void FirstEntityList::UpdateEntitySystemAddress(DMA_Connection* Conn, Process* Proc)
 {
 	uintptr_t EntitySystemPointer = Proc->GetModuleAddress("client.dll") + Offsets::GameEntitySystem;
 	m_EntitySystem_Address = Proc->ReadMem<uintptr_t>(Conn, EntitySystemPointer);
 	std::println("Entity System Address: 0x{:X}", m_EntitySystem_Address);
 }
 
-void EntityList::GetEntityListAddresses(DMA_Connection* Conn, Process* Proc)
+void FirstEntityList::GetEntityListAddresses(DMA_Connection* Conn, Process* Proc)
 {
 	m_EntityList_Addresses.fill({});
 
@@ -45,7 +45,7 @@ void EntityList::GetEntityListAddresses(DMA_Connection* Conn, Process* Proc)
 	VMMDLL_Scatter_CloseHandle(vmsh);
 }
 
-void EntityList::UpdateEntityMap(DMA_Connection* Conn, Process* Proc)
+void FirstEntityList::UpdateEntityMap(DMA_Connection* Conn, Process* Proc)
 {
 	for (auto& Arr : m_CompleteEntityList)
 		Arr.fill({});
@@ -69,7 +69,7 @@ void EntityList::UpdateEntityMap(DMA_Connection* Conn, Process* Proc)
 	VMMDLL_Scatter_CloseHandle(vmsh);
 }
 
-void EntityList::UpdatePlayerControllerAddresses()
+void FirstEntityList::UpdatePlayerControllerAddresses()
 {
 	m_PlayerController_Addresses.clear();
 
@@ -83,7 +83,7 @@ void EntityList::UpdatePlayerControllerAddresses()
 	}
 }
 
-void EntityList::UpdatePlayerPawnAddresses()
+void FirstEntityList::UpdatePlayerPawnAddresses()
 {
 	m_PlayerPawn_Addresses.clear();
 
@@ -101,25 +101,25 @@ void EntityList::UpdatePlayerPawnAddresses()
 	}
 }
 
-void EntityList::PrintPlayerControllerAddresses()
+void FirstEntityList::PrintPlayerControllerAddresses()
 {
 	for (auto& Addr : m_PlayerController_Addresses)
 		std::println("PlayerController: 0x{:X}", Addr);
 }
 
-void EntityList::PrintPlayerControllers()
+void FirstEntityList::PrintPlayerControllers()
 {
 	for (auto& [addr, pc] : m_PlayerControllers)
 		std::println("PlayerController: 0x{0:X} | hPawn: {1:X} {2:X}", addr, pc.m_hPawn.GetEntityEntryIndex(), pc.GameSceneNodeAddress);
 }
 
-void EntityList::PrintPlayerPawns()
+void FirstEntityList::PrintPlayerPawns()
 {
 	for (auto& [addr, pawn] : m_PlayerPawns)
 		std::println("PlayerPawn: 0x{0:X} | GameSceneNode: {1:X}", addr, pawn.GameSceneNodeAddress);
 }
 
-void EntityList::UpdatePlayerControllers(DMA_Connection* Conn, Process* Proc)
+void FirstEntityList::UpdatePlayerControllers(DMA_Connection* Conn, Process* Proc)
 {
 	std::scoped_lock Lock(PlayerControllerMutex);
 
@@ -139,7 +139,7 @@ void EntityList::UpdatePlayerControllers(DMA_Connection* Conn, Process* Proc)
 	VMMDLL_Scatter_CloseHandle(vmsh);
 }
 
-void EntityList::UpdatePlayerPawns(DMA_Connection* Conn, Process* Proc)
+void FirstEntityList::UpdatePlayerPawns(DMA_Connection* Conn, Process* Proc)
 {
 	std::scoped_lock Lock(PlayerPawnsMutex);
 
@@ -169,7 +169,7 @@ void EntityList::UpdatePlayerPawns(DMA_Connection* Conn, Process* Proc)
 	VMMDLL_Scatter_CloseHandle(vmsh);
 }
 
-uintptr_t EntityList::GetEntityAddressFromHandle(CHandle Handle)
+uintptr_t FirstEntityList::GetEntityAddressFromHandle(CHandle Handle)
 {
 	if (!Handle.IsValid()) return 0;
 

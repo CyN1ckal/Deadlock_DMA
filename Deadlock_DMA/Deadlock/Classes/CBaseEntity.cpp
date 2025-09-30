@@ -4,5 +4,5 @@
 
 bool CBaseEntity::IsFriendly() const
 {
-	return TeamNum == EntityList::m_PlayerControllers[Deadlock::m_LocalPlayerControllerAddress].TeamNum;
+	return TeamNum == FirstEntityList::m_PlayerControllers[Deadlock::m_LocalPlayerControllerAddress].TeamNum;
 }

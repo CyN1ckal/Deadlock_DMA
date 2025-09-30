@@ -6,16 +6,16 @@
 
 void ESP::OnFrame()
 {
-	std::scoped_lock lock(EntityList::PlayerPawnsMutex, EntityList::PlayerControllerMutex);
+	std::scoped_lock lock(FirstEntityList::PlayerPawnsMutex, FirstEntityList::PlayerControllerMutex);
 
 	auto DrawList = ImGui::GetWindowDrawList();
 	auto WindowPos = ImGui::GetWindowPos();
 
 	ImGui::PushFont(nullptr, 16.0f);
 
-	for (auto& [Addr, Pawn] : EntityList::m_PlayerPawns)
+	for (auto& [Addr, Pawn] : FirstEntityList::m_PlayerPawns)
 	{
-		auto& Controller = EntityList::m_PlayerControllers[EntityList::GetEntityAddressFromHandle(Pawn.hController)];
+		auto& Controller = FirstEntityList::m_PlayerControllers[FirstEntityList::GetEntityAddressFromHandle(Pawn.hController)];
 
 		if (Controller.IsDead()) continue;
 		if (bHideFriendly && Controller.IsFriendly()) continue;
