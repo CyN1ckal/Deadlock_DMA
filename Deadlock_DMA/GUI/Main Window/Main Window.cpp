@@ -153,6 +153,7 @@ bool MainWindow::OnFrame()
 	PreFrame();
 
 	Fuser::OnFrame();
+	Fuser::RenderSettings();
 
 	ESP::RenderSettings();
 
