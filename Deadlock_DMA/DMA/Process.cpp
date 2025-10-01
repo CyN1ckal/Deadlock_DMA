@@ -6,21 +6,21 @@
 
 bool Process::GetProcessInfo(const std::string& ProcessName, DMA_Connection* Conn)
 {
-	VMMDLL_PidGetFromName(Conn->GetHandle(), ProcessName.c_str(), &m_PID);
+    while (true)
+    {
+        m_PID = 0;
+        VMMDLL_PidGetFromName(Conn->GetHandle(), ProcessName.c_str(), &m_PID);
 
-	if (!this->m_PID)
-	{
-		std::println("Failed to find process `{}`", ProcessName);
-		return false;
-	}
+        if (m_PID)
+        {
+            std::println("Found process `{}` with PID {}", ProcessName, m_PID);
+            PopulateModules(Conn);
+            std::println("Client Base: 0x{:X}", GetClientBase());
+            return true;
+        }
 
-	std::println("Found process `{}` with PID {}", ProcessName, m_PID);
-
-	PopulateModules(Conn);
-
-	std::println("Client Base: 0x{:X}", GetClientBase());
-
-	return true;
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    }
 }
 
 const uintptr_t Process::GetBaseAddress() const
@@ -45,16 +45,28 @@ const uintptr_t Process::GetModuleAddress(const std::string& ModuleName)
 	return m_Modules.at(ModuleName);
 }
 
-bool Process::PopulateModules(DMA_Connection* Conn)
+void Process::PopulateModules(DMA_Connection* Conn)
 {
 	using namespace ConstStrings;
 
-	m_Modules[Game] = VMMDLL_ProcessGetModuleBaseU(Conn->GetHandle(), this->m_PID, Game.c_str());
+    VMM_HANDLE handle = Conn->GetHandle();
+    if (!handle) {
+        // TODO: add error logging?
+        return;
+    }
 
-	m_Modules[Client] = VMMDLL_ProcessGetModuleBaseU(Conn->GetHandle(), this->m_PID, Client.c_str());
+    while (true) {
+
+        m_Modules[Game] = VMMDLL_ProcessGetModuleBaseU(handle, this->m_PID, Game.c_str());
+        m_Modules[Client] = VMMDLL_ProcessGetModuleBaseU(handle, this->m_PID, Client.c_str());
+
+        // break out of the loop when the module base addresses have been read
+        if (m_Modules[Game] && m_Modules[Client])
+            break;
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
 
 	for (auto& [Name, Address] : m_Modules)
 		std::println("Module `{}` at address 0x{:X}", Name, Address);
-
-	return false;
 }

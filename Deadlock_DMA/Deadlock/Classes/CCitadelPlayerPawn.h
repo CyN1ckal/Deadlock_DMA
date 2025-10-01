@@ -12,6 +12,7 @@ public:
 	Vector3 BonePositions[MAX_BONES]{ 0.0f };
 	uintptr_t BoneArrayAddress{ 0 };
 	CHandle hController{ 0 };
+	uintptr_t CachedBoneArrayAddress{ 0 };
 
 public:
 	void DrawSkeleton(const ImVec2& WindowPos, ImDrawList* DrawList) const;
@@ -48,7 +49,18 @@ public:
 	template <typename T>
 	static void Read_3(VMMDLL_SCATTER_HANDLE vmsh, T& PlayerPawn, uintptr_t PlayerPawnAddress)
 	{
-		for (int i = 0; i < MAX_BONES; i++)
-			PrepareBoneRead(vmsh, PlayerPawn.BoneArrayAddress, reinterpret_cast<BYTE*>(&PlayerPawn.BonePositions[i]), i);
+		// If BoneArrayAddress is invalid, clear cache
+		if (!PlayerPawn.BoneArrayAddress) {
+			PlayerPawn.CachedBoneArrayAddress = 0;
+			return;
+		}
+
+		// Only rebuild scatter requests if address changed
+		if (PlayerPawn.BoneArrayAddress != PlayerPawn.CachedBoneArrayAddress) {
+			for (int i = 0; i < MAX_BONES; i++) {
+				PrepareBoneRead(vmsh, PlayerPawn.BoneArrayAddress, reinterpret_cast<BYTE*>(&PlayerPawn.BonePositions[i]), i);
+			}
+			PlayerPawn.CachedBoneArrayAddress = PlayerPawn.BoneArrayAddress;
+		}
 	}
 };

@@ -20,7 +20,7 @@ public:
 	const uintptr_t GetModuleAddress(const std::string& ModuleName);
 
 private:
-	bool PopulateModules(DMA_Connection* Conn);
+	void PopulateModules(DMA_Connection* Conn);
 
 public:
 	template<typename T> inline T ReadMem(DMA_Connection* Conn, uintptr_t Address)

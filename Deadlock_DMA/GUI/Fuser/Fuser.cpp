@@ -6,6 +6,9 @@ void Fuser::OnFrame()
 {
 	ImGui::PushStyleColor(ImGuiCol_WindowBg, IM_COL32(0, 0, 0, 0));
 
+	// this fixes edge cases on laptops i guess?
+	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);
+
 	ImGui::SetNextWindowSize(ScreenSize, ImGuiCond_Always);
 
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar;
