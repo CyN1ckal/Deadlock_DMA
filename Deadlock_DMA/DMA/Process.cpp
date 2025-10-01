@@ -6,19 +6,23 @@
 
 bool Process::GetProcessInfo(const std::string& ProcessName, DMA_Connection* Conn)
 {
-	VMMDLL_PidGetFromName(Conn->GetHandle(), ProcessName.c_str(), &m_PID);
+	std::println("Waiting for process {}..", ProcessName);
 
-	if (!this->m_PID)
+	m_PID = 0;
+
+	while (true)
 	{
-		std::println("Failed to find process `{}`", ProcessName);
-		return false;
+		VMMDLL_PidGetFromName(Conn->GetHandle(), ProcessName.c_str(), &m_PID);
+
+		if (m_PID)
+		{
+			std::println("Found process `{}` with PID {}", ProcessName, m_PID);
+			PopulateModules(Conn);
+			break;
+		}
+
+		std::this_thread::sleep_for(std::chrono::seconds(1));
 	}
-
-	std::println("Found process `{}` with PID {}", ProcessName, m_PID);
-
-	PopulateModules(Conn);
-
-	std::println("Client Base: 0x{:X}", GetClientBase());
 
 	return true;
 }
@@ -49,9 +53,18 @@ bool Process::PopulateModules(DMA_Connection* Conn)
 {
 	using namespace ConstStrings;
 
-	m_Modules[Game] = VMMDLL_ProcessGetModuleBaseU(Conn->GetHandle(), this->m_PID, Game.c_str());
+	auto Handle = Conn->GetHandle();
 
-	m_Modules[Client] = VMMDLL_ProcessGetModuleBaseU(Conn->GetHandle(), this->m_PID, Client.c_str());
+	while (!m_Modules[Game] || !m_Modules[Client])
+	{
+		if (!m_Modules[Game])
+			m_Modules[Game] = VMMDLL_ProcessGetModuleBaseU(Handle, this->m_PID, Game.c_str());
+
+		if (!m_Modules[Client])
+			m_Modules[Client] = VMMDLL_ProcessGetModuleBaseU(Handle, this->m_PID, Client.c_str());
+
+		std::this_thread::sleep_for(std::chrono::seconds(1));
+	}
 
 	for (auto& [Name, Address] : m_Modules)
 		std::println("Module `{}` at address 0x{:X}", Name, Address);
