@@ -2,6 +2,7 @@
 #include "CBaseEntity.h"
 #include "Deadlock/Engine/CHandle.h"
 #include "Deadlock/Const/HeroMap.hpp"
+#include "Deadlock/Const/HeroEnum.hpp"
 
 class CCitadelPlayerController : public CBaseEntity
 {
@@ -10,7 +11,7 @@ public:
 	int32_t m_CurrentLevel{ 0 };
 	int32_t m_MaxHealth{ 0 };
 	int32_t m_CurrentHealth{ 0 };
-	int32_t m_HeroID{ 0 };
+	HeroId m_HeroID{ 0 };
 
 public:
 	const bool IsDead() const { return m_CurrentHealth <= 0; }

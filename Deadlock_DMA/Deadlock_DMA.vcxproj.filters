@@ -72,6 +72,12 @@
     <ClCompile Include="GUI\Color Picker\Color Picker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Deadlock\Engine\CHandle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Deadlock\Classes\CCitadelPlayerPawn.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -160,6 +166,15 @@
     </ClInclude>
     <ClInclude Include="GUI\Color Picker\Color Picker.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Deadlock\Classes\Classes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Deadlock\Const\BoneLists.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Deadlock\Const\HeroEnum.hpp">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

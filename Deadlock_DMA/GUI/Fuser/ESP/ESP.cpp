@@ -6,34 +6,29 @@
 
 void ESP::OnFrame()
 {
-	std::scoped_lock lock(FirstEntityList::PlayerPawnsMutex, FirstEntityList::PlayerControllerMutex);
+	std::scoped_lock lock(EntityList::PlayerPawnsMutex, EntityList::PlayerControllerMutex);
 
 	auto DrawList = ImGui::GetWindowDrawList();
 	auto WindowPos = ImGui::GetWindowPos();
 
 	ImGui::PushFont(nullptr, 16.0f);
 
-	for (auto& [Addr, Pawn] : FirstEntityList::m_PlayerPawns)
+	for (auto& [Addr, Pawn] : EntityList::m_PlayerPawns)
 	{
-		auto& Controller = FirstEntityList::m_PlayerControllers[FirstEntityList::GetEntityAddressFromHandle(Pawn.hController)];
+		auto AssociatedControllerAddr = EntityList::GetEntityAddressFromHandle(Pawn.hController);
+
+		if (bHideLocal && AssociatedControllerAddr == Deadlock::m_LocalPlayerControllerAddress) continue;
+
+		auto& Controller = EntityList::m_PlayerControllers[AssociatedControllerAddr];
 
 		if (Controller.IsDead()) continue;
 		if (bHideFriendly && Controller.IsFriendly()) continue;
 
-		Vector2 ScreenPos{};
-		if (!Deadlock::WorldToScreen(Pawn.Position, ScreenPos)) continue;
+		if (bDrawNameTags) Pawn.DrawNameTag(WindowPos, DrawList, Controller);
 
-		std::string HealthString = std::format("{0:d} {1:s} {2:d}HP", Controller.m_CurrentLevel, Controller.GetHeroName(), Controller.m_CurrentHealth);
-		auto TextSize = ImGui::CalcTextSize(HealthString.c_str());
+		if (bBoneNumbers) DrawBoneNumers(Pawn);
 
-		auto BackgroundColor = Controller.IsFriendly() ? FriendlyColor : EnemyColor;
-
-		ImVec2 UpperLeft = ImVec2(ScreenPos.x - (TextSize.x / 2.0f) + WindowPos.x, ScreenPos.y + WindowPos.y);
-		ImVec2 LowerRight = ImVec2(ScreenPos.x + (TextSize.x / 2.0f) + WindowPos.x, ScreenPos.y + TextSize.y + WindowPos.y);
-		DrawList->AddRectFilled(UpperLeft, LowerRight, ImGui::GetColorU32(BackgroundColor));
-
-		ImGui::SetCursorPos(ImVec2(ScreenPos.x - (TextSize.x / 2.0f), ScreenPos.y));
-		ImGui::Text(HealthString.c_str());
+		if (bDrawBones) Pawn.DrawSkeleton(WindowPos, DrawList);
 	}
 
 	ImGui::PopFont();
@@ -45,5 +40,32 @@ void ESP::RenderSettings()
 
 	ImGui::Checkbox("Hide Friendly", &bHideFriendly);
 
+	ImGui::Checkbox("Draw Bones", &bDrawBones);
+
+	ImGui::Checkbox("Show Bone Numbers", &bBoneNumbers);
+
+	ImGui::Checkbox("Hide Local Player", &bHideLocal);
+
+	ImGui::Checkbox("Draw Name Tags", &bDrawNameTags);
+
 	ImGui::End();
+}
+
+void ESP::DrawBoneNumers(CCitadelPlayerPawn& Pawn)
+{
+	ImGui::PushFont(nullptr, 12.0f);
+
+	for (int i = 0; i < MAX_BONES; i++)
+	{
+		Vector2 ScreenPos{};
+		if (!Deadlock::WorldToScreen(Pawn.BonePositions[i], ScreenPos)) continue;
+
+		std::string BoneString = std::to_string(i);
+		auto TextSize = ImGui::CalcTextSize(BoneString.c_str());
+
+		ImGui::SetCursorPos(ImVec2(ScreenPos.x - (TextSize.x / 2.0f), ScreenPos.y));
+		ImGui::Text(BoneString.c_str());
+	}
+
+	ImGui::PopFont();
 }

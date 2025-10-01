@@ -250,7 +250,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Deadlock\Classes\CBaseEntity.cpp" />
+    <ClCompile Include="Deadlock\Classes\CCitadelPlayerPawn.cpp" />
+    <ClInclude Include="Deadlock\Const\HeroEnum.hpp">
+      <FileType>CppCode</FileType>
+    </ClInclude>
     <ClCompile Include="Deadlock\Deadlock.cpp" />
+    <ClCompile Include="Deadlock\Engine\CHandle.cpp" />
     <ClCompile Include="Deadlock\Entity List\EntityList.cpp" />
     <ClCompile Include="DMA\DMA.cpp" />
     <ClCompile Include="DMA\Process.cpp" />
@@ -280,6 +285,8 @@
     <ClInclude Include="Deadlock\Classes\CCitadelPlayerController.h" />
     <ClInclude Include="Deadlock\Classes\CCitadelPlayerPawn.h" />
     <ClInclude Include="Deadlock\Classes\CEntityListEntry.h" />
+    <ClInclude Include="Deadlock\Classes\Classes.h" />
+    <ClInclude Include="Deadlock\Const\BoneLists.hpp" />
     <ClInclude Include="Deadlock\Const\HeroMap.hpp" />
     <ClInclude Include="Deadlock\Engine\CHandle.h" />
     <ClInclude Include="Deadlock\Engine\Matrix.h" />

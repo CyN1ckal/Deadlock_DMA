@@ -10,6 +10,12 @@ namespace Offsets
 	namespace SceneNode
 	{
 		inline constexpr std::ptrdiff_t Position = 0xD0;
+		inline constexpr std::ptrdiff_t ModelState = 0x190;
+	}
+
+	namespace ModelState
+	{
+		inline constexpr std::ptrdiff_t BoneArrayPtr = 0x80;
 	}
 
 	namespace Pawn
