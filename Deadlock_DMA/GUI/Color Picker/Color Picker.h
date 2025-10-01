@@ -5,4 +5,9 @@ class ColorPicker
 public:
 	static void RenderColorPicker();
 
+public:
+	static inline ImVec4 FriendlyNameTagColor{ 0.29f,0.619f,0.6f,1.0f };
+	static inline ImVec4 EnemyNameTagColor{ 0.776f,0.223f,0.247f,1.0f };
+	static inline ImVec4 EnemyBoneColor{ 1.0f,0.0f,0.0f,1.0f };
+	static inline ImVec4 FriendlyBoneColor{ 0.0f,1.0f,1.0f,1.0f };
 };

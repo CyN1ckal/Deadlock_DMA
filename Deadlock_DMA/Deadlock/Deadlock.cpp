@@ -4,23 +4,25 @@
 
 #include "Entity List/EntityList.h"
 
+#include "GUI/Fuser/Fuser.h"
+
 bool Deadlock::Initialize(DMA_Connection* Conn)
 {
 	auto& Process = Deadlock::Proc();
 
 	Process.GetProcessInfo("deadlock.exe", Conn);
 
-	FirstEntityList::UpdateCrucialInformation(Conn, &Process);
+	EntityList::UpdateCrucialInformation(Conn, &Process);
 
-	FirstEntityList::UpdateEntityMap(Conn, &Process);
+	EntityList::UpdateEntityMap(Conn, &Process);
 
-	FirstEntityList::UpdatePlayerControllerAddresses();
+	EntityList::UpdatePlayerControllerAddresses();
 
-	FirstEntityList::UpdatePlayerControllers(Conn, &Process);
+	EntityList::UpdatePlayerControllers(Conn, &Process);
 
-	FirstEntityList::UpdatePlayerPawnAddresses();
+	EntityList::UpdatePlayerPawnAddresses();
 
-	FirstEntityList::UpdatePlayerPawns(Conn, &Process);
+	EntityList::UpdatePlayerPawns(Conn, &Process);
 
 	UpdateLocalPlayerControllerAddress(Conn);
 
@@ -34,15 +36,14 @@ Process& Deadlock::Proc()
 
 void Deadlock::UpdateViewMatrix(DMA_Connection* Conn)
 {
-	std::scoped_lock Lock(ViewMatrixMutex);
+	std::scoped_lock lock(ViewMatrixMutex);
 	uintptr_t ViewMatrixAddress = Proc().GetClientBase() + Offsets::ViewMatrix;
 	m_ViewMatrix = Proc().ReadMem<Matrix44>(Conn, ViewMatrixAddress);
 }
 
-const Vector2 ScreenSize{ 1920.0f, 1080.0f };
 bool Deadlock::WorldToScreen(const Vector3& Pos, Vector2& ScreenPos)
 {
-	std::scoped_lock Lock(ViewMatrixMutex);
+	std::scoped_lock lock(ViewMatrixMutex);
 
 	ScreenPos.x = m_ViewMatrix.m00 * Pos.x + m_ViewMatrix.m01 * Pos.y + m_ViewMatrix.m02 * Pos.z + m_ViewMatrix.m03;
 	ScreenPos.y = m_ViewMatrix.m10 * Pos.x + m_ViewMatrix.m11 * Pos.y + m_ViewMatrix.m12 * Pos.z + m_ViewMatrix.m13;
@@ -56,11 +57,11 @@ bool Deadlock::WorldToScreen(const Vector3& Pos, Vector2& ScreenPos)
 	ScreenPos.x *= inv_w;
 	ScreenPos.y *= inv_w;
 
-	float x = ScreenSize.x * .5f;
-	float y = ScreenSize.y * .5f;
+	float x = Fuser::ScreenSize.x * .5f;
+	float y = Fuser::ScreenSize.y * .5f;
 
-	x += 0.5f * ScreenPos.x * ScreenSize.x + 0.5f;
-	y -= 0.5f * ScreenPos.y * ScreenSize.y + 0.5f;
+	x += 0.5f * ScreenPos.x * Fuser::ScreenSize.x + 0.5f;
+	y -= 0.5f * ScreenPos.y * Fuser::ScreenSize.y + 0.5f;
 
 	ScreenPos.x = x;
 	ScreenPos.y = y;

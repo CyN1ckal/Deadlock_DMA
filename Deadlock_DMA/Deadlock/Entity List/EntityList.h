@@ -1,10 +1,8 @@
 #pragma once
 #include "Deadlock/Classes/CEntityListEntry.h"
-#include "Deadlock/Classes/CBaseEntity.h"
-#include "Deadlock/Classes/CCitadelPlayerController.h"
-#include "Deadlock/Classes/CCitadelPlayerPawn.h"
+#include "Deadlock/Classes/Classes.h"
 
-class FirstEntityList
+class EntityList
 {
 public:
 	static void FullUpdate(DMA_Connection* Conn, Process* Proc);

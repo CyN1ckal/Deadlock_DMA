@@ -152,12 +152,6 @@ bool MainWindow::OnFrame()
 {
 	PreFrame();
 
-	ImGui::Begin("Deadlock DMA");
-
-	ImGui::Text("Hello from Deadlock DMA!");
-
-	ImGui::End();
-
 	Fuser::OnFrame();
 
 	ESP::RenderSettings();
