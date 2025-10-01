@@ -4,7 +4,7 @@
 
 void Fuser::OnFrame()
 {
-	ImGui::SetNextWindowPos({ 100,100 }, ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
 
 	ImGui::PushStyleColor(ImGuiCol_WindowBg, IM_COL32(0, 0, 0, 0));
 
