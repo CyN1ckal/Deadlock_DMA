@@ -4,7 +4,7 @@
 
 #include "GUI/Fuser/Fuser.h"
 #include "GUI/Fuser/ESP/ESP.h"
-#include "GUI/Debug/Player List/Player List.h"
+#include "GUI/Debug GUI/Player List/Player List.h"
 #include "GUI/Color Picker/Color Picker.h"
 
 bool MainWindow::CreateDeviceD3D(HWND hWnd)

@@ -63,9 +63,6 @@
     <ClCompile Include="GUI\Fuser\ESP\ESP.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GUI\Debug\Player List\Player List.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Deadlock\Classes\CBaseEntity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -76,6 +73,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Deadlock\Classes\CCitadelPlayerPawn.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\Debug GUI\Player List\Player List.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -175,6 +175,9 @@
     </ClInclude>
     <ClInclude Include="Deadlock\Const\HeroEnum.hpp">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Debug GUI\Player List\Player List.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
