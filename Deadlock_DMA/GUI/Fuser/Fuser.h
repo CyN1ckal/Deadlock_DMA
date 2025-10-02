@@ -8,4 +8,5 @@ public:
 
 public:
 	static inline ImVec2 ScreenSize = { 1920.0f,1080.0f };
+	static inline bool bFullScreen = false;
 };
