@@ -363,4 +363,5 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # MemProcFS Assembles, import yourself
-/Dependencies/MemProcFS/
+/Dependencies/MemProcFS/*
+!/Dependencies/MemProcFS/.gitkeep
