@@ -9,7 +9,7 @@ This is an open-source DMA client for Valve's latest game, **Deadlock**. The pro
 - Open `Deadlock_DMA.sln` in **Visual Studio 2022**
 - Download the latest [MemProcFS release](https://github.com/ufrisk/MemProcFS/releases/latest)
 - Extract it into the `Dependencies/MemProcFS` folder
-- Select configuration (`Release | x64` recommended)
+- Select configuration (`Release | x64`)
 - Build the solution (**Ctrl+Shift+B**)
 
 ## Runtime
