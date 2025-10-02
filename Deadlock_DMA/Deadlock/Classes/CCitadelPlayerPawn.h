@@ -16,6 +16,7 @@ public:
 public:
 	void DrawSkeleton(const ImVec2& WindowPos, ImDrawList* DrawList) const;
 	void DrawNameTag(const ImVec2& WindowPos, ImDrawList* DrawList, CCitadelPlayerController& AssociatedController);
+	void DrawDistance(const ImVec2& winPos, ImDrawList* dl, const Vector3& localPos) const;
 
 private:
 	static void PrepareBoneRead(VMMDLL_SCATTER_HANDLE vmsh, uintptr_t BoneArrayAddress, BYTE* OutPosition, uint32_t BoneIndex)
@@ -50,5 +51,13 @@ public:
 	{
 		for (int i = 0; i < MAX_BONES; i++)
 			PrepareBoneRead(vmsh, PlayerPawn.BoneArrayAddress, reinterpret_cast<BYTE*>(&PlayerPawn.BonePositions[i]), i);
+	}
+
+	static inline float Distance3(const Vector3& a, const Vector3& b)
+	{
+		float dx = a.x - b.x;  // use your field names (x/y/z or X/Y/Z)
+		float dy = a.y - b.y;
+		float dz = a.z - b.z;
+		return std::sqrt(dx * dx + dy * dy + dz * dz);
 	}
 };
