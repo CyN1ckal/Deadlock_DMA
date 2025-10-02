@@ -5,7 +5,7 @@
 void Fuser::OnFrame()
 {
 	ImVec2 pos = bFullScreen ? ImVec2(0, 0) : ImVec2(100, 100);
-	ImGui::SetNextWindowPos(pos, bFullScreen ? ImGuiCond_Always : ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowPos(pos, ImGuiCond_Always);
 
 	ImGui::PushStyleColor(ImGuiCol_WindowBg, IM_COL32(0, 0, 0, 0));
 
