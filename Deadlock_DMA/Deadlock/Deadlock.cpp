@@ -73,6 +73,7 @@ bool Deadlock::UpdateLocalPlayerControllerAddress(DMA_Connection* Conn)
 {
 	uintptr_t LocalPlayerControllerAddress = Proc().GetClientBase() + Offsets::LocalController;
 	m_LocalPlayerControllerAddress = Proc().ReadMem<uintptr_t>(Conn, LocalPlayerControllerAddress);
+	m_LocalPlayerPawnAddress = EntityList::GetEntityAddressFromHandle(EntityList::m_PlayerControllers[m_LocalPlayerControllerAddress].m_hPawn);
 
 	return false;
 }

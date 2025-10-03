@@ -17,14 +17,14 @@ void ESP::OnFrame()
 	{
 		auto AssociatedControllerAddr = EntityList::GetEntityAddressFromHandle(Pawn.hController);
 
-		if (bHideLocal && AssociatedControllerAddr == Deadlock::m_LocalPlayerControllerAddress) continue;
+		if (bHideLocal && Pawn.IsLocalPlayer(AssociatedControllerAddr)) continue;
 
 		auto& Controller = EntityList::m_PlayerControllers[AssociatedControllerAddr];
 
 		if (Controller.IsDead()) continue;
 		if (bHideFriendly && Controller.IsFriendly()) continue;
 
-		if (bDrawNameTags) Pawn.DrawNameTag(WindowPos, DrawList, Controller);
+		if (NameTagSettings.bDrawNameTags) Pawn.DrawNameTag(WindowPos, DrawList, Controller);
 
 		if (bBoneNumbers) DrawBoneNumers(Pawn);
 
@@ -38,15 +38,25 @@ void ESP::RenderSettings()
 {
 	ImGui::Begin("ESP Settings");
 
-	ImGui::Checkbox("Hide Friendly", &bHideFriendly);
+	if (ImGui::CollapsingHeader("Master Settings", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ImGui::Checkbox("Hide Friendly", &bHideFriendly);
 
-	ImGui::Checkbox("Draw Bones", &bDrawBones);
+		ImGui::Checkbox("Draw Bones", &bDrawBones);
 
-	ImGui::Checkbox("Show Bone Numbers", &bBoneNumbers);
+		ImGui::Checkbox("Hide Local Player", &bHideLocal);
+	}
 
-	ImGui::Checkbox("Hide Local Player", &bHideLocal);
+	if (ImGui::CollapsingHeader("Name Tags"))
+	{
+		ImGui::Checkbox("Draw Name Tags", &NameTagSettings.bDrawNameTags);
+		ImGui::Checkbox("Show Distance", &NameTagSettings.bShowDistance);
+		ImGui::Checkbox("Show Level", &NameTagSettings.bShowLevel);
+		ImGui::Checkbox("Show Hero Name", &NameTagSettings.bShowHeroName);
+	}
 
-	ImGui::Checkbox("Draw Name Tags", &bDrawNameTags);
+	if (ImGui::CollapsingHeader("Debug"))
+		ImGui::Checkbox("Bone Numbers", &bBoneNumbers);
 
 	ImGui::End();
 }

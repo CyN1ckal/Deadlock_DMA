@@ -12,7 +12,9 @@ public:
 public:
 	const bool IsIncomplete() const { return Flags & 0x1; }
 	void SetInvalid() { Flags |= 0x1; }
-	bool IsFriendly() const;
+	const bool IsFriendly() const;
+	const bool IsLocalPlayer(uintptr_t EntityAddress) const;
+	const float DistanceFromLocalPlayer() const;
 
 public:
 	template<typename T>
