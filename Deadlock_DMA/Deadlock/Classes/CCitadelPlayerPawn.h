@@ -15,7 +15,8 @@ public:
 
 public:
 	void DrawSkeleton(const ImVec2& WindowPos, ImDrawList* DrawList) const;
-	void DrawNameTag(const ImVec2& WindowPos, ImDrawList* DrawList, CCitadelPlayerController& AssociatedController);
+	void DrawNameTag(const ImVec2& WindowPos, ImDrawList* DrawList, CCitadelPlayerController& AssociatedController) const;
+	void DrawBoneNumbers() const;
 
 private:
 	static void PrepareBoneRead(VMMDLL_SCATTER_HANDLE vmsh, uintptr_t BoneArrayAddress, BYTE* OutPosition, uint32_t BoneIndex)
