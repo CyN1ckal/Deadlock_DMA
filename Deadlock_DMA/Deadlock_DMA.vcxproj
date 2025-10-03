@@ -304,6 +304,7 @@
     <ClInclude Include="GUI\Fuser\ESP\ESP.h" />
     <ClInclude Include="GUI\Fuser\Fuser.h" />
     <ClInclude Include="GUI\Main Window\Main Window.h" />
+    <ClInclude Include="GUI\Main Window\Styles\DeepDark.hpp" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -7,6 +7,8 @@
 #include "GUI/Debug GUI/Player List/Player List.h"
 #include "GUI/Color Picker/Color Picker.h"
 
+#include "Styles/DeepDark.hpp"
+
 bool MainWindow::CreateDeviceD3D(HWND hWnd)
 {
 	// Setup swap chain
@@ -102,8 +104,7 @@ bool MainWindow::Initialize()
 
 	wc = { sizeof(wc), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(nullptr), nullptr, nullptr, nullptr, nullptr, L"MainWindow", nullptr };
 	::RegisterClassExW(&wc);
-	g_hWnd = ::CreateWindowW(wc.lpszClassName, L"Deadlock DMA", WS_OVERLAPPEDWINDOW, 100, 100, (int)(1280 * main_scale), (int)(800 * main_scale), nullptr, nullptr, wc.hInstance, nullptr);
-
+	g_hWnd = ::CreateWindowEx(NULL, wc.lpszClassName, L"Deadlock DMA", WS_OVERLAPPED, 100, 100, 800, 800, nullptr, nullptr, wc.hInstance, nullptr);
 	// Initialize Direct3D
 	if (!CreateDeviceD3D(g_hWnd))
 	{
@@ -140,6 +141,8 @@ bool MainWindow::Initialize()
 		style.WindowRounding = 0.0f;
 		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 	}
+
+	SetDeepDarkStyle();
 
 	// Setup Platform/Renderer backends
 	ImGui_ImplWin32_Init(g_hWnd);
