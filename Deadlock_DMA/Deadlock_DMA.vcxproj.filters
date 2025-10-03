@@ -78,6 +78,9 @@
     <ClCompile Include="GUI\Debug GUI\Player List\Player List.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GUI\Debug GUI\Trooper List\Trooper List.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -180,6 +183,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GUI\Main Window\Styles\DeepDark.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Debug GUI\Trooper List\Trooper List.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

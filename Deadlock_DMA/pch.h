@@ -4,6 +4,7 @@
 #include <print>
 #include <unordered_map>
 #include <array>
+#include <memory>
 
 #include "vmmdll.h"
 

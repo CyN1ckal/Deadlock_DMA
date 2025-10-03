@@ -5,6 +5,7 @@
 #include "GUI/Fuser/Fuser.h"
 #include "GUI/Fuser/ESP/ESP.h"
 #include "GUI/Debug GUI/Player List/Player List.h"
+#include "GUI/Debug GUI/Trooper List/Trooper List.h"
 #include "GUI/Color Picker/Color Picker.h"
 
 #include "Styles/DeepDark.hpp"
@@ -163,6 +164,7 @@ bool MainWindow::OnFrame()
 	ColorPicker::RenderColorPicker();
 
 	//PlayerList::Render();
+	//TrooperList::Render();
 
 	PostFrame();
 
@@ -170,7 +172,7 @@ bool MainWindow::OnFrame()
 }
 
 bool MainWindow::Cleanup()
-{  
+{
 	// Cleanup
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();

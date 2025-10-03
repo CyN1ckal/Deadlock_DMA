@@ -2,15 +2,16 @@
 
 namespace Offsets
 {
-	inline constexpr std::ptrdiff_t GameEntitySystem = 0x26EC7D8;
-	inline constexpr std::ptrdiff_t LocalController = 0x2B3E6C8;
-	inline constexpr std::ptrdiff_t ViewMatrix = 0x2B5C7E0;
+	inline constexpr std::ptrdiff_t GameEntitySystem = 0x26EC758;
+	inline constexpr std::ptrdiff_t LocalController = 0x2B3E668;
+	inline constexpr std::ptrdiff_t ViewMatrix = 0x2B5C760;
 	inline constexpr std::ptrdiff_t FirstEntityList = 0x10;
 
 	namespace SceneNode
 	{
 		inline constexpr std::ptrdiff_t Position = 0xD0;
 		inline constexpr std::ptrdiff_t ModelState = 0x190;
+		inline constexpr std::ptrdiff_t Dormant = 0x10B;
 	}
 
 	namespace ModelState
@@ -27,6 +28,7 @@ namespace Offsets
 	{
 		inline constexpr std::ptrdiff_t GameSceneNode = 0x330;
 		inline constexpr std::ptrdiff_t TeamNum = 0x3F3;
+		inline constexpr std::ptrdiff_t CurrentHealth = 0x354;
 	}
 
 	namespace Controller

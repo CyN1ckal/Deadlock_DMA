@@ -16,11 +16,13 @@ bool Deadlock::Initialize(DMA_Connection* Conn)
 
 	EntityList::UpdateEntityMap(Conn, &Process);
 
-	EntityList::UpdatePlayerControllerAddresses();
+	EntityList::UpdateEntityClassMap(Conn, &Process);
+
+	EntityList::GetPlayerControllerAddresses();
 
 	EntityList::UpdatePlayerControllers(Conn, &Process);
 
-	EntityList::UpdatePlayerPawnAddresses();
+	EntityList::GetPlayerPawnAddresses();
 
 	EntityList::UpdatePlayerPawns(Conn, &Process);
 
