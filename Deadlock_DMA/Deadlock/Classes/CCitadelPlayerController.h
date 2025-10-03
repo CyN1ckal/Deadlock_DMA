@@ -10,11 +10,10 @@ public:
 	CHandle m_hPawn{ 0 };
 	int32_t m_CurrentLevel{ 0 };
 	int32_t m_MaxHealth{ 0 };
-	int32_t m_CurrentHealth{ 0 };
 	HeroId m_HeroID{ 0 };
 
 public:
-	const bool IsDead() const { return m_CurrentHealth <= 0; }
+	const bool IsDead() const { return CurrentHealth <= 0; }
 	const std::string_view GetHeroName() const
 	{
 		auto it = HeroNames::HeroNameMap.find(m_HeroID);
@@ -41,7 +40,7 @@ public:
 		VMMDLL_Scatter_PrepareEx(vmsh, MaxHealthAddress, sizeof(int32_t), reinterpret_cast<BYTE*>(&Controller.m_MaxHealth), nullptr);
 
 		uintptr_t CurrentHealthAddress = PlayerDataAddress + Offsets::Controller::PlayerDataOffsets::CurrentHealth;
-		VMMDLL_Scatter_PrepareEx(vmsh, CurrentHealthAddress, sizeof(int32_t), reinterpret_cast<BYTE*>(&Controller.m_CurrentHealth), nullptr);
+		VMMDLL_Scatter_PrepareEx(vmsh, CurrentHealthAddress, sizeof(int32_t), reinterpret_cast<BYTE*>(&Controller.CurrentHealth), nullptr);
 
 		uintptr_t HeroIDAddress = PlayerDataAddress + Offsets::Controller::PlayerDataOffsets::HeroID;
 		VMMDLL_Scatter_PrepareEx(vmsh, HeroIDAddress, sizeof(int32_t), reinterpret_cast<BYTE*>(&Controller.m_HeroID), nullptr);

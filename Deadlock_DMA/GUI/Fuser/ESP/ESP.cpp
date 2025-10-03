@@ -4,14 +4,54 @@
 
 #include "Deadlock/Entity List/EntityList.h"
 
+#include "GUI/Color Picker/Color Picker.h"
+
 void ESP::OnFrame()
 {
-	std::scoped_lock lock(EntityList::PlayerPawnsMutex, EntityList::PlayerControllerMutex);
-
 	auto DrawList = ImGui::GetWindowDrawList();
 	auto WindowPos = ImGui::GetWindowPos();
 
 	ImGui::PushFont(nullptr, 16.0f);
+
+	RenderPlayers(WindowPos, DrawList);
+
+	if (bDrawTroopers) RenderTroopers();
+
+	ImGui::PopFont();
+}
+
+void ESP::RenderSettings()
+{
+	ImGui::Begin("ESP Settings");
+
+	if (ImGui::CollapsingHeader("Master Settings", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ImGui::Checkbox("Hide Friendly", &bHideFriendly);
+
+		ImGui::Checkbox("Draw Bones", &bDrawBones);
+
+		ImGui::Checkbox("Hide Local Player", &bHideLocal);
+
+		ImGui::Checkbox("Draw Troopers", &bDrawTroopers);
+	}
+
+	if (ImGui::CollapsingHeader("Name Tags"))
+	{
+		ImGui::Checkbox("Draw Name Tags", &NameTagSettings.bDrawNameTags);
+		ImGui::Checkbox("Show Distance", &NameTagSettings.bShowDistance);
+		ImGui::Checkbox("Show Level", &NameTagSettings.bShowLevel);
+		ImGui::Checkbox("Show Hero Name", &NameTagSettings.bShowHeroName);
+	}
+
+	if (ImGui::CollapsingHeader("Debug"))
+		ImGui::Checkbox("Bone Numbers", &bBoneNumbers);
+
+	ImGui::End();
+}
+
+void ESP::RenderPlayers(const ImVec2 WindowPos, ImDrawList* DrawList)
+{
+	std::scoped_lock lock(EntityList::m_PawnMutex, EntityList::m_ControllerMutex);
 
 	for (auto& [Addr, Pawn] : EntityList::m_PlayerPawns)
 	{
@@ -30,33 +70,38 @@ void ESP::OnFrame()
 
 		if (bDrawBones) Pawn.DrawSkeleton(WindowPos, DrawList);
 	}
-
-	ImGui::PopFont();
 }
 
-void ESP::RenderSettings()
+void ESP::RenderTroopers()
 {
-	ImGui::Begin("ESP Settings");
+	/* m_ControllerMutex is required for friendly check */
+	std::scoped_lock Lock(EntityList::m_TrooperMutex, EntityList::m_ControllerMutex);
 
-	if (ImGui::CollapsingHeader("Master Settings", ImGuiTreeNodeFlags_DefaultOpen))
+	for (auto& [Addr, Trooper] : EntityList::m_Troopers)
 	{
-		ImGui::Checkbox("Hide Friendly", &bHideFriendly);
+		if (Trooper.IsIncomplete()) continue;
 
-		ImGui::Checkbox("Draw Bones", &bDrawBones);
+		if (Trooper.IsDormant()) continue;
 
-		ImGui::Checkbox("Hide Local Player", &bHideLocal);
+		if (Trooper.CurrentHealth < 1) continue;
+
+		DrawTrooper(Trooper);
 	}
+}
 
-	if (ImGui::CollapsingHeader("Name Tags"))
-	{
-		ImGui::Checkbox("Draw Name Tags", &NameTagSettings.bDrawNameTags);
-		ImGui::Checkbox("Show Distance", &NameTagSettings.bShowDistance);
-		ImGui::Checkbox("Show Level", &NameTagSettings.bShowLevel);
-		ImGui::Checkbox("Show Hero Name", &NameTagSettings.bShowHeroName);
-	}
+void ESP::DrawTrooper(CBaseEntity& Trooper)
+{
+	Vector2 ScreenPos{};
+	if (!Deadlock::WorldToScreen(Trooper.Position, ScreenPos)) return;
 
-	if (ImGui::CollapsingHeader("Debug"))
-		ImGui::Checkbox("Bone Numbers", &bBoneNumbers);
+	auto HealthString = std::to_string(Trooper.CurrentHealth);
+	auto TextSize = ImGui::CalcTextSize(HealthString.c_str());
 
-	ImGui::End();
+	ImGui::PushStyleColor(ImGuiCol_Text, (Trooper.IsFriendly()) ? ColorPicker::FriendlyNameTagColor : ColorPicker::EnemyNameTagColor);
+
+	ImGui::SetCursorPos({ ScreenPos.x - (TextSize.x / 2.0f), ScreenPos.y });
+
+	ImGui::Text(HealthString.c_str());
+
+	ImGui::PopStyleColor();
 }

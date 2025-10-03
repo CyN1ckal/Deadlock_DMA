@@ -9,6 +9,7 @@ public:
 	bool bShowLevel{ true };
 	bool bShowHeroName{ true };
 	bool bShowDistance{ true };
+	bool bShowHealth{ true };
 };
 
 class ESP
@@ -22,5 +23,13 @@ public:
 	static inline bool bBoneNumbers{ false };
 	static inline bool bDrawBones{ true };
 	static inline bool bHideLocal{ true };
+	static inline bool bDrawTroopers{ true };
 	static inline CNameTagSetings NameTagSettings{};
+
+private:
+	static void RenderPlayers(const ImVec2 WindowPos, ImDrawList* DrawList);
+	static void RenderTroopers();
+
+	static void DrawTrooper(CBaseEntity& Trooper);
+
 };

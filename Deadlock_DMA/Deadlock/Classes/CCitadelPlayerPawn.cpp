@@ -42,6 +42,8 @@ void CCitadelPlayerPawn::DrawNameTag(const ImVec2& WindowPos, ImDrawList* DrawLi
 
 	if (ESP::NameTagSettings.bShowHeroName)	NameTagString += std::format("{0:s} ", AssociatedController.GetHeroName());
 
+	if (ESP::NameTagSettings.bShowHealth)	NameTagString += std::format("{0:d} ", AssociatedController.CurrentHealth);
+
 	if (ESP::NameTagSettings.bShowDistance)	NameTagString += std::format("{0:.0f} ", this->DistanceFromLocalPlayer());
 
 	if (NameTagString.back() == ' ') NameTagString.pop_back();
