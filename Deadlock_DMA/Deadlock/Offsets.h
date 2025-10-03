@@ -2,9 +2,9 @@
 
 namespace Offsets
 {
-	inline constexpr std::ptrdiff_t GameEntitySystem = 0x26E4838;
-	inline constexpr std::ptrdiff_t LocalController = 0x2B31B78;
-	inline constexpr std::ptrdiff_t ViewMatrix = 0x2B4FC60;
+	inline constexpr std::ptrdiff_t GameEntitySystem = 0x26EC7D8;
+	inline constexpr std::ptrdiff_t LocalController = 0x2B3E6C8;
+	inline constexpr std::ptrdiff_t ViewMatrix = 0x2B5C7E0;
 	inline constexpr std::ptrdiff_t FirstEntityList = 0x10;
 
 	namespace SceneNode
