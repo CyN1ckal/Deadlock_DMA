@@ -23,7 +23,4 @@ public:
 	static inline bool bDrawBones{ true };
 	static inline bool bHideLocal{ true };
 	static inline CNameTagSetings NameTagSettings{};
-
-private:
-	static void DrawBoneNumers(CCitadelPlayerPawn& Pawn);
 };
