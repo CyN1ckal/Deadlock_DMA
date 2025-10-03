@@ -6,8 +6,11 @@ public:
 	static void RenderColorPicker();
 
 public:
-	static inline ImVec4 FriendlyNameTagColor{ 0.29f,0.619f,0.6f,1.0f };
-	static inline ImVec4 EnemyNameTagColor{ 0.776f,0.223f,0.247f,1.0f };
-	static inline ImVec4 EnemyBoneColor{ 1.0f,0.0f,0.0f,1.0f };
-	static inline ImVec4 FriendlyBoneColor{ 0.0f,1.0f,1.0f,1.0f };
+	// friend
+	static inline ImVec4 FriendlyNameTagColor{ 0.05f, 0.45f, 0.25f, 1.0f };  // dark teal/forest
+	static inline ImVec4 FriendlyBoneColor{ 0.20f, 0.70f, 0.90f, 1.0f };  // sky blue
+
+	// enemy
+	static inline ImVec4 EnemyNameTagColor{ 0.60f, 0.10f, 0.15f, 1.0f };  // deep crimson, white text visible
+	static inline ImVec4 EnemyBoneColor{ 0.95f, 0.20f, 0.20f, 1.0f };  // vivid red
 };

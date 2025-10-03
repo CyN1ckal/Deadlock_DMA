@@ -17,11 +17,12 @@ void ESP::OnFrame()
 	{
 		auto AssociatedControllerAddr = EntityList::GetEntityAddressFromHandle(Pawn.hController);
 
-		if (bHideLocal && AssociatedControllerAddr == Deadlock::m_LocalPlayerControllerAddress) continue;
+		if (bHideLocal && Pawn.IsLocalPlayer(AssociatedControllerAddr)) continue;
 
 		auto& Controller = EntityList::m_PlayerControllers[AssociatedControllerAddr];
 
 		if (Controller.IsDead()) continue;
+
 		if (bHideFriendly && Controller.IsFriendly()) continue;
 
 		if (bDrawNameTags) Pawn.DrawNameTag(WindowPos, DrawList, Controller);
@@ -29,6 +30,11 @@ void ESP::OnFrame()
 		if (bBoneNumbers) DrawBoneNumers(Pawn);
 
 		if (bDrawBones) Pawn.DrawSkeleton(WindowPos, DrawList);
+
+		if (bDrawDistance) {
+			Vector3 localPos = Controller.GetLocalPlayerPosition(Pawn, Addr);
+			Pawn.DrawDistance(WindowPos, DrawList, localPos);
+		}
 	}
 
 	ImGui::PopFont();
@@ -47,6 +53,8 @@ void ESP::RenderSettings()
 	ImGui::Checkbox("Hide Local Player", &bHideLocal);
 
 	ImGui::Checkbox("Draw Name Tags", &bDrawNameTags);
+
+	ImGui::Checkbox("Draw Distance", &bDrawDistance);
 
 	ImGui::End();
 }

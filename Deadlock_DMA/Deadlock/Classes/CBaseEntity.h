@@ -13,6 +13,8 @@ public:
 	const bool IsIncomplete() const { return Flags & 0x1; }
 	void SetInvalid() { Flags |= 0x1; }
 	bool IsFriendly() const;
+	bool IsLocalPlayer(uintptr_t selfAddr) const;
+	Vector3 GetLocalPlayerPosition(const CBaseEntity& pawn, uintptr_t addr);
 
 public:
 	template<typename T>

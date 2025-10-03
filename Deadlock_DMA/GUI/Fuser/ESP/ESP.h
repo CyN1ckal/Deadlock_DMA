@@ -14,6 +14,7 @@ public:
 	static inline bool bDrawBones = true;
 	static inline bool bHideLocal = true;
 	static inline bool bDrawNameTags = true;
+	static inline bool bDrawDistance = true;
 
 private:
 	static void DrawBoneNumers(CCitadelPlayerPawn& Pawn);

@@ -47,3 +47,28 @@ void CCitadelPlayerPawn::DrawNameTag(const ImVec2& WindowPos, ImDrawList* DrawLi
 	ImGui::SetCursorPos(ImVec2(ScreenPos.x - (TextSize.x / 2.0f), ScreenPos.y));
 	ImGui::Text(HealthString.c_str());
 }
+
+void CCitadelPlayerPawn::DrawDistance(const ImVec2& winPos, ImDrawList* dl, const Vector3& localPos) const
+{
+	if (!hController.IsValid()) return;
+
+	const auto ctrlAddr = EntityList::GetEntityAddressFromHandle(hController);
+	auto& Ctrl = EntityList::m_PlayerControllers[ctrlAddr];
+	// world-space origin for correct distance math
+	const Vector3 worldPos = Position;
+
+	Vector2 screen;
+	if (!Deadlock::WorldToScreen(worldPos, screen)) return;
+
+	float distM = (worldPos - localPos).Length() / 100.0f;
+	if (distM < 0.01f) return; // avoid jitter when on top of each other
+
+	char buf[32];
+	std::snprintf(buf, sizeof(buf), "%.1fm", distM);
+
+	const ImU32 col = ImGui::GetColorU32(Ctrl.IsFriendly()
+		? ColorPicker::FriendlyBoneColor
+		: ColorPicker::EnemyBoneColor);
+
+	dl->AddText(ImVec2(screen.x + winPos.x + 25.0f, screen.y + winPos.y - 25.0f), col, buf);
+}

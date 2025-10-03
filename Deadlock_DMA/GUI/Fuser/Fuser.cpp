@@ -4,7 +4,8 @@
 
 void Fuser::OnFrame()
 {
-	ImGui::SetNextWindowPos({ 100,100 }, ImGuiCond_FirstUseEver);
+	ImVec2 pos = bFullScreen ? ImVec2(0, 0) : ImVec2(100, 100);
+	ImGui::SetNextWindowPos(pos, ImGuiCond_Always);
 
 	ImGui::PushStyleColor(ImGuiCol_WindowBg, IM_COL32(0, 0, 0, 0));
 
@@ -31,6 +32,8 @@ void Fuser::RenderSettings()
 	ImGui::InputFloat("Screen Size Y", &ScreenSize.y);
 
 	ImGui::PopItemWidth();
+
+	ImGui::Checkbox("Full Screen", &bFullScreen);
 
 	ImGui::End();
 }
