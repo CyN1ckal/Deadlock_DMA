@@ -24,11 +24,11 @@ void Fuser::RenderSettings()
 {
 	ImGui::Begin("Fuser Settings");
 
-	ImGui::PushItemWidth(100.0f);
+	ImGui::PushItemWidth(60.0f);
 
-	ImGui::InputFloat("Screen Size X", &ScreenSize.x);
+	ImGui::InputFloat("Screen Size X", &ScreenSize.x, 0.0f,0.0f,"%.0f");
 
-	ImGui::InputFloat("Screen Size Y", &ScreenSize.y);
+	ImGui::InputFloat("Screen Size Y", &ScreenSize.y, 0.0f, 0.0f, "%.0f");
 
 	ImGui::PopItemWidth();
 

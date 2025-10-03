@@ -4,6 +4,7 @@
 #include "Deadlock/Const/HeroEnum.hpp"
 #include "Deadlock/Const/BoneLists.hpp"
 #include "GUI/Color Picker/Color Picker.h"
+#include "GUI/Fuser/ESP/ESP.h"	
 
 void CCitadelPlayerPawn::DrawSkeleton(const ImVec2& WindowPos, ImDrawList* DrawList) const
 {
@@ -35,8 +36,17 @@ void CCitadelPlayerPawn::DrawNameTag(const ImVec2& WindowPos, ImDrawList* DrawLi
 	Vector2 ScreenPos{};
 	if (!Deadlock::WorldToScreen(Position, ScreenPos)) return;
 
-	std::string HealthString = std::format("{0:d} {1:s} {2:d}HP", AssociatedController.m_CurrentLevel, AssociatedController.GetHeroName(), AssociatedController.m_CurrentHealth);
-	auto TextSize = ImGui::CalcTextSize(HealthString.c_str());
+	std::string NameTagString{};
+
+	if (ESP::NameTagSettings.bShowLevel)	NameTagString += std::format("{0:d} ", AssociatedController.m_CurrentLevel);
+
+	if (ESP::NameTagSettings.bShowHeroName)	NameTagString += std::format("{0:s} ", AssociatedController.GetHeroName());
+
+	if (ESP::NameTagSettings.bShowDistance)	NameTagString += std::format("{0:.0f}m ", this->DistanceFromLocalPlayer());
+
+	if (NameTagString.back() == ' ') NameTagString.pop_back();
+
+	auto TextSize = ImGui::CalcTextSize(NameTagString.c_str());
 
 	auto BackgroundColor = AssociatedController.IsFriendly() ? ColorPicker::FriendlyNameTagColor : ColorPicker::EnemyNameTagColor;
 
@@ -45,5 +55,5 @@ void CCitadelPlayerPawn::DrawNameTag(const ImVec2& WindowPos, ImDrawList* DrawLi
 	DrawList->AddRectFilled(UpperLeft, LowerRight, ImGui::GetColorU32(BackgroundColor));
 
 	ImGui::SetCursorPos(ImVec2(ScreenPos.x - (TextSize.x / 2.0f), ScreenPos.y));
-	ImGui::Text(HealthString.c_str());
+	ImGui::Text(NameTagString.c_str());
 }
