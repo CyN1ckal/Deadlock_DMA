@@ -179,5 +179,8 @@
     <ClInclude Include="GUI\Debug GUI\Player List\Player List.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GUI\Main Window\Styles\DeepDark.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
