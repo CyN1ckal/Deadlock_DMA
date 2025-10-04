@@ -6,6 +6,7 @@
 #include "GUI/Fuser/ESP/ESP.h"
 #include "GUI/Debug GUI/Player List/Player List.h"
 #include "GUI/Debug GUI/Trooper List/Trooper List.h"
+#include "GUI/Debug GUI/Class List/Class List.h"
 #include "GUI/Color Picker/Color Picker.h"
 
 #include "Styles/DeepDark.hpp"
@@ -165,6 +166,7 @@ bool MainWindow::OnFrame()
 
 	//PlayerList::Render();
 	//TrooperList::Render();
+	//ClassList::Render();
 
 	PostFrame();
 
