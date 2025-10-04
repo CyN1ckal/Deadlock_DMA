@@ -105,27 +105,27 @@ void EntityList::SortEntityList()
 	m_TrooperAddresses.clear();
 	m_PlayerPawn_Addresses.clear();
 	m_PlayerController_Addresses.clear();
-	m_BossAddresses.clear();
+	m_MonsterCampAddresses.clear();
 
-	/* ASSUMING THAT THE CLASS MAP HAS ALL CLASSES ALREADY!!! */
-	uintptr_t TrooperClassPtr = m_EntityClassMap["npc_trooper"];
 	uintptr_t PlayerControllerClassPtr = m_EntityClassMap["citadel_player_controller"];
 	uintptr_t PlayerPawnClassPtr = m_EntityClassMap["player"];
-	std::vector<uintptr_t> m_BossClassPtrs{ m_EntityClassMap["npc_trooper_neutral"] };
 
-	//if (auto it = m_EntityClassMap.find("npc_boss_tier3"); it != m_EntityClassMap.end()) m_BossClassPtrs.push_back(it->second);
+	uintptr_t TrooperClassPtr = 0;
+	if (m_EntityClassMap.find("npc_trooper") != m_EntityClassMap.end())
+		TrooperClassPtr = m_EntityClassMap["npc_trooper"];
+
+	uintptr_t MonsterCampClassPtr = 0;
+	if (m_EntityClassMap.find("npc_trooper_neutral") != m_EntityClassMap.end())
+		MonsterCampClassPtr = m_EntityClassMap["npc_trooper_neutral"];
 
 	for (auto& List : m_CompleteEntityList)
 	{
 		for (auto& Entry : List)
 		{
-			if (Entry.NamePtr == TrooperClassPtr) m_TrooperAddresses.push_back(Entry.pEntity);
+			if (TrooperClassPtr && Entry.NamePtr == TrooperClassPtr) m_TrooperAddresses.push_back(Entry.pEntity);
 			else if (Entry.NamePtr == PlayerControllerClassPtr) m_PlayerController_Addresses.push_back(Entry.pEntity);
 			else if (Entry.NamePtr == PlayerPawnClassPtr) m_PlayerPawn_Addresses.push_back(Entry.pEntity);
-			else if (std::find(m_BossClassPtrs.begin(), m_BossClassPtrs.end(), Entry.NamePtr) != m_BossClassPtrs.end())
-			{
-				m_BossAddresses.push_back(Entry.pEntity);
-			}
+			else if (MonsterCampClassPtr && Entry.NamePtr == MonsterCampClassPtr) m_MonsterCampAddresses.push_back(Entry.pEntity);
 			else continue;
 		}
 	}
@@ -200,7 +200,7 @@ void EntityList::UpdateBosses(DMA_Connection* Conn, Process* Proc)
 
 	auto vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
-	for (auto& Addr : m_BossAddresses)
+	for (auto& Addr : m_MonsterCampAddresses)
 	{
 		auto& Boss = m_MonsterCamps[Addr];
 		CBaseEntity::Read_1(vmsh, Boss, Addr, true);
@@ -210,7 +210,7 @@ void EntityList::UpdateBosses(DMA_Connection* Conn, Process* Proc)
 
 	VMMDLL_Scatter_Clear(vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
-	for (auto& Addr : m_BossAddresses)
+	for (auto& Addr : m_MonsterCampAddresses)
 	{
 		auto& Boss = m_MonsterCamps[Addr];
 		CBaseEntity::Read_2(vmsh, Boss, Addr);
