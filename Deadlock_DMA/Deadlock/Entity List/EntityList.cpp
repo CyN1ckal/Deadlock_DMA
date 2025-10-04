@@ -6,12 +6,8 @@ void EntityList::FullUpdate(DMA_Connection* Conn, Process* Proc)
 {
 	UpdateCrucialInformation(Conn, Proc);
 	UpdateEntityMap(Conn, Proc);
-	SortTroopers();
-
-	GetPlayerControllerAddresses();
-	UpdatePlayerControllers(Conn, Proc);
-
-	GetPlayerPawnAddresses();
+	UpdateEntityClassMap(Conn, Proc);
+	SortEntityList();
 }
 
 void EntityList::UpdateCrucialInformation(DMA_Connection* Conn, Process* Proc)
@@ -104,23 +100,33 @@ void EntityList::GetPlayerPawnAddresses()
 	}
 }
 
-void EntityList::SortTroopers()
+void EntityList::SortEntityList()
 {
-	std::scoped_lock Lock(m_TrooperMutex);
-
 	m_TrooperAddresses.clear();
+	m_PlayerPawn_Addresses.clear();
+	m_PlayerController_Addresses.clear();
+	m_BossAddresses.clear();
 
-	auto TrooperClassPtrIt = m_EntityClassMap.find("npc_trooper");
+	/* ASSUMING THAT THE CLASS MAP HAS ALL CLASSES ALREADY!!! */
+	uintptr_t TrooperClassPtr = m_EntityClassMap["npc_trooper"];
+	uintptr_t PlayerControllerClassPtr = m_EntityClassMap["citadel_player_controller"];
+	uintptr_t PlayerPawnClassPtr = m_EntityClassMap["player"];
+	std::vector<uintptr_t> m_BossClassPtrs{ m_EntityClassMap["npc_trooper_neutral"] };
 
-	if (TrooperClassPtrIt == m_EntityClassMap.end()) return;
-
-	uintptr_t TrooperClassPtr = TrooperClassPtrIt->second;
+	//if (auto it = m_EntityClassMap.find("npc_boss_tier3"); it != m_EntityClassMap.end()) m_BossClassPtrs.push_back(it->second);
 
 	for (auto& List : m_CompleteEntityList)
 	{
 		for (auto& Entry : List)
 		{
 			if (Entry.NamePtr == TrooperClassPtr) m_TrooperAddresses.push_back(Entry.pEntity);
+			else if (Entry.NamePtr == PlayerControllerClassPtr) m_PlayerController_Addresses.push_back(Entry.pEntity);
+			else if (Entry.NamePtr == PlayerPawnClassPtr) m_PlayerPawn_Addresses.push_back(Entry.pEntity);
+			else if (std::find(m_BossClassPtrs.begin(), m_BossClassPtrs.end(), Entry.NamePtr) != m_BossClassPtrs.end())
+			{
+				m_BossAddresses.push_back(Entry.pEntity);
+			}
+			else continue;
 		}
 	}
 }
@@ -186,6 +192,35 @@ void EntityList::UpdatePlayerPawns(DMA_Connection* Conn, Process* Proc)
 	VMMDLL_Scatter_CloseHandle(vmsh);
 }
 
+void EntityList::UpdateBosses(DMA_Connection* Conn, Process* Proc)
+{
+	std::scoped_lock Lock(m_MonsterCampMutex);
+
+	m_MonsterCamps.clear();
+
+	auto vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
+
+	for (auto& Addr : m_BossAddresses)
+	{
+		auto& Boss = m_MonsterCamps[Addr];
+		CBaseEntity::Read_1(vmsh, Boss, Addr, true);
+	}
+
+	VMMDLL_Scatter_Execute(vmsh);
+
+	VMMDLL_Scatter_Clear(vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
+
+	for (auto& Addr : m_BossAddresses)
+	{
+		auto& Boss = m_MonsterCamps[Addr];
+		CBaseEntity::Read_2(vmsh, Boss, Addr);
+	}
+
+	VMMDLL_Scatter_Execute(vmsh);
+
+	VMMDLL_Scatter_CloseHandle(vmsh);
+}
+
 void EntityList::UpdateTroopers(DMA_Connection* Conn, Process* Proc)
 {
 	std::scoped_lock Lock(m_TrooperMutex);
@@ -227,8 +262,6 @@ uintptr_t EntityList::GetEntityAddressFromHandle(CHandle Handle)
 
 void EntityList::UpdateEntityClassMap(DMA_Connection* Conn, Process* Proc)
 {
-	m_EntityClassMap.clear();
-
 	std::println("Updating Entity Class Types...");
 
 	std::vector<uintptr_t> UniqueClassNames{};
@@ -265,13 +298,15 @@ void EntityList::UpdateEntityClassMap(DMA_Connection* Conn, Process* Proc)
 
 	VMMDLL_Scatter_CloseHandle(vmsh);
 
+	std::scoped_lock Lock(m_ClassMapMutex);
+
 	for (int i = 0; i < UniqueClassNames.size(); i++)
 	{
 		auto& NamePtr = UniqueClassNames[i];
 
 		std::string Name = Buffer.get()[i].Name;
 
-		//std::println("Class: {} | Address: 0x{:X}", Name, NamePtr);
+		if (Name.empty()) continue;
 
 		m_EntityClassMap[Name] = NamePtr;
 	}
@@ -293,4 +328,10 @@ void EntityList::PrintPlayerPawns()
 {
 	for (auto& [addr, pawn] : m_PlayerPawns)
 		std::println("PlayerPawn: 0x{0:X} | GameSceneNode: {1:X}", addr, pawn.GameSceneNodeAddress);
+}
+
+void EntityList::PrintClassMap()
+{
+	for (auto& [name, addr] : m_EntityClassMap)
+		std::println("Class: {} | Address: 0x{:X}", name, addr);
 }

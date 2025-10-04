@@ -260,6 +260,7 @@
     <ClCompile Include="DMA\DMA.cpp" />
     <ClCompile Include="DMA\Process.cpp" />
     <ClCompile Include="GUI\Color Picker\Color Picker.cpp" />
+    <ClCompile Include="GUI\Debug GUI\Class List\Class List.cpp" />
     <ClCompile Include="GUI\Debug GUI\Player List\Player List.cpp" />
     <ClCompile Include="GUI\Debug GUI\Trooper List\Trooper List.cpp" />
     <ClCompile Include="GUI\Fuser\ESP\ESP.cpp" />
@@ -300,6 +301,7 @@
     <ClInclude Include="DMA\DMA.h" />
     <ClInclude Include="DMA\Process.h" />
     <ClInclude Include="GUI\Color Picker\Color Picker.h" />
+    <ClInclude Include="GUI\Debug GUI\Class List\Class List.h" />
     <ClInclude Include="GUI\Debug GUI\Player List\Player List.h" />
     <ClInclude Include="GUI\Debug GUI\Trooper List\Trooper List.h" />
     <ClInclude Include="GUI\Debug\Player List\Player List.h" />

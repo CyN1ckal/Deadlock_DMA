@@ -24,11 +24,13 @@ public:
 	static inline bool bDrawBones{ true };
 	static inline bool bHideLocal{ true };
 	static inline bool bDrawTroopers{ true };
+	static inline bool bDrawCamps{ true };
 	static inline CNameTagSetings NameTagSettings{};
 
 private:
 	static void RenderPlayers(const ImVec2 WindowPos, ImDrawList* DrawList);
 	static void RenderTroopers();
+	static void RenderMonsterCamps();
 
 	static void DrawTrooper(CBaseEntity& Trooper);
 

@@ -17,6 +17,8 @@ void ESP::OnFrame()
 
 	if (bDrawTroopers) RenderTroopers();
 
+	if (bDrawCamps) RenderMonsterCamps();
+
 	ImGui::PopFont();
 }
 
@@ -33,6 +35,8 @@ void ESP::RenderSettings()
 		ImGui::Checkbox("Hide Local Player", &bHideLocal);
 
 		ImGui::Checkbox("Draw Troopers", &bDrawTroopers);
+
+		ImGui::Checkbox("Draw Monster Camps", &bDrawCamps);
 	}
 
 	if (ImGui::CollapsingHeader("Name Tags"))
@@ -86,6 +90,28 @@ void ESP::RenderTroopers()
 		if (Trooper.CurrentHealth < 1) continue;
 
 		DrawTrooper(Trooper);
+	}
+}
+
+void ESP::RenderMonsterCamps()
+{
+	std::scoped_lock Lock(EntityList::m_MonsterCampMutex);
+
+	for (auto& [Addr, Camp] : EntityList::m_MonsterCamps)
+	{
+		if (Camp.IsIncomplete()) continue;
+
+		if (Camp.IsDormant()) continue;
+
+		if (Camp.CurrentHealth < 1) continue;
+
+		Vector2 ScreenPos{};
+		if (!Deadlock::WorldToScreen(Camp.Position, ScreenPos)) continue;
+
+		std::string CampString = std::format("[{}]", Camp.CurrentHealth);
+		auto TextSize = ImGui::CalcTextSize(CampString.c_str());
+		ImGui::SetCursorPos({ ScreenPos.x - (TextSize.x / 2.0f), ScreenPos.y });
+		ImGui::Text(CampString.c_str());
 	}
 }
 

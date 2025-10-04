@@ -16,10 +16,11 @@ public: /* Interface methods */
 	static void UpdateEntityMap(DMA_Connection* Conn, Process* Proc);
 	static void UpdatePlayerControllers(DMA_Connection* Conn, Process* Proc);
 	static void UpdatePlayerPawns(DMA_Connection* Conn, Process* Proc);
+	static void UpdateBosses(DMA_Connection* Conn, Process* Proc);
 	static void UpdateTroopers(DMA_Connection* Conn, Process* Proc);
 	static void UpdateEntityClassMap(DMA_Connection* Conn, Process* Proc);
 
-	static void SortTroopers();
+	static void SortEntityList();
 
 	static uintptr_t GetEntityAddressFromHandle(CHandle Handle);
 
@@ -34,9 +35,13 @@ public: /* Interface variables */
 	static inline std::mutex m_TrooperMutex{};
 	static inline std::unordered_map<uintptr_t, CBaseEntity> m_Troopers{};
 
-private: /* Internal variables */
+	static inline std::mutex m_MonsterCampMutex{};
+	static inline std::unordered_map<uintptr_t, CBaseEntity> m_MonsterCamps{};
+
+	static inline std::mutex m_ClassMapMutex{};
 	static inline std::unordered_map<std::string, uintptr_t> m_EntityClassMap{};
 
+private: /* Internal variables */
 	static inline uintptr_t m_EntitySystem_Address = 0;
 	static inline std::array<uintptr_t, MAX_ENTITY_LISTS> m_EntityList_Addresses{};
 	static inline std::array<std::array<CEntityListEntry, MAX_ENTITIES>, MAX_ENTITY_LISTS> m_CompleteEntityList{};
@@ -44,9 +49,11 @@ private: /* Internal variables */
 	static inline std::vector<uintptr_t> m_PlayerController_Addresses{};
 	static inline std::vector<uintptr_t> m_PlayerPawn_Addresses{};
 	static inline std::vector<uintptr_t> m_TrooperAddresses{};
+	static inline std::vector<uintptr_t> m_BossAddresses{};
 
 public: /* Debug features */
 	static void PrintPlayerControllerAddresses();
 	static void PrintPlayerControllers();
 	static void PrintPlayerPawns();
+	static void PrintClassMap();
 };
