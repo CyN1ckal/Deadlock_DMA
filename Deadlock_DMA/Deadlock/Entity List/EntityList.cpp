@@ -68,44 +68,13 @@ void EntityList::UpdateEntityMap(DMA_Connection* Conn, Process* Proc)
 	VMMDLL_Scatter_CloseHandle(vmsh);
 }
 
-void EntityList::GetPlayerControllerAddresses()
-{
-	m_PlayerController_Addresses.clear();
-
-	for (int i = 1; i < 32; i++)
-	{
-		auto& Entry = m_CompleteEntityList[0][i];
-
-		if (Entry.NamePtr == 0)	continue;
-
-		m_PlayerController_Addresses.push_back(Entry.pEntity);
-	}
-}
-
-void EntityList::GetPlayerPawnAddresses()
-{
-	m_PlayerPawn_Addresses.clear();
-
-	for (auto& [addr, pc] : m_PlayerControllers)
-	{
-		if (!pc.m_hPawn.IsValid()) continue;
-		auto ListIndex = pc.m_hPawn.GetEntityListIndex();
-		auto EntityIndex = pc.m_hPawn.GetEntityEntryIndex();
-
-		auto& Entry = m_CompleteEntityList[ListIndex][EntityIndex];
-
-		if (Entry.pEntity == 0)	continue;
-
-		m_PlayerPawn_Addresses.push_back(Entry.pEntity);
-	}
-}
-
 void EntityList::SortEntityList()
 {
 	m_TrooperAddresses.clear();
 	m_PlayerPawn_Addresses.clear();
 	m_PlayerController_Addresses.clear();
 	m_MonsterCampAddresses.clear();
+	m_SinnersAddresses.clear();
 
 	uintptr_t PlayerControllerClassPtr = m_EntityClassMap["citadel_player_controller"];
 	uintptr_t PlayerPawnClassPtr = m_EntityClassMap["player"];
@@ -118,6 +87,10 @@ void EntityList::SortEntityList()
 	if (m_EntityClassMap.find("npc_trooper_neutral") != m_EntityClassMap.end())
 		MonsterCampClassPtr = m_EntityClassMap["npc_trooper_neutral"];
 
+	uintptr_t SinnerClassPtr = 0;
+	if (m_EntityClassMap.find("npc_neutral_sinners_sacrifce") != m_EntityClassMap.end())
+		SinnerClassPtr = m_EntityClassMap["npc_neutral_sinners_sacrifce"];
+
 	for (auto& List : m_CompleteEntityList)
 	{
 		for (auto& Entry : List)
@@ -126,6 +99,7 @@ void EntityList::SortEntityList()
 			else if (Entry.NamePtr == PlayerControllerClassPtr) m_PlayerController_Addresses.push_back(Entry.pEntity);
 			else if (Entry.NamePtr == PlayerPawnClassPtr) m_PlayerPawn_Addresses.push_back(Entry.pEntity);
 			else if (MonsterCampClassPtr && Entry.NamePtr == MonsterCampClassPtr) m_MonsterCampAddresses.push_back(Entry.pEntity);
+			else if (SinnerClassPtr && Entry.NamePtr == SinnerClassPtr) m_SinnersAddresses.push_back(Entry.pEntity);
 			else continue;
 		}
 	}
@@ -243,6 +217,34 @@ void EntityList::UpdateTroopers(DMA_Connection* Conn, Process* Proc)
 	{
 		auto& Trooper = m_Troopers[Addr];
 		CBaseEntity::Read_2(vmsh, Trooper, Addr);
+	}
+
+	VMMDLL_Scatter_Execute(vmsh);
+
+	VMMDLL_Scatter_CloseHandle(vmsh);
+}
+
+void EntityList::UpdateSinners(DMA_Connection* Conn, Process* Proc)
+{
+	std::scoped_lock Lock(m_SinnerMutex);
+	m_Sinners.clear();
+
+	auto vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
+
+	for (auto& Addr : m_SinnersAddresses)
+	{
+		auto& Sinner = m_Sinners[Addr];
+		CBaseEntity::Read_1(vmsh, Sinner, Addr, true);
+	}
+
+	VMMDLL_Scatter_Execute(vmsh);
+
+	VMMDLL_Scatter_Clear(vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
+
+	for (auto& Addr : m_SinnersAddresses)
+	{
+		auto& Sinner = m_Sinners[Addr];
+		CBaseEntity::Read_2(vmsh, Sinner, Addr);
 	}
 
 	VMMDLL_Scatter_Execute(vmsh);

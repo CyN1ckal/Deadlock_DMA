@@ -166,7 +166,7 @@ bool MainWindow::OnFrame()
 
 	//PlayerList::Render();
 	//TrooperList::Render();
-	ClassList::Render();
+	//ClassList::Render();
 
 	PostFrame();
 

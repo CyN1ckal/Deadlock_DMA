@@ -19,6 +19,8 @@ void ESP::OnFrame()
 
 	if (bDrawCamps) RenderMonsterCamps();
 
+	RenderSinners();
+
 	ImGui::PopFont();
 }
 
@@ -109,10 +111,42 @@ void ESP::RenderMonsterCamps()
 		if (!Deadlock::WorldToScreen(Camp.Position, ScreenPos)) continue;
 
 		std::string CampString = std::format("[{}]", Camp.CurrentHealth);
+
 		auto TextSize = ImGui::CalcTextSize(CampString.c_str());
+
 		ImGui::SetCursorPos({ ScreenPos.x - (TextSize.x / 2.0f), ScreenPos.y });
+
 		ImGui::Text(CampString.c_str());
 	}
+}
+
+void ESP::RenderSinners()
+{
+	std::scoped_lock Lock(EntityList::m_SinnerMutex);
+
+	ImGui::PushStyleColor(ImGuiCol_Text, ColorPicker::SinnersColor);
+
+	for (auto& [Addr, Sinner] : EntityList::m_Sinners)
+	{
+		if (Sinner.IsIncomplete()) continue;
+
+		if (Sinner.IsDormant()) continue;
+
+		if (Sinner.CurrentHealth < 1) continue;
+
+		Vector2 ScreenPos{};
+		if (!Deadlock::WorldToScreen(Sinner.Position, ScreenPos)) continue;
+
+		static const std::string SinnerString = "SS";
+
+		auto TextSize = ImGui::CalcTextSize(SinnerString.c_str());
+
+		ImGui::SetCursorPos({ ScreenPos.x - (TextSize.x / 2.0f), ScreenPos.y });
+
+		ImGui::Text(SinnerString.c_str());
+	}
+
+	ImGui::PopStyleColor(1);
 }
 
 void ESP::DrawTrooper(CBaseEntity& Trooper)
