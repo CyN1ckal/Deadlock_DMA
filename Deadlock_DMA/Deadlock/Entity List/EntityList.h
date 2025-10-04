@@ -49,7 +49,7 @@ private: /* Internal variables */
 	static inline std::vector<uintptr_t> m_PlayerController_Addresses{};
 	static inline std::vector<uintptr_t> m_PlayerPawn_Addresses{};
 	static inline std::vector<uintptr_t> m_TrooperAddresses{};
-	static inline std::vector<uintptr_t> m_BossAddresses{};
+	static inline std::vector<uintptr_t> m_MonsterCampAddresses{};
 
 public: /* Debug features */
 	static void PrintPlayerControllerAddresses();
