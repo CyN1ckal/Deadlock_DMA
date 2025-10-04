@@ -16,7 +16,7 @@ public:
 	void SetInvalid() { Flags |= 0x1; }
 	const bool IsFriendly() const;
 	const bool IsLocalPlayer(uintptr_t EntityAddress) const;
-	const float DistanceFromLocalPlayer() const;
+	const float DistanceFromLocalPlayer(bool bInMeters = 0) const;
 	const bool IsDormant() const { return Dormant; }
 
 public:

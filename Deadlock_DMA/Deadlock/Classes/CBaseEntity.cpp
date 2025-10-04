@@ -12,12 +12,18 @@ const bool CBaseEntity::IsLocalPlayer(uintptr_t EntityAddress) const
 	return EntityAddress == Deadlock::m_LocalPlayerControllerAddress;
 }
 
-const float CBaseEntity::DistanceFromLocalPlayer() const
+constexpr uint32_t HammerUnitsPerMeter = 52;
+const float CBaseEntity::DistanceFromLocalPlayer(bool bInMeters) const
 {
 	auto LocalPlayer = EntityList::m_PlayerPawns.find(Deadlock::m_LocalPlayerPawnAddress);
 
 	if (LocalPlayer == EntityList::m_PlayerPawns.end())
 		return 0.0f;
 
-	return Position.Distance(LocalPlayer->second.Position);
+	auto Distance = Position.Distance(LocalPlayer->second.Position);
+
+	if (bInMeters)
+		return Distance / HammerUnitsPerMeter; // Convert cm to m
+
+	return Distance;
 }

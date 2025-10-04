@@ -14,7 +14,7 @@ public: /* Interface methods */
 	static void UpdateEntityMap(DMA_Connection* Conn, Process* Proc);
 	static void UpdatePlayerControllers(DMA_Connection* Conn, Process* Proc);
 	static void UpdatePlayerPawns(DMA_Connection* Conn, Process* Proc);
-	static void UpdateBosses(DMA_Connection* Conn, Process* Proc);
+	static void UpdateMonsterCamps(DMA_Connection* Conn, Process* Proc);
 	static void UpdateTroopers(DMA_Connection* Conn, Process* Proc);
 	static void UpdateSinners(DMA_Connection* Conn, Process* Proc);
 	static void UpdateEntityClassMap(DMA_Connection* Conn, Process* Proc);

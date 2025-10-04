@@ -10,6 +10,14 @@ public:
 	bool bShowHeroName{ true };
 	bool bShowDistance{ true };
 	bool bShowHealth{ true };
+	bool bHideFriendly{ true };
+};
+
+class CSkeletonSettings
+{
+public:
+	bool bDrawSkeleton{ true };
+	bool bHideFriendly{ true };
 };
 
 class ESP
@@ -19,13 +27,13 @@ public:
 	static void RenderSettings();
 
 public:
-	static inline bool bHideFriendly{ true };
 	static inline bool bBoneNumbers{ false };
-	static inline bool bDrawBones{ true };
 	static inline bool bHideLocal{ true };
 	static inline bool bDrawTroopers{ true };
 	static inline bool bDrawCamps{ true };
+	static inline bool bDrawSinners{ true };
 	static inline CNameTagSetings NameTagSettings{};
+	static inline CSkeletonSettings SkeletonSettings{};
 
 private:
 	static void RenderPlayers(const ImVec2 WindowPos, ImDrawList* DrawList);

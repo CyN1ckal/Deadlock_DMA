@@ -14,5 +14,9 @@ void ColorPicker::RenderColorPicker()
 
 	ImGui::ColorEdit4("Enemy Bone Color", &ColorPicker::EnemyBoneColor.x);
 
+	ImGui::ColorEdit4("Sinner's Sacrifice Color", &ColorPicker::SinnersColor.x);
+
+	ImGui::ColorEdit4("Monster Camp Color", &ColorPicker::MonsterCampColor.x);
+
 	ImGui::End();
 }
