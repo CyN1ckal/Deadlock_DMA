@@ -10,6 +10,8 @@ void CCitadelPlayerPawn::DrawSkeleton(const ImVec2& WindowPos, ImDrawList* DrawL
 {
 	if (!hController.IsValid()) return;
 
+	if (ESP::SkeletonSettings.bHideFriendly && IsFriendly()) return;
+
 	const auto ControllerAddress = EntityList::GetEntityAddressFromHandle(hController);
 	auto& Controller = EntityList::m_PlayerControllers[ControllerAddress];
 
@@ -33,18 +35,20 @@ void CCitadelPlayerPawn::DrawSkeleton(const ImVec2& WindowPos, ImDrawList* DrawL
 
 void CCitadelPlayerPawn::DrawNameTag(const ImVec2& WindowPos, ImDrawList* DrawList, CCitadelPlayerController& AssociatedController) const
 {
+	if (ESP::NameTagSettings.bHideFriendly && IsFriendly()) return;
+
 	Vector2 ScreenPos{};
 	if (!Deadlock::WorldToScreen(Position, ScreenPos)) return;
 
 	std::string NameTagString{};
 
-	if (ESP::NameTagSettings.bShowLevel)	NameTagString += std::format("{0:d} ", AssociatedController.m_CurrentLevel);
+	if (ESP::NameTagSettings.bShowLevel)	NameTagString += std::format("L{0:d} ", AssociatedController.m_CurrentLevel);
 
 	if (ESP::NameTagSettings.bShowHeroName)	NameTagString += std::format("{0:s} ", AssociatedController.GetHeroName());
 
-	if (ESP::NameTagSettings.bShowHealth)	NameTagString += std::format("{0:d} ", AssociatedController.CurrentHealth);
+	if (ESP::NameTagSettings.bShowHealth)	NameTagString += std::format("{0:d}HP ", AssociatedController.CurrentHealth);
 
-	if (ESP::NameTagSettings.bShowDistance)	NameTagString += std::format("{0:.0f} ", this->DistanceFromLocalPlayer());
+	if (ESP::NameTagSettings.bShowDistance)	NameTagString += std::format("{0:.0f}m ", this->DistanceFromLocalPlayer(true));
 
 	if (NameTagString.back() == ' ') NameTagString.pop_back();
 

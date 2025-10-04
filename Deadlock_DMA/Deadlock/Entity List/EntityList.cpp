@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include "EntityList.h"
+#include "GUI/Fuser/ESP/ESP.h"
 
 void EntityList::FullUpdate(DMA_Connection* Conn, Process* Proc)
 {
@@ -166,8 +167,10 @@ void EntityList::UpdatePlayerPawns(DMA_Connection* Conn, Process* Proc)
 	VMMDLL_Scatter_CloseHandle(vmsh);
 }
 
-void EntityList::UpdateBosses(DMA_Connection* Conn, Process* Proc)
+void EntityList::UpdateMonsterCamps(DMA_Connection* Conn, Process* Proc)
 {
+	if (!ESP::bDrawCamps) return;
+
 	std::scoped_lock Lock(m_MonsterCampMutex);
 
 	m_MonsterCamps.clear();
@@ -197,6 +200,8 @@ void EntityList::UpdateBosses(DMA_Connection* Conn, Process* Proc)
 
 void EntityList::UpdateTroopers(DMA_Connection* Conn, Process* Proc)
 {
+	if (!ESP::bDrawTroopers) return;
+
 	std::scoped_lock Lock(m_TrooperMutex);
 
 	m_Troopers.clear();
@@ -226,7 +231,10 @@ void EntityList::UpdateTroopers(DMA_Connection* Conn, Process* Proc)
 
 void EntityList::UpdateSinners(DMA_Connection* Conn, Process* Proc)
 {
+	if (!ESP::bDrawSinners) return;
+
 	std::scoped_lock Lock(m_SinnerMutex);
+
 	m_Sinners.clear();
 
 	auto vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), Proc->GetPID(), VMMDLL_FLAG_NOCACHE);

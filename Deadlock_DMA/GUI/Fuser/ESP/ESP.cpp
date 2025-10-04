@@ -30,27 +30,42 @@ void ESP::RenderSettings()
 
 	if (ImGui::CollapsingHeader("Master Settings", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ImGui::Checkbox("Hide Friendly", &bHideFriendly);
-
-		ImGui::Checkbox("Draw Bones", &bDrawBones);
-
-		ImGui::Checkbox("Hide Local Player", &bHideLocal);
+		ImGui::Indent();
 
 		ImGui::Checkbox("Draw Troopers", &bDrawTroopers);
-
 		ImGui::Checkbox("Draw Monster Camps", &bDrawCamps);
+		ImGui::Checkbox("Draw Sinners", &bDrawSinners);
+		ImGui::SeparatorText("Filters");
+		ImGui::Checkbox("Hide Local Player", &bHideLocal);
+		ImGui::Unindent();
 	}
 
-	if (ImGui::CollapsingHeader("Name Tags"))
+	if (ImGui::CollapsingHeader("Player Name Tags"))
 	{
-		ImGui::Checkbox("Draw Name Tags", &NameTagSettings.bDrawNameTags);
-		ImGui::Checkbox("Show Distance", &NameTagSettings.bShowDistance);
+		ImGui::Indent();
+		ImGui::Checkbox("Draw Player Name Tags", &NameTagSettings.bDrawNameTags);
+		ImGui::Checkbox("Hide Friendly", &NameTagSettings.bHideFriendly);
 		ImGui::Checkbox("Show Level", &NameTagSettings.bShowLevel);
 		ImGui::Checkbox("Show Hero Name", &NameTagSettings.bShowHeroName);
+		ImGui::Checkbox("Show Health", &NameTagSettings.bShowHealth);
+		ImGui::Checkbox("Show Distance", &NameTagSettings.bShowDistance);
+		ImGui::Unindent();
+	}
+
+	if (ImGui::CollapsingHeader("Player Bones"))
+	{
+		ImGui::Indent();
+		ImGui::Checkbox("Draw Bones", &SkeletonSettings.bDrawSkeleton);
+		ImGui::Checkbox("Hide Friendly Bones", &SkeletonSettings.bHideFriendly);
+		ImGui::Unindent();
 	}
 
 	if (ImGui::CollapsingHeader("Debug"))
+	{
+		ImGui::Indent();
 		ImGui::Checkbox("Bone Numbers", &bBoneNumbers);
+		ImGui::Unindent();
+	}
 
 	ImGui::End();
 }
@@ -61,20 +76,23 @@ void ESP::RenderPlayers(const ImVec2 WindowPos, ImDrawList* DrawList)
 
 	for (auto& [Addr, Pawn] : EntityList::m_PlayerPawns)
 	{
+		if (Pawn.IsIncomplete()) continue;
+
 		auto AssociatedControllerAddr = EntityList::GetEntityAddressFromHandle(Pawn.hController);
 
 		if (bHideLocal && Pawn.IsLocalPlayer(AssociatedControllerAddr)) continue;
 
 		auto& Controller = EntityList::m_PlayerControllers[AssociatedControllerAddr];
 
+		if (Controller.IsIncomplete()) continue;
+
 		if (Controller.IsDead()) continue;
-		if (bHideFriendly && Controller.IsFriendly()) continue;
 
 		if (NameTagSettings.bDrawNameTags) Pawn.DrawNameTag(WindowPos, DrawList, Controller);
 
 		if (bBoneNumbers) Pawn.DrawBoneNumbers();
 
-		if (bDrawBones) Pawn.DrawSkeleton(WindowPos, DrawList);
+		if (SkeletonSettings.bDrawSkeleton) Pawn.DrawSkeleton(WindowPos, DrawList);
 	}
 }
 
@@ -99,6 +117,8 @@ void ESP::RenderMonsterCamps()
 {
 	std::scoped_lock Lock(EntityList::m_MonsterCampMutex);
 
+	ImGui::PushStyleColor(ImGuiCol_Text, ColorPicker::MonsterCampColor);
+
 	for (auto& [Addr, Camp] : EntityList::m_MonsterCamps)
 	{
 		if (Camp.IsIncomplete()) continue;
@@ -118,6 +138,8 @@ void ESP::RenderMonsterCamps()
 
 		ImGui::Text(CampString.c_str());
 	}
+
+	ImGui::PopStyleColor(1);
 }
 
 void ESP::RenderSinners()
