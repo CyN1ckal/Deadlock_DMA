@@ -31,6 +31,7 @@ private:
 	static void RenderPlayers(const ImVec2 WindowPos, ImDrawList* DrawList);
 	static void RenderTroopers();
 	static void RenderMonsterCamps();
+	static void RenderSinners();
 
 	static void DrawTrooper(CBaseEntity& Trooper);
 

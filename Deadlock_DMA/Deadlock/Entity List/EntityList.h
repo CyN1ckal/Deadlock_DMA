@@ -8,8 +8,6 @@ public: /* Interface methods */
 	static void FullUpdate(DMA_Connection* Conn, Process* Proc);
 
 	static void GetEntityListAddresses(DMA_Connection* Conn, Process* Proc);
-	static void GetPlayerControllerAddresses();
-	static void GetPlayerPawnAddresses();
 	static void GetEntitySystemAddress(DMA_Connection* Conn, Process* Proc);
 
 	static void UpdateCrucialInformation(DMA_Connection* Conn, Process* Proc);
@@ -18,6 +16,7 @@ public: /* Interface methods */
 	static void UpdatePlayerPawns(DMA_Connection* Conn, Process* Proc);
 	static void UpdateBosses(DMA_Connection* Conn, Process* Proc);
 	static void UpdateTroopers(DMA_Connection* Conn, Process* Proc);
+	static void UpdateSinners(DMA_Connection* Conn, Process* Proc);
 	static void UpdateEntityClassMap(DMA_Connection* Conn, Process* Proc);
 
 	static void SortEntityList();
@@ -41,6 +40,9 @@ public: /* Interface variables */
 	static inline std::mutex m_ClassMapMutex{};
 	static inline std::unordered_map<std::string, uintptr_t> m_EntityClassMap{};
 
+	static inline std::mutex m_SinnerMutex{};
+	static inline std::unordered_map<uintptr_t, CBaseEntity> m_Sinners{};
+
 private: /* Internal variables */
 	static inline uintptr_t m_EntitySystem_Address = 0;
 	static inline std::array<uintptr_t, MAX_ENTITY_LISTS> m_EntityList_Addresses{};
@@ -50,6 +52,7 @@ private: /* Internal variables */
 	static inline std::vector<uintptr_t> m_PlayerPawn_Addresses{};
 	static inline std::vector<uintptr_t> m_TrooperAddresses{};
 	static inline std::vector<uintptr_t> m_MonsterCampAddresses{};
+	static inline std::vector<uintptr_t> m_SinnersAddresses{};
 
 public: /* Debug features */
 	static void PrintPlayerControllerAddresses();

@@ -12,19 +12,7 @@ bool Deadlock::Initialize(DMA_Connection* Conn)
 
 	Process.GetProcessInfo("deadlock.exe", Conn);
 
-	EntityList::UpdateCrucialInformation(Conn, &Process);
-
-	EntityList::UpdateEntityMap(Conn, &Process);
-
-	EntityList::UpdateEntityClassMap(Conn, &Process);
-
-	EntityList::GetPlayerControllerAddresses();
-
-	EntityList::UpdatePlayerControllers(Conn, &Process);
-
-	EntityList::GetPlayerPawnAddresses();
-
-	EntityList::UpdatePlayerPawns(Conn, &Process);
+	EntityList::FullUpdate(Conn, &Process);
 
 	UpdateLocalPlayerControllerAddress(Conn);
 
