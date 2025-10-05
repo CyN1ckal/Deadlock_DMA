@@ -12,6 +12,14 @@ namespace Offsets
 	// 49 8D 87 ? ? ? ? 48 C1 E2 //
 	inline constexpr std::ptrdiff_t ViewMatrix = 0x2B5C5E0;
 
+	// 48 8B 05 ? ? ? ? 38 58 //
+	inline constexpr std::ptrdiff_t PredictionPtr = 0x2495708;
+
+	namespace Prediction
+	{
+		inline constexpr std::ptrdiff_t ServerTime = 0x68;
+	}
+
 	namespace SceneNode
 	{
 		inline constexpr std::ptrdiff_t Position = 0xD0;
@@ -44,9 +52,10 @@ namespace Offsets
 		namespace PlayerDataOffsets
 		{
 			inline constexpr std::ptrdiff_t Level = 0x8;
-			inline constexpr std::ptrdiff_t CurrentHealth = 0x4C;
 			inline constexpr std::ptrdiff_t MaxHealth = 0x10;
 			inline constexpr std::ptrdiff_t HeroID = 0x1C;
+			inline constexpr std::ptrdiff_t TotalSouls = 0x24;
+			inline constexpr std::ptrdiff_t CurrentHealth = 0x4C;
 		}
 	}
 }

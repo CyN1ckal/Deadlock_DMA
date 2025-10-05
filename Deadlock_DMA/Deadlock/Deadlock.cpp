@@ -16,6 +16,8 @@ bool Deadlock::Initialize(DMA_Connection* Conn)
 
 	UpdateLocalPlayerControllerAddress(Conn);
 
+	GetPredictionAddress(Conn);
+
 	return false;
 }
 
@@ -61,9 +63,27 @@ bool Deadlock::WorldToScreen(const Vector3& Pos, Vector2& ScreenPos)
 
 bool Deadlock::UpdateLocalPlayerControllerAddress(DMA_Connection* Conn)
 {
+	std::scoped_lock Lock(m_LocalAddressMutex);
+
 	uintptr_t LocalPlayerControllerAddress = Proc().GetClientBase() + Offsets::LocalController;
 	m_LocalPlayerControllerAddress = Proc().ReadMem<uintptr_t>(Conn, LocalPlayerControllerAddress);
 	m_LocalPlayerPawnAddress = EntityList::GetEntityAddressFromHandle(EntityList::m_PlayerControllers[m_LocalPlayerControllerAddress].m_hPawn);
 
 	return false;
+}
+
+void Deadlock::GetPredictionAddress(DMA_Connection* Conn)
+{
+	uintptr_t PredictionPtrAddress = Proc().GetClientBase() + Offsets::PredictionPtr;
+	m_PredictionAddress = Proc().ReadMem<uintptr_t>(Conn, PredictionPtrAddress);
+}
+
+void Deadlock::UpdateServerTime(DMA_Connection* Conn)
+{
+	if (!m_PredictionAddress) return;
+
+	uintptr_t ServerTimeAddress = m_PredictionAddress + Offsets::Prediction::ServerTime;
+
+	std::scoped_lock lock(m_ServerTimeMutex);
+	m_ServerTime = Proc().ReadMem<float>(Conn, ServerTimeAddress);
 }

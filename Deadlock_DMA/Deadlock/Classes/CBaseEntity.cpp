@@ -4,11 +4,13 @@
 
 const bool CBaseEntity::IsFriendly() const
 {
+	std::scoped_lock lock(Deadlock::m_LocalAddressMutex);
 	return TeamNum == EntityList::m_PlayerControllers[Deadlock::m_LocalPlayerControllerAddress].TeamNum;
 }
 
 const bool CBaseEntity::IsLocalPlayer(uintptr_t EntityAddress) const
 {
+	std::scoped_lock lock(Deadlock::m_LocalAddressMutex);	
 	return EntityAddress == Deadlock::m_LocalPlayerControllerAddress;
 }
 
