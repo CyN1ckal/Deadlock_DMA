@@ -10,6 +10,7 @@ public:
 	CHandle m_hPawn{ 0 };
 	int32_t m_CurrentLevel{ 0 };
 	int32_t m_MaxHealth{ 0 };
+	int32_t m_TotalSouls{ 0 };
 	HeroId m_HeroID{ 0 };
 
 public:
@@ -44,6 +45,9 @@ public:
 
 		uintptr_t HeroIDAddress = PlayerDataAddress + Offsets::Controller::PlayerDataOffsets::HeroID;
 		VMMDLL_Scatter_PrepareEx(vmsh, HeroIDAddress, sizeof(int32_t), reinterpret_cast<BYTE*>(&Controller.m_HeroID), nullptr);
+
+		uintptr_t TotalSoulsAddress = PlayerDataAddress + Offsets::Controller::PlayerDataOffsets::TotalSouls;
+		VMMDLL_Scatter_PrepareEx(vmsh, TotalSoulsAddress, sizeof(int32_t), reinterpret_cast<BYTE*>(&Controller.m_TotalSouls), nullptr);
 	}
 
 private:
