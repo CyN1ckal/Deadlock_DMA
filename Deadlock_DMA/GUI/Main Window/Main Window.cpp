@@ -8,6 +8,7 @@
 #include "GUI/Debug GUI/Trooper List/Trooper List.h"
 #include "GUI/Debug GUI/Class List/Class List.h"
 #include "GUI/Color Picker/Color Picker.h"
+#include "GUI/Radar/Radar.h"
 
 #include "Styles/DeepDark.hpp"
 
@@ -106,7 +107,7 @@ bool MainWindow::Initialize()
 
 	wc = { sizeof(wc), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(nullptr), nullptr, nullptr, nullptr, nullptr, L"MainWindow", nullptr };
 	::RegisterClassExW(&wc);
-	g_hWnd = ::CreateWindowEx(NULL, wc.lpszClassName, L"Deadlock DMA", WS_OVERLAPPED, 100, 100, 800, 800, nullptr, nullptr, wc.hInstance, nullptr);
+	g_hWnd = ::CreateWindowEx(NULL, wc.lpszClassName, L"Deadlock DMA", WS_OVERLAPPEDWINDOW, 100, 100, 800, 800, nullptr, nullptr, wc.hInstance, nullptr);
 	// Initialize Direct3D
 	if (!CreateDeviceD3D(g_hWnd))
 	{
@@ -163,6 +164,9 @@ bool MainWindow::OnFrame()
 	ESP::RenderSettings();
 
 	ColorPicker::RenderColorPicker();
+
+	Radar::Render();
+	Radar::RenderSettings();
 
 	//PlayerList::Render();
 	//TrooperList::Render();

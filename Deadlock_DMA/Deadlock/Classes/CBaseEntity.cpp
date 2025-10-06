@@ -10,8 +10,8 @@ const bool CBaseEntity::IsFriendly() const
 
 const bool CBaseEntity::IsLocalPlayer(uintptr_t EntityAddress) const
 {
-	std::scoped_lock lock(Deadlock::m_LocalAddressMutex);	
-	return EntityAddress == Deadlock::m_LocalPlayerControllerAddress;
+	std::scoped_lock lock(Deadlock::m_LocalAddressMutex);
+	return EntityAddress == Deadlock::m_LocalPlayerControllerAddress || EntityAddress == Deadlock::m_LocalPlayerPawnAddress;
 }
 
 constexpr uint32_t HammerUnitsPerMeter = 52;

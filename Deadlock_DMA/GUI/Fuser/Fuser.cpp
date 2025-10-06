@@ -5,6 +5,8 @@
 
 void Fuser::OnFrame()
 {
+	if (!bFuser) return;
+
 	ImGui::SetNextWindowPos({ 100,100 }, ImGuiCond_FirstUseEver);
 
 	ImGui::PushStyleColor(ImGuiCol_WindowBg, IM_COL32(0, 0, 0, 0));
@@ -26,6 +28,8 @@ void Fuser::OnFrame()
 void Fuser::RenderSettings()
 {
 	ImGui::Begin("Fuser Settings");
+
+	ImGui::Checkbox("Enable Fuser", &bFuser);
 
 	ImGui::PushItemWidth(60.0f);
 
@@ -52,7 +56,7 @@ void Fuser::RenderSoulsPerMinute()
 		auto SoulsPerSecond = static_cast<float>(It->second.m_TotalSouls) / Deadlock::m_ServerTime;
 		auto SoulsPerMinute = SoulsPerSecond * 60.0f;
 		ImGui::PushFont(nullptr, 16.0f);
-		ImGui::SetCursorPos({ 2.0f, ScreenSize.y - ImGui::GetTextLineHeight()});
+		ImGui::SetCursorPos({ 2.0f, ScreenSize.y - ImGui::GetTextLineHeight() });
 		ImGui::Text("%.1f Souls/Min", SoulsPerMinute);
 		ImGui::PopFont();
 	}

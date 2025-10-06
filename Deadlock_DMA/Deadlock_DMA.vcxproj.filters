@@ -84,6 +84,9 @@
     <ClCompile Include="GUI\Debug GUI\Class List\Class List.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GUI\Radar\Radar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -192,6 +195,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GUI\Debug GUI\Class List\Class List.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Radar\Radar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
