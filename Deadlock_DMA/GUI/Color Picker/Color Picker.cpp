@@ -18,5 +18,9 @@ void ColorPicker::RenderColorPicker()
 
 	ImGui::ColorEdit4("Monster Camp Color", &ColorPicker::MonsterCampColor.x);
 
+	ImGui::ColorEdit4("Friendly Radar Color", &ColorPicker::FriendlyRadarColor.x);
+
+	ImGui::ColorEdit4("Enemy Radar Color", &ColorPicker::EnemyRadarColor.x);
+
 	ImGui::End();
 }

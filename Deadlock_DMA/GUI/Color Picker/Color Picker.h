@@ -12,4 +12,6 @@ public:
 	static inline ImVec4 FriendlyBoneColor{ 0.0f,1.0f,1.0f,1.0f };
 	static inline ImVec4 SinnersColor{ 0.65f,0.05f,0.7f,1.0f };
 	static inline ImVec4 MonsterCampColor{ 0.8f,0.8f,0.8f,1.0f };
+	static inline ImVec4 FriendlyRadarColor{ 0.0f,1.0f,1.0f,1.0f };
+	static inline ImVec4 EnemyRadarColor{ 1.0f,0.0f,0.0f,1.0f };
 };

@@ -31,4 +31,9 @@ public:
 	static inline float m_ServerTime = 0.0f;
 	static void GetPredictionAddress(DMA_Connection* Conn);
 	static void UpdateServerTime(DMA_Connection* Conn);
+
+public:
+	static inline std::mutex m_ClientYawMutex{};
+	static inline float m_ClientYaw = 0.0f;
+	static void UpdateClientYaw(DMA_Connection* Conn);
 };

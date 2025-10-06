@@ -15,6 +15,10 @@ namespace Offsets
 	// 48 8B 05 ? ? ? ? 38 58 //
 	inline constexpr std::ptrdiff_t PredictionPtr = 0x2495708;
 
+	// F2 0F 11 05 ? ? ? ? 89 05 ? ? ? ? F2 0F 10 06 //
+	// Points to float pitch, followed by float yaw
+	inline constexpr std::ptrdiff_t Rotation = 0x2B5CE20;
+
 	namespace Prediction
 	{
 		inline constexpr std::ptrdiff_t ServerTime = 0x68;

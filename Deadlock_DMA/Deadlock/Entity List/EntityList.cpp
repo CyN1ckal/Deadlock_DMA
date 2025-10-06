@@ -21,7 +21,12 @@ void EntityList::UpdateCrucialInformation(DMA_Connection* Conn, Process* Proc)
 void EntityList::GetEntitySystemAddress(DMA_Connection* Conn, Process* Proc)
 {
 	uintptr_t EntitySystemPointer = Proc->GetModuleAddress("client.dll") + Offsets::GameEntitySystem;
-	m_EntitySystem_Address = Proc->ReadMem<uintptr_t>(Conn, EntitySystemPointer);
+	uintptr_t LatestAddr = Proc->ReadMem<uintptr_t>(Conn, EntitySystemPointer);
+
+	if (LatestAddr == m_EntitySystem_Address) return;
+
+	m_EntitySystem_Address = LatestAddr;
+
 	std::println("Entity System Address: 0x{:X}", m_EntitySystem_Address);
 }
 
@@ -272,8 +277,6 @@ uintptr_t EntityList::GetEntityAddressFromHandle(CHandle Handle)
 
 void EntityList::UpdateEntityClassMap(DMA_Connection* Conn, Process* Proc)
 {
-	std::println("Updating Entity Class Types...");
-
 	std::vector<uintptr_t> UniqueClassNames{};
 
 	for (auto& List : m_CompleteEntityList)

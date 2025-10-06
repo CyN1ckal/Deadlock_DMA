@@ -87,3 +87,10 @@ void Deadlock::UpdateServerTime(DMA_Connection* Conn)
 	std::scoped_lock lock(m_ServerTimeMutex);
 	m_ServerTime = Proc().ReadMem<float>(Conn, ServerTimeAddress);
 }
+
+void Deadlock::UpdateClientYaw(DMA_Connection* Conn)
+{
+	std::scoped_lock Lock(m_ClientYawMutex);
+	uintptr_t YawAddress = Proc().GetClientBase() + Offsets::Rotation + sizeof(float);
+	m_ClientYaw = Proc().ReadMem<float>(Conn, YawAddress);
+}
