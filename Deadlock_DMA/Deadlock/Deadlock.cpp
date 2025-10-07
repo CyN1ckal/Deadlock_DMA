@@ -12,6 +12,8 @@ bool Deadlock::Initialize(DMA_Connection* Conn)
 
 	Process.GetProcessInfo("deadlock.exe", Conn);
 
+	Offsets::ResolveOffsets(Conn);
+
 	EntityList::FullUpdate(Conn, &Process);
 
 	UpdateLocalPlayerControllerAddress(Conn);
