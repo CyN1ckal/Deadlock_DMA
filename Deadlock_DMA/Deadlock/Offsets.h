@@ -1,23 +1,21 @@
 #pragma once
+#include "DMA/MultiScan.h"
 
 namespace Offsets
 {
-	// 48 8B 0D ? ? ? ? 8B FD //
-	inline constexpr std::ptrdiff_t GameEntitySystem = 0x26EC5D8;
+	bool ResolveOffsets(DMA_Connection* Conn);
+	bool ResolveGameEntitySystem(MultiScan& ms, DMA_Connection* Conn);
+	bool ResolveLocalController(MultiScan& ms, DMA_Connection* Conn);
+	bool ResolveViewMatrix(MultiScan& ms, DMA_Connection* Conn);
+	bool ResolvePredictionPtr(MultiScan& ms, DMA_Connection* Conn);
+	bool ResolveRotation(MultiScan& ms, DMA_Connection* Conn);
+
 	inline constexpr std::ptrdiff_t FirstEntityList = 0x10;
-
-	// 48 3B 35 //
-	inline constexpr std::ptrdiff_t LocalController = 0x2B3E4B8;
-	
-	// 49 8D 87 ? ? ? ? 48 C1 E2 //
-	inline constexpr std::ptrdiff_t ViewMatrix = 0x2B5C5E0;
-
-	// 48 8B 05 ? ? ? ? 38 58 //
-	inline constexpr std::ptrdiff_t PredictionPtr = 0x2495708;
-
-	// F2 0F 11 05 ? ? ? ? 89 05 ? ? ? ? F2 0F 10 06 //
-	// Points to float pitch, followed by float yaw
-	inline constexpr std::ptrdiff_t Rotation = 0x2B5CE20;
+	inline std::ptrdiff_t GameEntitySystem = 0;
+	inline std::ptrdiff_t LocalController = 0;
+	inline std::ptrdiff_t ViewMatrix = 0;
+	inline std::ptrdiff_t PredictionPtr = 0;
+	inline std::ptrdiff_t Rotation = 0;
 
 	namespace Prediction
 	{
