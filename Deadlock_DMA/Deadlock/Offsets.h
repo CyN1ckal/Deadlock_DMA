@@ -48,8 +48,8 @@ namespace Offsets
 
 	namespace Controller
 	{
-		inline constexpr std::ptrdiff_t PlayerData = 0x8B8;
-		inline constexpr std::ptrdiff_t m_hPawn = 0x6B4;
+		inline constexpr std::ptrdiff_t PlayerData = 0x8e0;
+		inline constexpr std::ptrdiff_t m_hPawn = 0x89c;
 
 		namespace PlayerDataOffsets
 		{
