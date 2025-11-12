@@ -15,13 +15,13 @@ void TrooperList::Render()
 
 	ImGui::Checkbox("Hide Friendly", &bHideFriendly);
 
-	for(auto& [Addr, Trooper] : EntityList::m_Troopers)
+	for(auto& Trooper : EntityList::m_Troopers)
 	{
-		if (Trooper.IsIncomplete()) continue;
+		if (Trooper.IsInvalid()) continue;
 		
 		if (bHideFriendly && Trooper.IsFriendly()) continue;
 
-		auto String = std::format("{0:X} {1:d}", Addr, Trooper.TeamNum);
+		auto String = std::format("{0:X} {1:d}", Trooper.m_EntityAddress, Trooper.m_TeamNum);
 
 		ImGui::Text(String.c_str());
 	}

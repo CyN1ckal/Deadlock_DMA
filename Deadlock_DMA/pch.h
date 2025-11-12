@@ -6,6 +6,12 @@
 #include <array>
 #include <memory>
 
+#ifdef DBGPRINT
+#define DbgPrintln(...) std::println(__VA_ARGS__)
+#else
+#define DbgPrintln(...)
+#endif
+
 #include "vmmdll.h"
 
 #include "Scheduler.hpp"

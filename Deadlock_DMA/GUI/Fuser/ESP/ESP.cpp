@@ -74,21 +74,26 @@ void ESP::RenderPlayers(const ImVec2 WindowPos, ImDrawList* DrawList)
 {
 	std::scoped_lock lock(EntityList::m_PawnMutex, EntityList::m_ControllerMutex);
 
-	for (auto& [Addr, Pawn] : EntityList::m_PlayerPawns)
+	for (auto& Pawn : EntityList::m_PlayerPawns)
 	{
-		if (Pawn.IsIncomplete()) continue;
+		if (Pawn.IsInvalid()) continue;
 
-		auto AssociatedControllerAddr = EntityList::GetEntityAddressFromHandle(Pawn.hController);
+		auto AssociatedControllerAddr = EntityList::GetEntityAddressFromHandle(Pawn.m_hController);
 
-		if (bHideLocal && Pawn.IsLocalPlayer(AssociatedControllerAddr)) continue;
+		if (!AssociatedControllerAddr) continue;
 
-		auto& Controller = EntityList::m_PlayerControllers[AssociatedControllerAddr];
+		if (bHideLocal && Pawn.IsLocalPlayer()) continue;
 
-		if (Controller.IsIncomplete()) continue;
+		auto ControllerIt = std::find(EntityList::m_PlayerControllers.begin(), EntityList::m_PlayerControllers.end(), AssociatedControllerAddr);
 
-		if (Controller.IsDead()) continue;
+		if (ControllerIt == EntityList::m_PlayerControllers.end())
+			continue;
 
-		if (NameTagSettings.bDrawNameTags) Pawn.DrawNameTag(WindowPos, DrawList, Controller);
+		if (ControllerIt->IsInvalid()) continue;
+
+		if (ControllerIt->IsDead()) continue;
+
+		if (NameTagSettings.bDrawNameTags) Pawn.DrawNameTag(WindowPos, DrawList, *ControllerIt);
 
 		if (bBoneNumbers) Pawn.DrawBoneNumbers();
 
@@ -101,13 +106,13 @@ void ESP::RenderTroopers()
 	/* m_ControllerMutex is required for friendly check */
 	std::scoped_lock Lock(EntityList::m_TrooperMutex, EntityList::m_ControllerMutex);
 
-	for (auto& [Addr, Trooper] : EntityList::m_Troopers)
+	for (auto& Trooper : EntityList::m_Troopers)
 	{
-		if (Trooper.IsIncomplete()) continue;
+		if (Trooper.IsInvalid()) continue;
 
 		if (Trooper.IsDormant()) continue;
 
-		if (Trooper.CurrentHealth < 1) continue;
+		if (Trooper.m_CurrentHealth < 1) continue;
 
 		DrawTrooper(Trooper);
 	}
@@ -119,18 +124,18 @@ void ESP::RenderMonsterCamps()
 
 	ImGui::PushStyleColor(ImGuiCol_Text, ColorPicker::MonsterCampColor);
 
-	for (auto& [Addr, Camp] : EntityList::m_MonsterCamps)
+	for (auto& Camp : EntityList::m_MonsterCamps)
 	{
-		if (Camp.IsIncomplete()) continue;
+		if (Camp.IsInvalid()) continue;
 
 		if (Camp.IsDormant()) continue;
 
-		if (Camp.CurrentHealth < 1) continue;
+		if (Camp.m_CurrentHealth < 1) continue;
 
 		Vector2 ScreenPos{};
-		if (!Deadlock::WorldToScreen(Camp.Position, ScreenPos)) continue;
+		if (!Deadlock::WorldToScreen(Camp.m_Position, ScreenPos)) continue;
 
-		std::string CampString = std::format("[{}]", Camp.CurrentHealth);
+		std::string CampString = std::format("[{}]", Camp.m_CurrentHealth);
 
 		auto TextSize = ImGui::CalcTextSize(CampString.c_str());
 
@@ -148,16 +153,16 @@ void ESP::RenderSinners()
 
 	ImGui::PushStyleColor(ImGuiCol_Text, ColorPicker::SinnersColor);
 
-	for (auto& [Addr, Sinner] : EntityList::m_Sinners)
+	for (auto& Sinner : EntityList::m_Sinners)
 	{
-		if (Sinner.IsIncomplete()) continue;
+		if (Sinner.IsInvalid()) continue;
 
 		if (Sinner.IsDormant()) continue;
 
-		if (Sinner.CurrentHealth < 1) continue;
+		if (Sinner.m_CurrentHealth < 1) continue;
 
 		Vector2 ScreenPos{};
-		if (!Deadlock::WorldToScreen(Sinner.Position, ScreenPos)) continue;
+		if (!Deadlock::WorldToScreen(Sinner.m_Position, ScreenPos)) continue;
 
 		static const std::string SinnerString = "SS";
 
@@ -174,9 +179,9 @@ void ESP::RenderSinners()
 void ESP::DrawTrooper(CBaseEntity& Trooper)
 {
 	Vector2 ScreenPos{};
-	if (!Deadlock::WorldToScreen(Trooper.Position, ScreenPos)) return;
+	if (!Deadlock::WorldToScreen(Trooper.m_Position, ScreenPos)) return;
 
-	auto HealthString = std::to_string(Trooper.CurrentHealth);
+	auto HealthString = std::to_string(Trooper.m_CurrentHealth);
 	auto TextSize = ImGui::CalcTextSize(HealthString.c_str());
 
 	ImGui::PushStyleColor(ImGuiCol_Text, (Trooper.IsFriendly()) ? ColorPicker::FriendlyNameTagColor : ColorPicker::EnemyNameTagColor);

@@ -72,6 +72,8 @@ void EntityList::UpdateEntityMap(DMA_Connection* Conn, Process* Proc)
 	VMMDLL_Scatter_Execute(vmsh);
 
 	VMMDLL_Scatter_CloseHandle(vmsh);
+
+	DbgPrintln("Entity Map Updated.");
 }
 
 void EntityList::SortEntityList()
@@ -111,68 +113,66 @@ void EntityList::SortEntityList()
 	}
 }
 
-void EntityList::UpdatePlayerControllers(DMA_Connection* Conn, Process* Proc)
+void EntityList::FullControllerRefresh(DMA_Connection* Conn, Process* Proc)
 {
 	std::scoped_lock Lock(m_ControllerMutex);
 
 	m_PlayerControllers.clear();
 
+	for (auto& addr : m_PlayerController_Addresses)
+		m_PlayerControllers.emplace_back(CCitadelPlayerController(addr));
+
 	auto vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
-	for (auto& pcAddr : m_PlayerController_Addresses)
-	{
-		auto&& PC = m_PlayerControllers[pcAddr];
-		CBaseEntity::Read_1(vmsh, PC, pcAddr);
-		CCitadelPlayerController::Read_1(vmsh, PC, pcAddr);
-	}
+	for (auto& PC : m_PlayerControllers)
+		PC.PrepareRead_1(vmsh);
+
+	VMMDLL_Scatter_Execute(vmsh);
+
+	VMMDLL_Scatter_Clear(vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
+
+	for (auto& PC : m_PlayerControllers)
+		PC.PrepareRead_2(vmsh);
 
 	VMMDLL_Scatter_Execute(vmsh);
 
 	VMMDLL_Scatter_CloseHandle(vmsh);
 }
 
-void EntityList::UpdatePlayerPawns(DMA_Connection* Conn, Process* Proc)
+void EntityList::FullPawnRefresh(DMA_Connection* Conn, Process* Proc)
 {
 	std::scoped_lock Lock(m_PawnMutex);
 
 	m_PlayerPawns.clear();
 
+	for (auto& addr : m_PlayerPawn_Addresses)
+		m_PlayerPawns.emplace_back(CCitadelPlayerPawn(addr));
+
 	auto vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
-	for (auto& pcAddr : m_PlayerPawn_Addresses)
-	{
-		auto&& Pawn = m_PlayerPawns[pcAddr];
-		CBaseEntity::Read_1(vmsh, Pawn, pcAddr);
-		CCitadelPlayerPawn::Read_1(vmsh, Pawn, pcAddr);
-	}
+	for (auto& Pawn : m_PlayerPawns)
+		Pawn.PrepareRead_1(vmsh);
 
 	VMMDLL_Scatter_Execute(vmsh);
 
 	VMMDLL_Scatter_Clear(vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
-	for (auto& pcAddr : m_PlayerPawn_Addresses)
-	{
-		auto&& Pawn = m_PlayerPawns[pcAddr];
-		CBaseEntity::Read_2(vmsh, Pawn, pcAddr);
-		CCitadelPlayerPawn::Read_2(vmsh, Pawn, pcAddr);
-	}
+	for (auto& Pawn : m_PlayerPawns)
+		Pawn.PrepareRead_2(vmsh);
 
 	VMMDLL_Scatter_Execute(vmsh);
 
 	VMMDLL_Scatter_Clear(vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
-	for (auto& pcAddr : m_PlayerPawn_Addresses)
-	{
-		auto&& Pawn = m_PlayerPawns[pcAddr];
-		CCitadelPlayerPawn::Read_3(vmsh, Pawn, pcAddr);
-	}
+	for (auto& Pawn : m_PlayerPawns)
+		Pawn.PrepareRead_3(vmsh);
 
 	VMMDLL_Scatter_Execute(vmsh);
 
 	VMMDLL_Scatter_CloseHandle(vmsh);
 }
 
-void EntityList::UpdateMonsterCamps(DMA_Connection* Conn, Process* Proc)
+void EntityList::FullMonsterCampRefresh(DMA_Connection* Conn, Process* Proc)
 {
 	if (!ESP::bDrawCamps) return;
 
@@ -180,30 +180,27 @@ void EntityList::UpdateMonsterCamps(DMA_Connection* Conn, Process* Proc)
 
 	m_MonsterCamps.clear();
 
+	for (auto& addr : m_MonsterCampAddresses)
+		m_MonsterCamps.emplace_back(CBaseEntity(addr));
+
 	auto vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
-	for (auto& Addr : m_MonsterCampAddresses)
-	{
-		auto& Boss = m_MonsterCamps[Addr];
-		CBaseEntity::Read_1(vmsh, Boss, Addr, true);
-	}
+	for (auto& Camp : m_MonsterCamps)
+		Camp.PrepareRead_1(vmsh);
 
 	VMMDLL_Scatter_Execute(vmsh);
 
 	VMMDLL_Scatter_Clear(vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
-	for (auto& Addr : m_MonsterCampAddresses)
-	{
-		auto& Boss = m_MonsterCamps[Addr];
-		CBaseEntity::Read_2(vmsh, Boss, Addr);
-	}
+	for (auto& Camp : m_MonsterCamps)
+		Camp.PrepareRead_2(vmsh);
 
 	VMMDLL_Scatter_Execute(vmsh);
 
 	VMMDLL_Scatter_CloseHandle(vmsh);
 }
 
-void EntityList::UpdateTroopers(DMA_Connection* Conn, Process* Proc)
+void EntityList::FullTrooperRefresh(DMA_Connection* Conn, Process* Proc)
 {
 	if (!ESP::bDrawTroopers) return;
 
@@ -211,30 +208,27 @@ void EntityList::UpdateTroopers(DMA_Connection* Conn, Process* Proc)
 
 	m_Troopers.clear();
 
+	for (auto& addr : m_TrooperAddresses)
+		m_Troopers.emplace_back(CBaseEntity(addr));
+
 	auto vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
-	for (auto& Addr : m_TrooperAddresses)
-	{
-		auto& Trooper = m_Troopers[Addr];
-		CBaseEntity::Read_1(vmsh, Trooper, Addr, true);
-	}
+	for (auto& Trooper : m_Troopers)
+		Trooper.PrepareRead_1(vmsh);
 
 	VMMDLL_Scatter_Execute(vmsh);
 
 	VMMDLL_Scatter_Clear(vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
-	for (auto& Addr : m_TrooperAddresses)
-	{
-		auto& Trooper = m_Troopers[Addr];
-		CBaseEntity::Read_2(vmsh, Trooper, Addr);
-	}
+	for (auto& Trooper : m_Troopers)
+		Trooper.PrepareRead_2(vmsh);
 
 	VMMDLL_Scatter_Execute(vmsh);
 
 	VMMDLL_Scatter_CloseHandle(vmsh);
 }
 
-void EntityList::UpdateSinners(DMA_Connection* Conn, Process* Proc)
+void EntityList::FullSinnerRefresh(DMA_Connection* Conn, Process* Proc)
 {
 	if (!ESP::bDrawSinners) return;
 
@@ -242,23 +236,20 @@ void EntityList::UpdateSinners(DMA_Connection* Conn, Process* Proc)
 
 	m_Sinners.clear();
 
+	for (auto& addr : m_SinnersAddresses)
+		m_Sinners.emplace_back(CBaseEntity(addr));
+
 	auto vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
-	for (auto& Addr : m_SinnersAddresses)
-	{
-		auto& Sinner = m_Sinners[Addr];
-		CBaseEntity::Read_1(vmsh, Sinner, Addr, true);
-	}
+	for (auto& Sinner : m_Sinners)
+		Sinner.PrepareRead_1(vmsh);
 
 	VMMDLL_Scatter_Execute(vmsh);
 
 	VMMDLL_Scatter_Clear(vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
-	for (auto& Addr : m_SinnersAddresses)
-	{
-		auto& Sinner = m_Sinners[Addr];
-		CBaseEntity::Read_2(vmsh, Sinner, Addr);
-	}
+	for (auto& Sinner : m_Sinners)
+		Sinner.PrepareRead_2(vmsh);
 
 	VMMDLL_Scatter_Execute(vmsh);
 
@@ -323,6 +314,8 @@ void EntityList::UpdateEntityClassMap(DMA_Connection* Conn, Process* Proc)
 
 		m_EntityClassMap[Name] = NamePtr;
 	}
+
+	DbgPrintln("Entity Class Map Updated.");
 }
 
 void EntityList::PrintPlayerControllerAddresses()
@@ -333,14 +326,31 @@ void EntityList::PrintPlayerControllerAddresses()
 
 void EntityList::PrintPlayerControllers()
 {
-	for (auto& [addr, pc] : m_PlayerControllers)
-		std::println("PlayerController: 0x{0:X} | hPawn: {1:X} {2:X}", addr, pc.m_hPawn.GetEntityEntryIndex(), pc.GameSceneNodeAddress);
+	if (m_PlayerControllers.empty())
+	{
+		std::println("No PlayerControllers found.");
+		return;
+	}
+
+
+	for (auto& PC : m_PlayerControllers)
+	{
+		if (PC.IsInvalid()) continue;
+
+		auto PawnIt = std::find(m_PlayerPawns.begin(), m_PlayerPawns.end(), EntityList::GetEntityAddressFromHandle(PC.m_hPawn));
+
+		if (PawnIt == std::end(m_PlayerPawns)) continue;
+
+		if (PawnIt->IsInvalid()) continue;
+
+		std::println("Player found! hPawn: {0:d}, hController {1:d}\n  Pawn @ {2:.0f} with {3:d} hp", PC.m_hPawn.GetEntityEntryIndex(), PawnIt->m_hController.GetEntityEntryIndex(), PawnIt->m_BonePositions[0].z, PC.m_CurrentHealth);
+	}
 }
 
 void EntityList::PrintPlayerPawns()
 {
-	for (auto& [addr, pawn] : m_PlayerPawns)
-		std::println("PlayerPawn: 0x{0:X} | GameSceneNode: {1:X}", addr, pawn.GameSceneNodeAddress);
+	for (auto& Pawn : m_PlayerPawns)
+		std::println("PlayerPawn: 0x{0:X} | GameSceneNode: {1:X}", Pawn.m_EntityAddress, Pawn.m_GameSceneNodeAddress);
 }
 
 void EntityList::PrintClassMap()

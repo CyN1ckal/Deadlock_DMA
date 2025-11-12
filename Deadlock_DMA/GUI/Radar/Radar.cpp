@@ -46,14 +46,19 @@ void Radar::DrawEntities()
 
 	std::scoped_lock Lock(EntityList::m_PawnMutex, EntityList::m_ControllerMutex);
 
-	Vector3& LocalPlayerPos = EntityList::m_PlayerPawns[Deadlock::m_LocalPlayerPawnAddress].Position;
+	auto LocalPlayerIt = std::find(EntityList::m_PlayerPawns.begin(), EntityList::m_PlayerPawns.end(), Deadlock::m_LocalPlayerPawnAddress);
 
-	for (auto&& [Addr, Pawn] : EntityList::m_PlayerPawns)
+	if (LocalPlayerIt == EntityList::m_PlayerPawns.end())
+		return;
+
+	Vector3& LocalPlayerPos = LocalPlayerIt->m_Position;
+
+	for (auto& Pawn : EntityList::m_PlayerPawns)
 	{
-		if (Pawn.IsIncomplete() || Pawn.IsDormant() || Pawn.IsLocalPlayer(Addr))
+		if (Pawn.IsInvalid() || Pawn.IsDormant() || Pawn.IsLocalPlayer())
 			continue;
 
-		Vector3 RawRelativePos = { Pawn.Position.x - LocalPlayerPos.x, Pawn.Position.y - LocalPlayerPos.y, Pawn.Position.z - LocalPlayerPos.z };
+		Vector3 RawRelativePos = { Pawn.m_Position.x - LocalPlayerPos.x, Pawn.m_Position.y - LocalPlayerPos.y, Pawn.m_Position.z - LocalPlayerPos.z };
 
 		ImVec2 EntityDrawPos = { Center.x - (RawRelativePos.x / fRadarScale), Center.y + (RawRelativePos.y / fRadarScale) };
 

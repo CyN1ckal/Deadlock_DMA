@@ -15,15 +15,18 @@ int main()
 	MainWindow::Initialize();
 
 	Cppsched::Scheduler s(1);
+
 	s.every("UpdateViewMatrix", std::chrono::milliseconds(1), Deadlock::UpdateViewMatrix, Conn);
-	s.every("UpdatePlayerPawns", std::chrono::milliseconds(10), EntityList::UpdatePlayerPawns, Conn, &Deadlock::Proc());
-	s.every("UpdateLocalPlayerYaw", std::chrono::milliseconds(10), Deadlock::UpdateClientYaw, Conn);
-	s.every("UpdatePlayerControllers", std::chrono::milliseconds(50), EntityList::UpdatePlayerControllers, Conn, &Deadlock::Proc());
-	s.every("UpdateTroopers", std::chrono::milliseconds(100), EntityList::UpdateTroopers, Conn, &Deadlock::Proc());
-	s.every("UpdateMonsterCamps", std::chrono::milliseconds(100), EntityList::UpdateMonsterCamps, Conn, &Deadlock::Proc());
-	s.every("UpdateSinners", std::chrono::seconds(1), EntityList::UpdateSinners, Conn, &Deadlock::Proc());
-	s.every("UpdateServerTime", std::chrono::seconds(1), Deadlock::UpdateServerTime, Conn);
+
 	s.every("FullUpdate", std::chrono::seconds(5), EntityList::FullUpdate, Conn, &Deadlock::Proc());
+	s.every("FullPawnRefresh", std::chrono::milliseconds(10), EntityList::FullPawnRefresh, Conn, &Deadlock::Proc());
+	s.every("FullControllerRefresh", std::chrono::milliseconds(50), EntityList::FullControllerRefresh, Conn, &Deadlock::Proc());
+	s.every("FullTrooperRefresh", std::chrono::milliseconds(100), EntityList::FullTrooperRefresh, Conn, &Deadlock::Proc());
+	s.every("FullMonsterCampRefresh", std::chrono::milliseconds(100), EntityList::FullMonsterCampRefresh, Conn, &Deadlock::Proc());
+	s.every("FullSinnerRefresh", std::chrono::milliseconds(1000), EntityList::FullSinnerRefresh, Conn, &Deadlock::Proc());
+
+	s.every("UpdateLocalPlayerYaw", std::chrono::milliseconds(10), Deadlock::UpdateClientYaw, Conn);
+	s.every("UpdateServerTime", std::chrono::seconds(1), Deadlock::UpdateServerTime, Conn);
 	s.every("UpdateLocalPlayerControllerAddress", std::chrono::seconds(15), Deadlock::UpdateLocalPlayerControllerAddress, Conn);
 
 	while (!GetAsyncKeyState(VK_END))
