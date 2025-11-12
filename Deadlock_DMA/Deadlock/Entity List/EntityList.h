@@ -12,16 +12,22 @@ public: /* Interface methods */
 
 	static void UpdateCrucialInformation(DMA_Connection* Conn, Process* Proc);
 	static void UpdateEntityMap(DMA_Connection* Conn, Process* Proc);
-	static void FullControllerRefresh(DMA_Connection* Conn, Process* Proc);
-	static void FullPawnRefresh(DMA_Connection* Conn, Process* Proc);
-	static void FullMonsterCampRefresh(DMA_Connection* Conn, Process* Proc);
-	static void FullTrooperRefresh(DMA_Connection* Conn, Process* Proc);
-	static void FullSinnerRefresh(DMA_Connection* Conn, Process* Proc);
 	static void UpdateEntityClassMap(DMA_Connection* Conn, Process* Proc);
-
 	static void SortEntityList();
-
 	static uintptr_t GetEntityAddressFromHandle(CHandle Handle);
+
+
+	static void FullControllerRefresh(DMA_Connection* Conn, Process* Proc);
+	static void FullSinnerRefresh(DMA_Connection* Conn, Process* Proc);
+
+	static void FullPawnRefresh(DMA_Connection* Conn, Process* Proc);
+	static void QuickPawnRefresh(DMA_Connection* Conn, Process* Proc);
+
+	static void FullTrooperRefresh(DMA_Connection* Conn, Process* Proc);
+	static void QuickTrooperRefresh(DMA_Connection* Conn, Process* Proc);
+
+	static void FullMonsterCampRefresh(DMA_Connection* Conn, Process* Proc);
+	static void QuickMonsterCampRefresh(DMA_Connection* Conn, Process* Proc);
 
 public: /* Interface variables */
 	static inline std::mutex m_PawnMutex{};
@@ -31,7 +37,7 @@ public: /* Interface variables */
 	static inline std::vector<CCitadelPlayerController> m_PlayerControllers{};
 
 	static inline std::mutex m_TrooperMutex{};
-	static inline std::vector<CBaseEntity> m_Troopers{};
+	static inline std::vector<CTrooperEntity> m_Troopers{};
 
 	static inline std::mutex m_MonsterCampMutex{};
 	static inline std::vector<CBaseEntity> m_MonsterCamps{};

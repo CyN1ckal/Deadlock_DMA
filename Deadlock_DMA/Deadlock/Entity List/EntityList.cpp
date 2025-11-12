@@ -178,6 +178,22 @@ void EntityList::FullPawnRefresh(DMA_Connection* Conn, Process* Proc)
 	VMMDLL_Scatter_CloseHandle(vmsh);
 }
 
+void EntityList::QuickPawnRefresh(DMA_Connection* Conn, Process* Proc)
+{
+	ZoneScoped;
+
+	std::scoped_lock Lock(m_PawnMutex);
+
+	auto vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
+
+	for (auto& Pawn : m_PlayerPawns)
+		Pawn.QuickRead(vmsh);
+
+	VMMDLL_Scatter_Execute(vmsh);
+
+	VMMDLL_Scatter_Clear(vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
+}
+
 void EntityList::FullMonsterCampRefresh(DMA_Connection* Conn, Process* Proc)
 {
 	if (!ESP::bDrawCamps) return;
@@ -208,6 +224,24 @@ void EntityList::FullMonsterCampRefresh(DMA_Connection* Conn, Process* Proc)
 	VMMDLL_Scatter_CloseHandle(vmsh);
 }
 
+void EntityList::QuickMonsterCampRefresh(DMA_Connection* Conn, Process* Proc)
+{
+	if (!ESP::bDrawCamps) return;
+
+	ZoneScoped;
+
+	std::scoped_lock Lock(m_MonsterCampMutex);
+
+	auto vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
+
+	for (auto& Camp : m_MonsterCamps)
+		Camp.QuickRead(vmsh);
+
+	VMMDLL_Scatter_Execute(vmsh);
+
+	VMMDLL_Scatter_Clear(vmsh, Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
+}
+
 void EntityList::FullTrooperRefresh(DMA_Connection* Conn, Process* Proc)
 {
 	if (!ESP::bDrawTroopers) return;
@@ -219,7 +253,7 @@ void EntityList::FullTrooperRefresh(DMA_Connection* Conn, Process* Proc)
 	m_Troopers.clear();
 
 	for (auto& addr : m_TrooperAddresses)
-		m_Troopers.emplace_back(CBaseEntity(addr));
+		m_Troopers.emplace_back(CTrooperEntity(addr));
 
 	auto vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
 
@@ -232,6 +266,28 @@ void EntityList::FullTrooperRefresh(DMA_Connection* Conn, Process* Proc)
 
 	for (auto& Trooper : m_Troopers)
 		Trooper.PrepareRead_2(vmsh);
+
+	VMMDLL_Scatter_Execute(vmsh);
+
+	VMMDLL_Scatter_CloseHandle(vmsh);
+
+	DbgPrintln("Trooper List Refreshed. Count: {}", m_Troopers.size());
+}
+
+void EntityList::QuickTrooperRefresh(DMA_Connection* Conn, Process* Proc)
+{
+	if (!ESP::bDrawTroopers) return;
+
+	ZoneScoped;
+
+	std::scoped_lock Lock(m_TrooperMutex);
+
+	if (m_Troopers.empty()) return;
+
+	auto vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
+
+	for (auto& Trooper : m_Troopers)
+		Trooper.QuickRead(vmsh);
 
 	VMMDLL_Scatter_Execute(vmsh);
 

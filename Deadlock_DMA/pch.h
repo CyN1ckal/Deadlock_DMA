@@ -12,6 +12,10 @@
 #define DbgPrintln(...)
 #endif
 
+#ifdef CATCH_ENABLE
+#include "catch_amalgamated.hpp"
+#endif
+
 #include "tracy/Tracy.hpp"
 
 #include "vmmdll.h"

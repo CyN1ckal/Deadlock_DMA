@@ -59,6 +59,24 @@ public:
 		VMMDLL_Scatter_PrepareEx(vmsh, DormantAddress, sizeof(uint8_t), reinterpret_cast<BYTE*>(&m_Dormant), nullptr);
 	}
 
+	void QuickRead(VMMDLL_SCATTER_HANDLE vmsh, bool bReadHealth = true)
+	{
+		if (IsInvalid())
+			return;
+
+		if (bReadHealth)
+		{
+			uintptr_t CurrentHealthPtr = m_EntityAddress + Offsets::BaseEntity::CurrentHealth;
+			VMMDLL_Scatter_PrepareEx(vmsh, CurrentHealthPtr, sizeof(int32_t), reinterpret_cast<BYTE*>(&m_CurrentHealth), nullptr);
+		}
+
+		uintptr_t PositionAddress = m_GameSceneNodeAddress + Offsets::SceneNode::Position;
+		VMMDLL_Scatter_PrepareEx(vmsh, PositionAddress, sizeof(Vector3), reinterpret_cast<BYTE*>(&m_Position), nullptr);
+
+		uintptr_t DormantAddress = m_GameSceneNodeAddress + Offsets::SceneNode::Dormant;
+		VMMDLL_Scatter_PrepareEx(vmsh, DormantAddress, sizeof(uint8_t), reinterpret_cast<BYTE*>(&m_Dormant), nullptr);
+	}
+
 	bool operator==(const CBaseEntity& Other) const
 	{
 		return m_EntityAddress == Other.m_EntityAddress;

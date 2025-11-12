@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Deadlock_DMA", "Deadlock_DM
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Catch|x64 = Catch|x64
+		Catch|x86 = Catch|x86
 		DbgPrint|x64 = DbgPrint|x64
 		DbgPrint|x86 = DbgPrint|x86
 		Release|x64 = Release|x64
@@ -15,6 +17,10 @@ Global
 		Tracy|x86 = Tracy|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.Catch|x64.ActiveCfg = Catch|x64
+		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.Catch|x64.Build.0 = Catch|x64
+		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.Catch|x86.ActiveCfg = Catch|Win32
+		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.Catch|x86.Build.0 = Catch|Win32
 		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.DbgPrint|x64.ActiveCfg = DbgPrint|x64
 		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.DbgPrint|x64.Build.0 = DbgPrint|x64
 		{EA70A989-E9D4-4EB9-8ABC-235D06A2599F}.DbgPrint|x86.ActiveCfg = DbgPrint|Win32

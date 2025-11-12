@@ -58,4 +58,13 @@ public:
 
 		PrepareBoneRead(vmsh);
 	}
+	void QuickRead(VMMDLL_SCATTER_HANDLE vmsh)
+	{
+		if (IsInvalid())
+			return;
+
+		CBaseEntity::QuickRead(vmsh, false);
+
+		PrepareBoneRead(vmsh);
+	}
 };
