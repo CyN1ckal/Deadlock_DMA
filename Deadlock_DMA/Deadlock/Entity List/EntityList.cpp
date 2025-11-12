@@ -5,6 +5,8 @@
 
 void EntityList::FullUpdate(DMA_Connection* Conn, Process* Proc)
 {
+	ZoneScoped;
+
 	UpdateCrucialInformation(Conn, Proc);
 	UpdateEntityMap(Conn, Proc);
 	UpdateEntityClassMap(Conn, Proc);
@@ -115,6 +117,8 @@ void EntityList::SortEntityList()
 
 void EntityList::FullControllerRefresh(DMA_Connection* Conn, Process* Proc)
 {
+	ZoneScoped;
+
 	std::scoped_lock Lock(m_ControllerMutex);
 
 	m_PlayerControllers.clear();
@@ -141,6 +145,8 @@ void EntityList::FullControllerRefresh(DMA_Connection* Conn, Process* Proc)
 
 void EntityList::FullPawnRefresh(DMA_Connection* Conn, Process* Proc)
 {
+	ZoneScoped;
+
 	std::scoped_lock Lock(m_PawnMutex);
 
 	m_PlayerPawns.clear();
@@ -176,6 +182,8 @@ void EntityList::FullMonsterCampRefresh(DMA_Connection* Conn, Process* Proc)
 {
 	if (!ESP::bDrawCamps) return;
 
+	ZoneScoped;
+
 	std::scoped_lock Lock(m_MonsterCampMutex);
 
 	m_MonsterCamps.clear();
@@ -204,6 +212,8 @@ void EntityList::FullTrooperRefresh(DMA_Connection* Conn, Process* Proc)
 {
 	if (!ESP::bDrawTroopers) return;
 
+	ZoneScoped;
+
 	std::scoped_lock Lock(m_TrooperMutex);
 
 	m_Troopers.clear();
@@ -231,6 +241,8 @@ void EntityList::FullTrooperRefresh(DMA_Connection* Conn, Process* Proc)
 void EntityList::FullSinnerRefresh(DMA_Connection* Conn, Process* Proc)
 {
 	if (!ESP::bDrawSinners) return;
+
+	ZoneScoped;
 
 	std::scoped_lock Lock(m_SinnerMutex);
 

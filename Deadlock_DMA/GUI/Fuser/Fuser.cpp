@@ -7,6 +7,8 @@ void Fuser::OnFrame()
 {
 	if (!bFuser) return;
 
+	ZoneScoped;
+
 	ImGui::SetNextWindowPos({ 100,100 }, ImGuiCond_FirstUseEver);
 
 	ImGui::PushStyleColor(ImGuiCol_WindowBg, IM_COL32(0, 0, 0, 0));
@@ -47,6 +49,8 @@ void Fuser::RenderSettings()
 void Fuser::RenderSoulsPerMinute()
 {
 	if (!bDrawSoulsPerMinute) return;
+
+	ZoneScoped;
 
 	std::scoped_lock Lock(EntityList::m_ControllerMutex, Deadlock::m_LocalAddressMutex, Deadlock::m_ServerTimeMutex);
 

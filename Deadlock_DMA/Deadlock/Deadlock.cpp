@@ -32,6 +32,8 @@ Process& Deadlock::Proc()
 
 void Deadlock::UpdateViewMatrix(DMA_Connection* Conn)
 {
+	ZoneScoped;
+
 	std::scoped_lock lock(ViewMatrixMutex);
 	uintptr_t ViewMatrixAddress = Proc().GetClientBase() + Offsets::ViewMatrix;
 	m_ViewMatrix = Proc().ReadMem<Matrix44>(Conn, ViewMatrixAddress);
@@ -67,6 +69,8 @@ bool Deadlock::WorldToScreen(const Vector3& Pos, Vector2& ScreenPos)
 
 bool Deadlock::UpdateLocalPlayerControllerAddress(DMA_Connection* Conn)
 {
+	ZoneScoped;
+
 	std::scoped_lock Lock(m_LocalAddressMutex);
 
 	uintptr_t LocalPlayerControllerAddress = Proc().GetClientBase() + Offsets::LocalController;
@@ -97,6 +101,8 @@ void Deadlock::UpdateServerTime(DMA_Connection* Conn)
 {
 	if (!m_PredictionAddress) return;
 
+	ZoneScoped;
+
 	uintptr_t ServerTimeAddress = m_PredictionAddress + Offsets::Prediction::ServerTime;
 
 	std::scoped_lock lock(m_ServerTimeMutex);
@@ -105,6 +111,8 @@ void Deadlock::UpdateServerTime(DMA_Connection* Conn)
 
 void Deadlock::UpdateClientYaw(DMA_Connection* Conn)
 {
+	ZoneScoped;
+
 	std::scoped_lock Lock(m_ClientYawMutex);
 	uintptr_t YawAddress = Proc().GetClientBase() + Offsets::Rotation + sizeof(float);
 	m_ClientYaw = Proc().ReadMem<float>(Conn, YawAddress);

@@ -24,6 +24,8 @@ bool DMA_Connection::EndConnection()
 
 DMA_Connection::DMA_Connection()
 {
+	ZoneScoped;
+
 	std::println("Connecting to DMA...");
 
 	LPCSTR args[] = { "", "-device", "FPGA" };
@@ -38,6 +40,8 @@ DMA_Connection::DMA_Connection()
 
 DMA_Connection::~DMA_Connection()
 {
+	ZoneScoped;
+
 	VMMDLL_Close(m_VMMHandle);
 
 	m_VMMHandle = nullptr;
