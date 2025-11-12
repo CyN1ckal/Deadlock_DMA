@@ -10,15 +10,17 @@ void PlayerList::Render()
 
 	ImGui::Begin("Controller List");
 
-	for (auto& [address, pawn] : EntityList::m_PlayerPawns)
+	for (auto& Pawn : EntityList::m_PlayerPawns)
 	{
-		auto ControllerAddr = EntityList::GetEntityAddressFromHandle(pawn.hController);
+		uintptr_t ControllerAddr = EntityList::GetEntityAddressFromHandle(Pawn.m_hController);
 
-		auto& Controller = EntityList::m_PlayerControllers[ControllerAddr];
+		auto ControllerIt = std::find(EntityList::m_PlayerControllers.begin(), EntityList::m_PlayerControllers.end(), ControllerAddr);
 
-		if (Controller.IsIncomplete() || pawn.IsIncomplete()) continue;
+		if (ControllerIt == EntityList::m_PlayerControllers.end()) continue;
 
-		ImGui::Text(std::format("{0:d} {1:d} {2:s} {3:.0f}", Controller.CurrentHealth, Controller.m_MaxHealth, Controller.GetHeroName(), pawn.DistanceFromLocalPlayer()).c_str());
+		if (ControllerIt->IsInvalid() || Pawn.IsInvalid()) continue;
+
+		ImGui::Text(std::format("{0:d} {1:d} {2:s} {3:.0f} {4:X}", ControllerIt->m_CurrentHealth, ControllerIt->m_MaxHealth, ControllerIt->GetHeroName(), Pawn.DistanceFromLocalPlayer(), ControllerAddr).c_str());
 	}
 
 	ImGui::End();

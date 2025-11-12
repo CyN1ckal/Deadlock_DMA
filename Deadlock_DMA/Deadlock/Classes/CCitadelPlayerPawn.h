@@ -9,9 +9,9 @@ constexpr int MAX_BONES = 70;
 class CCitadelPlayerPawn : public CBaseEntity
 {
 public:
-	Vector3 BonePositions[MAX_BONES]{ 0.0f };
-	uintptr_t BoneArrayAddress{ 0 };
-	CHandle hController{ 0 };
+	Vector3 m_BonePositions[MAX_BONES]{ 0.0f };
+	uintptr_t m_BoneArrayAddress{ 0 };
+	CHandle m_hController{ 0 };
 
 public:
 	void DrawSkeleton(const ImVec2& WindowPos, ImDrawList* DrawList) const;
@@ -19,37 +19,43 @@ public:
 	void DrawBoneNumbers() const;
 
 private:
-	static void PrepareBoneRead(VMMDLL_SCATTER_HANDLE vmsh, uintptr_t BoneArrayAddress, BYTE* OutPosition, uint32_t BoneIndex)
+	void PrepareBoneRead(VMMDLL_SCATTER_HANDLE vmsh)
 	{
-		uintptr_t BoneAddress = BoneArrayAddress + (BoneIndex * 0x20);
-		VMMDLL_Scatter_PrepareEx(vmsh, BoneAddress, sizeof(Vector3), OutPosition, nullptr);
+		for (int i = 0; i < MAX_BONES; i++)
+		{
+			uintptr_t BoneAddress = m_BoneArrayAddress + (i * 0x20);
+			VMMDLL_Scatter_PrepareEx(vmsh, BoneAddress, sizeof(Vector3), reinterpret_cast<BYTE*>(&m_BonePositions[i]), nullptr);
+		}
 	}
 
 public:
-	template<typename T>
-	static void Read_1(VMMDLL_SCATTER_HANDLE vmsh, T& PlayerPawn, uintptr_t PlayerPawnAddress)
+	void PrepareRead_1(VMMDLL_SCATTER_HANDLE vmsh)
 	{
-		uintptr_t hControllerPtr = PlayerPawnAddress + Offsets::Pawn::hController;
-		VMMDLL_Scatter_PrepareEx(vmsh, hControllerPtr, sizeof(uint32_t), reinterpret_cast<BYTE*>(&PlayerPawn.hController.Data), nullptr);
+		CBaseEntity::PrepareRead_1(vmsh, false);
+
+		uintptr_t hControllerPtr = m_EntityAddress + Offsets::Pawn::hController;
+		VMMDLL_Scatter_PrepareEx(vmsh, hControllerPtr, sizeof(uint32_t), reinterpret_cast<BYTE*>(&m_hController.Data), nullptr);
 	}
 
-	template <typename T>
-	static void Read_2(VMMDLL_SCATTER_HANDLE vmsh, T& PlayerPawn, uintptr_t PlayerPawnAddress)
+	void PrepareRead_2(VMMDLL_SCATTER_HANDLE vmsh)
 	{
-		if (!PlayerPawn.GameSceneNodeAddress)
-		{
-			PlayerPawn.SetInvalid();
+		if (!m_GameSceneNodeAddress)
+			SetInvalid();
+
+		CBaseEntity::PrepareRead_2(vmsh);
+
+		if (IsInvalid())
 			return;
-		}
 
-		uintptr_t BoneArrayPtrAddress = PlayerPawn.GameSceneNodeAddress + Offsets::SceneNode::ModelState + Offsets::ModelState::BoneArrayPtr;
-		VMMDLL_Scatter_PrepareEx(vmsh, BoneArrayPtrAddress, sizeof(uintptr_t), reinterpret_cast<BYTE*>(&PlayerPawn.BoneArrayAddress), nullptr);
+		uintptr_t BoneArrayPtrAddress = m_GameSceneNodeAddress + Offsets::SceneNode::ModelState + Offsets::ModelState::BoneArrayPtr;
+		VMMDLL_Scatter_PrepareEx(vmsh, BoneArrayPtrAddress, sizeof(uintptr_t), reinterpret_cast<BYTE*>(&m_BoneArrayAddress), nullptr);
 	}
 
-	template <typename T>
-	static void Read_3(VMMDLL_SCATTER_HANDLE vmsh, T& PlayerPawn, uintptr_t PlayerPawnAddress)
+	void PrepareRead_3(VMMDLL_SCATTER_HANDLE vmsh)
 	{
-		for (int i = 0; i < MAX_BONES; i++)
-			PrepareBoneRead(vmsh, PlayerPawn.BoneArrayAddress, reinterpret_cast<BYTE*>(&PlayerPawn.BonePositions[i]), i);
+		if (IsInvalid())
+			return;
+
+		PrepareBoneRead(vmsh);
 	}
 };

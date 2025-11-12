@@ -50,18 +50,15 @@ void Fuser::RenderSoulsPerMinute()
 
 	std::scoped_lock Lock(EntityList::m_ControllerMutex, Deadlock::m_LocalAddressMutex, Deadlock::m_ServerTimeMutex);
 
-	if (auto It = EntityList::m_PlayerControllers.find(Deadlock::m_LocalPlayerControllerAddress); It != EntityList::m_PlayerControllers.end())
-	{
-		auto Souls = It->second.m_TotalSouls;
-		auto SoulsPerSecond = static_cast<float>(It->second.m_TotalSouls) / Deadlock::m_ServerTime;
-		auto SoulsPerMinute = SoulsPerSecond * 60.0f;
-		ImGui::PushFont(nullptr, 16.0f);
-		ImGui::SetCursorPos({ 2.0f, ScreenSize.y - ImGui::GetTextLineHeight() });
-		ImGui::Text("%.1f Souls/Min", SoulsPerMinute);
-		ImGui::PopFont();
-	}
-	else
-	{
-		return;
-	}
+	auto ControllerIt = std::find(EntityList::m_PlayerControllers.begin(), EntityList::m_PlayerControllers.end(), Deadlock::m_LocalPlayerControllerAddress);
+
+	if (ControllerIt == EntityList::m_PlayerControllers.end()) return;
+
+	auto Souls = ControllerIt->m_TotalSouls;
+	auto SoulsPerSecond = static_cast<float>(ControllerIt->m_TotalSouls) / Deadlock::m_ServerTime;
+	auto SoulsPerMinute = SoulsPerSecond * 60.0f;
+	ImGui::PushFont(nullptr, 16.0f);
+	ImGui::SetCursorPos({ 2.0f, ScreenSize.y - ImGui::GetTextLineHeight() });
+	ImGui::Text("%.1f Souls/Min", SoulsPerMinute);
+	ImGui::PopFont();
 }

@@ -20,6 +20,8 @@ bool Deadlock::Initialize(DMA_Connection* Conn)
 
 	GetPredictionAddress(Conn);
 
+	DbgPrintln("Deadlock Initialized.");
+
 	return false;
 }
 
@@ -69,7 +71,16 @@ bool Deadlock::UpdateLocalPlayerControllerAddress(DMA_Connection* Conn)
 
 	uintptr_t LocalPlayerControllerAddress = Proc().GetClientBase() + Offsets::LocalController;
 	m_LocalPlayerControllerAddress = Proc().ReadMem<uintptr_t>(Conn, LocalPlayerControllerAddress);
-	m_LocalPlayerPawnAddress = EntityList::GetEntityAddressFromHandle(EntityList::m_PlayerControllers[m_LocalPlayerControllerAddress].m_hPawn);
+	DbgPrintln("Local Player Controller Address: 0x{:X}", m_LocalPlayerControllerAddress);
+
+	auto LocalPlayerControllerIt = std::find(EntityList::m_PlayerControllers.begin(), EntityList::m_PlayerControllers.end(), m_LocalPlayerControllerAddress);
+
+	if (LocalPlayerControllerIt == EntityList::m_PlayerControllers.end())
+		return false;
+
+	m_LocalPlayerPawnAddress = EntityList::GetEntityAddressFromHandle(LocalPlayerControllerIt->m_hPawn);
+
+	DbgPrintln("Local Player Pawn Address: 0x{:X}", m_LocalPlayerPawnAddress);
 
 	return false;
 }
@@ -78,6 +89,8 @@ void Deadlock::GetPredictionAddress(DMA_Connection* Conn)
 {
 	uintptr_t PredictionPtrAddress = Proc().GetClientBase() + Offsets::PredictionPtr;
 	m_PredictionAddress = Proc().ReadMem<uintptr_t>(Conn, PredictionPtrAddress);
+
+	DbgPrintln("Prediction Address: 0x{:X}", m_PredictionAddress);
 }
 
 void Deadlock::UpdateServerTime(DMA_Connection* Conn)

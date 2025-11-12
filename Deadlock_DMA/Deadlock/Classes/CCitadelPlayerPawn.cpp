@@ -8,24 +8,27 @@
 
 void CCitadelPlayerPawn::DrawSkeleton(const ImVec2& WindowPos, ImDrawList* DrawList) const
 {
-	if (!hController.IsValid()) return;
+	if (!m_hController.IsValid()) return;
 
 	if (ESP::SkeletonSettings.bHideFriendly && IsFriendly()) return;
 
-	const auto ControllerAddress = EntityList::GetEntityAddressFromHandle(hController);
-	auto& Controller = EntityList::m_PlayerControllers[ControllerAddress];
+	const auto ControllerAddress = EntityList::GetEntityAddressFromHandle(m_hController);
 
-	auto It = g_HeroBoneMap.find(Controller.m_HeroID);
+	auto ControllerIt = std::find(EntityList::m_PlayerControllers.begin(), EntityList::m_PlayerControllers.end(), ControllerAddress);
+
+	if (ControllerIt == EntityList::m_PlayerControllers.end()) return;
+
+	auto It = g_HeroBoneMap.find(ControllerIt->m_HeroID);
 	if (It == g_HeroBoneMap.end()) return;
 
-	auto SkeletonColor = Controller.IsFriendly() ? ColorPicker::FriendlyBoneColor : ColorPicker::EnemyBoneColor;
+	auto SkeletonColor = ControllerIt->IsFriendly() ? ColorPicker::FriendlyBoneColor : ColorPicker::EnemyBoneColor;
 
 	for (const auto& [StartBone, EndBone] : It->second)
 	{
 		Vector2 Start2D, End2D;
 
-		if (!Deadlock::WorldToScreen(BonePositions[StartBone], Start2D)) continue;
-		if (!Deadlock::WorldToScreen(BonePositions[EndBone], End2D)) continue;
+		if (!Deadlock::WorldToScreen(m_BonePositions[StartBone], Start2D)) continue;
+		if (!Deadlock::WorldToScreen(m_BonePositions[EndBone], End2D)) continue;
 
 		ImVec2 Start = ImVec2(Start2D.x + WindowPos.x, Start2D.y + WindowPos.y);
 		ImVec2 End = ImVec2(End2D.x + WindowPos.x, End2D.y + WindowPos.y);
@@ -38,7 +41,7 @@ void CCitadelPlayerPawn::DrawNameTag(const ImVec2& WindowPos, ImDrawList* DrawLi
 	if (ESP::NameTagSettings.bHideFriendly && IsFriendly()) return;
 
 	Vector2 ScreenPos{};
-	if (!Deadlock::WorldToScreen(Position, ScreenPos)) return;
+	if (!Deadlock::WorldToScreen(m_Position, ScreenPos)) return;
 
 	std::string NameTagString{};
 
@@ -46,7 +49,7 @@ void CCitadelPlayerPawn::DrawNameTag(const ImVec2& WindowPos, ImDrawList* DrawLi
 
 	if (ESP::NameTagSettings.bShowHeroName)	NameTagString += std::format("{0:s} ", AssociatedController.GetHeroName());
 
-	if (ESP::NameTagSettings.bShowHealth)	NameTagString += std::format("{0:d}HP ", AssociatedController.CurrentHealth);
+	if (ESP::NameTagSettings.bShowHealth)	NameTagString += std::format("{0:d}HP ", AssociatedController.m_CurrentHealth);
 
 	if (ESP::NameTagSettings.bShowDistance)	NameTagString += std::format("{0:.0f}m ", this->DistanceFromLocalPlayer(true));
 
@@ -71,7 +74,7 @@ void CCitadelPlayerPawn::DrawBoneNumbers() const
 	for (int i = 0; i < MAX_BONES; i++)
 	{
 		Vector2 ScreenPos{};
-		if (!Deadlock::WorldToScreen(BonePositions[i], ScreenPos)) continue;
+		if (!Deadlock::WorldToScreen(m_BonePositions[i], ScreenPos)) continue;
 
 		std::string BoneString = std::to_string(i);
 		auto TextSize = ImGui::CalcTextSize(BoneString.c_str());

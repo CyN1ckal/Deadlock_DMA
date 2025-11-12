@@ -5,24 +5,30 @@
 const bool CBaseEntity::IsFriendly() const
 {
 	std::scoped_lock lock(Deadlock::m_LocalAddressMutex);
-	return TeamNum == EntityList::m_PlayerControllers[Deadlock::m_LocalPlayerControllerAddress].TeamNum;
+
+	auto LocalControllerIt = std::find(EntityList::m_PlayerControllers.begin(), EntityList::m_PlayerControllers.end(), Deadlock::m_LocalPlayerControllerAddress);
+
+	if (LocalControllerIt == EntityList::m_PlayerControllers.end())
+		return false;
+
+	return m_TeamNum == LocalControllerIt->m_TeamNum;
 }
 
-const bool CBaseEntity::IsLocalPlayer(uintptr_t EntityAddress) const
+const bool CBaseEntity::IsLocalPlayer() const
 {
 	std::scoped_lock lock(Deadlock::m_LocalAddressMutex);
-	return EntityAddress == Deadlock::m_LocalPlayerControllerAddress || EntityAddress == Deadlock::m_LocalPlayerPawnAddress;
+	return m_EntityAddress == Deadlock::m_LocalPlayerControllerAddress || m_EntityAddress == Deadlock::m_LocalPlayerPawnAddress;
 }
 
 constexpr uint32_t HammerUnitsPerMeter = 52;
 const float CBaseEntity::DistanceFromLocalPlayer(bool bInMeters) const
 {
-	auto LocalPlayer = EntityList::m_PlayerPawns.find(Deadlock::m_LocalPlayerPawnAddress);
+	auto LocalPawnIt = std::find(std::begin(EntityList::m_PlayerPawns), std::end(EntityList::m_PlayerPawns), Deadlock::m_LocalPlayerPawnAddress);
 
-	if (LocalPlayer == EntityList::m_PlayerPawns.end())
+	if (LocalPawnIt == EntityList::m_PlayerPawns.end())
 		return 0.0f;
 
-	auto Distance = Position.Distance(LocalPlayer->second.Position);
+	auto Distance = m_Position.Distance(LocalPawnIt->m_Position);
 
 	if (bInMeters)
 		return Distance / HammerUnitsPerMeter; // Convert cm to m

@@ -12,36 +12,35 @@ public: /* Interface methods */
 
 	static void UpdateCrucialInformation(DMA_Connection* Conn, Process* Proc);
 	static void UpdateEntityMap(DMA_Connection* Conn, Process* Proc);
-	static void UpdatePlayerControllers(DMA_Connection* Conn, Process* Proc);
-	static void UpdatePlayerPawns(DMA_Connection* Conn, Process* Proc);
-	static void UpdateMonsterCamps(DMA_Connection* Conn, Process* Proc);
-	static void UpdateTroopers(DMA_Connection* Conn, Process* Proc);
-	static void UpdateSinners(DMA_Connection* Conn, Process* Proc);
+	static void FullControllerRefresh(DMA_Connection* Conn, Process* Proc);
+	static void FullPawnRefresh(DMA_Connection* Conn, Process* Proc);
+	static void FullMonsterCampRefresh(DMA_Connection* Conn, Process* Proc);
+	static void FullTrooperRefresh(DMA_Connection* Conn, Process* Proc);
+	static void FullSinnerRefresh(DMA_Connection* Conn, Process* Proc);
 	static void UpdateEntityClassMap(DMA_Connection* Conn, Process* Proc);
 
 	static void SortEntityList();
 
 	static uintptr_t GetEntityAddressFromHandle(CHandle Handle);
 
-
 public: /* Interface variables */
 	static inline std::mutex m_PawnMutex{};
-	static inline std::unordered_map<uintptr_t, CCitadelPlayerPawn> m_PlayerPawns{};
+	static inline std::vector<CCitadelPlayerPawn> m_PlayerPawns{};
 
 	static inline std::mutex m_ControllerMutex{};
-	static inline std::unordered_map<uintptr_t, CCitadelPlayerController> m_PlayerControllers{};
+	static inline std::vector<CCitadelPlayerController> m_PlayerControllers{};
 
 	static inline std::mutex m_TrooperMutex{};
-	static inline std::unordered_map<uintptr_t, CBaseEntity> m_Troopers{};
+	static inline std::vector<CBaseEntity> m_Troopers{};
 
 	static inline std::mutex m_MonsterCampMutex{};
-	static inline std::unordered_map<uintptr_t, CBaseEntity> m_MonsterCamps{};
+	static inline std::vector<CBaseEntity> m_MonsterCamps{};
+
+	static inline std::mutex m_SinnerMutex{};
+	static inline std::vector<CBaseEntity> m_Sinners{};
 
 	static inline std::mutex m_ClassMapMutex{};
 	static inline std::unordered_map<std::string, uintptr_t> m_EntityClassMap{};
-
-	static inline std::mutex m_SinnerMutex{};
-	static inline std::unordered_map<uintptr_t, CBaseEntity> m_Sinners{};
 
 private: /* Internal variables */
 	static inline uintptr_t m_EntitySystem_Address = 0;

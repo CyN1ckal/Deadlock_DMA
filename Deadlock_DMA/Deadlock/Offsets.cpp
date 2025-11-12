@@ -22,6 +22,8 @@ bool Offsets::ResolveOffsets(DMA_Connection* Conn)
 
 	ms.Close();
 
+	DbgPrintln("All offsets resolved.");
+
 	return true;
 }
 
