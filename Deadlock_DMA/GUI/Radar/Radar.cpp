@@ -12,6 +12,8 @@ void Radar::Render()
 {
 	if (!bDrawRadar) return;
 
+	ZoneScoped;
+
 	ImGui::Begin("Radar");
 
 	DrawEntities();
@@ -36,6 +38,8 @@ void Radar::RenderSettings()
 
 void Radar::DrawEntities()
 {
+	ZoneScoped;
+
 	auto DrawList = ImGui::GetWindowDrawList();
 	auto WindowPos = ImGui::GetWindowPos();
 	auto WindowSize = ImGui::GetWindowSize();

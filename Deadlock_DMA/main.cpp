@@ -16,7 +16,12 @@ int main()
 
 	Cppsched::Scheduler s(1);
 
-	s.every("UpdateViewMatrix", std::chrono::milliseconds(1), Deadlock::UpdateViewMatrix, Conn);
+#ifdef TRACY_ENABLE
+	tracy::SetThreadName("Main Thread");
+	s.in("InitialDelay", std::chrono::microseconds(1), []() { tracy::SetThreadName("DMA Thread"); });
+#endif
+
+	s.every("UpdateViewMatrix", std::chrono::microseconds(500), Deadlock::UpdateViewMatrix, Conn);
 
 	s.every("FullUpdate", std::chrono::seconds(5), EntityList::FullUpdate, Conn, &Deadlock::Proc());
 	s.every("FullPawnRefresh", std::chrono::milliseconds(10), EntityList::FullPawnRefresh, Conn, &Deadlock::Proc());
@@ -32,6 +37,7 @@ int main()
 	while (!GetAsyncKeyState(VK_END))
 	{
 		MainWindow::OnFrame();
+		FrameMark;
 	}
 
 	Conn->EndConnection();

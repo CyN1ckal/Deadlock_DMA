@@ -12,6 +12,8 @@
 #define DbgPrintln(...)
 #endif
 
+#include "tracy/Tracy.hpp"
+
 #include "vmmdll.h"
 
 #include "Scheduler.hpp"

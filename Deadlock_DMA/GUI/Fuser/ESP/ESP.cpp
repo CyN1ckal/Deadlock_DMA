@@ -8,6 +8,8 @@
 
 void ESP::OnFrame()
 {
+	ZoneScoped;
+
 	auto DrawList = ImGui::GetWindowDrawList();
 	auto WindowPos = ImGui::GetWindowPos();
 
@@ -72,6 +74,8 @@ void ESP::RenderSettings()
 
 void ESP::RenderPlayers(const ImVec2 WindowPos, ImDrawList* DrawList)
 {
+	ZoneScoped;
+
 	std::scoped_lock lock(EntityList::m_PawnMutex, EntityList::m_ControllerMutex);
 
 	for (auto& Pawn : EntityList::m_PlayerPawns)
@@ -103,6 +107,8 @@ void ESP::RenderPlayers(const ImVec2 WindowPos, ImDrawList* DrawList)
 
 void ESP::RenderTroopers()
 {
+	ZoneScoped;
+
 	/* m_ControllerMutex is required for friendly check */
 	std::scoped_lock Lock(EntityList::m_TrooperMutex, EntityList::m_ControllerMutex);
 
@@ -120,6 +126,8 @@ void ESP::RenderTroopers()
 
 void ESP::RenderMonsterCamps()
 {
+	ZoneScoped;
+
 	std::scoped_lock Lock(EntityList::m_MonsterCampMutex);
 
 	ImGui::PushStyleColor(ImGuiCol_Text, ColorPicker::MonsterCampColor);
@@ -149,6 +157,8 @@ void ESP::RenderMonsterCamps()
 
 void ESP::RenderSinners()
 {
+	ZoneScoped;
+
 	std::scoped_lock Lock(EntityList::m_SinnerMutex);
 
 	ImGui::PushStyleColor(ImGuiCol_Text, ColorPicker::SinnersColor);

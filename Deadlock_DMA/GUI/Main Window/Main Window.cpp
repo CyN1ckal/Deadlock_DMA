@@ -101,6 +101,8 @@ LRESULT __stdcall MainWindow::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM
 
 bool MainWindow::Initialize()
 {
+	ZoneScoped;
+
 	ImGui_ImplWin32_EnableDpiAwareness();
 
 	float main_scale = ImGui_ImplWin32_GetDpiScaleForMonitor(::MonitorFromPoint(POINT{ 0, 0 }, MONITOR_DEFAULTTOPRIMARY));

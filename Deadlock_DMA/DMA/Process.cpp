@@ -6,6 +6,8 @@
 
 bool Process::GetProcessInfo(const std::string& ProcessName, DMA_Connection* Conn)
 {
+	ZoneScoped;
+
 	std::println("Waiting for process {}..", ProcessName);
 
 	m_PID = 0;
@@ -51,6 +53,8 @@ const uintptr_t Process::GetModuleAddress(const std::string& ModuleName)
 
 bool Process::PopulateModules(DMA_Connection* Conn)
 {
+	ZoneScoped;
+
 	using namespace ConstStrings;
 
 	auto Handle = Conn->GetHandle();
