@@ -39,6 +39,9 @@ void Draw_Players::operator()()
 
 void Draw_Players::DrawPlayer(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn)
 {
+	if (bHideFriendly && PC.IsFriendly())
+		return;
+
 	Vector2 ScreenPos{};
 	if (!Deadlock::WorldToScreen(Pawn.m_Position, ScreenPos)) return;
 
