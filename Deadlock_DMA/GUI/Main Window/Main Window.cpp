@@ -166,10 +166,12 @@ bool MainWindow::OnFrame()
 {
 	PreFrame();
 
+	ImGui::DockSpaceOverViewport(ImGui::GetMainViewport()->ID,nullptr, ImGuiDockNodeFlags_PassthruCentralNode);
+
+	Fuser::RenderSettings();
 	Fuser::OnFrame();
 	ColorPicker::RenderColorPicker();
 
-	//Fuser::RenderSettings();
 	//ESP::RenderSettings();
 	//Radar::Render();
 	//Radar::RenderSettings();
