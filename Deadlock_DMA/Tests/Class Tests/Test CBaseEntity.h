@@ -1,4 +1,5 @@
 #pragma once
+#include "Deadlock/Classes/CBaseEntity.h"
 
 TEST_CASE("CBaseEntity::Missing m_EntityAddress")
 {

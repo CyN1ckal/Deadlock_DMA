@@ -1,4 +1,5 @@
 #pragma once
+#include "Deadlock/Classes/CTrooperEntity.h"
 
 TEST_CASE("CTrooperEntity::Missing m_EntityAddress")
 {

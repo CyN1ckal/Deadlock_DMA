@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <array>
 #include <memory>
+#include <mutex>
 
 #ifdef DBGPRINT
 #define DbgPrintln(...) std::println(__VA_ARGS__)
@@ -19,8 +20,6 @@
 #include "tracy/Tracy.hpp"
 
 #include "vmmdll.h"
-
-#include "Scheduler.hpp"
 
 #include <d3d11.h>
 #pragma comment(lib, "d3d11.lib")
