@@ -52,8 +52,6 @@ void DMAThread(DMA_Connection* Conn, Process* Deadlock)
 
 	while (bRunning)
 	{
-		ZoneScopedN("DMA Thread Tick");
-
 		auto CurrentTime = std::chrono::steady_clock::now();
 		ViewMatrixTimer.Tick(CurrentTime);
 		YawTimer.Tick(CurrentTime);
