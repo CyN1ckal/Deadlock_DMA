@@ -13,6 +13,9 @@
 
 void ESP::OnFrame()
 {
+	if (!bMasterToggle)
+		return;
+
 	ZoneScoped;
 
 	auto DrawList = ImGui::GetWindowDrawList();
@@ -20,10 +23,17 @@ void ESP::OnFrame()
 
 	ImGui::PushFont(nullptr, 16.0f);
 
-	Draw_Players()();
-	Draw_Troopers()();
-	Draw_Camps()();
-	Draw_Sinners()();
+	if (Draw_Players::bMasterToggle)
+		Draw_Players()();
+
+	if (Draw_Troopers::bMasterToggle)
+		Draw_Troopers()();
+
+	if (Draw_Camps::bMasterToggle)
+		Draw_Camps()();
+
+	if (Draw_Sinners::bMasterToggle)
+		Draw_Sinners()();
 
 	ImGui::PopFont();
 }
@@ -32,44 +42,26 @@ void ESP::RenderSettings()
 {
 	ImGui::Begin("ESP Settings");
 
-	/*if (ImGui::CollapsingHeader("Master Settings", ImGuiTreeNodeFlags_DefaultOpen))
+	ImGui::Checkbox("Enable ESP", &bMasterToggle);
+
+	if (ImGui::CollapsingHeader("Players", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::Indent();
-
-		ImGui::Checkbox("Draw Troopers", &bDrawTroopers);
-		ImGui::Checkbox("Draw Monster Camps", &bDrawCamps);
-		ImGui::Checkbox("Draw Sinners", &bDrawSinners);
-		ImGui::SeparatorText("Filters");
-		ImGui::Checkbox("Hide Local Player", &bHideLocal);
+		ImGui::Checkbox("Enable Player ESP", &Draw_Players::bMasterToggle);
+		ImGui::Checkbox("Draw Player Bones", &Draw_Players::bDrawBones);
+		ImGui::Checkbox("Draw Player Health Bars", &Draw_Players::bDrawHealthBar);
+		ImGui::Checkbox("Hide Local Player", &Draw_Players::bHideLocalPlayer);
+		ImGui::Checkbox("Show Player Level", &Draw_Players::bShowLevel);
+		ImGui::Checkbox("Show Player Distance", &Draw_Players::bShowDistance);
 		ImGui::Unindent();
 	}
 
-	if (ImGui::CollapsingHeader("Player Name Tags"))
-	{
-		ImGui::Indent();
-		ImGui::Checkbox("Draw Player Name Tags", &NameTagSettings.bDrawNameTags);
-		ImGui::Checkbox("Hide Friendly", &NameTagSettings.bHideFriendly);
-		ImGui::Checkbox("Show Level", &NameTagSettings.bShowLevel);
-		ImGui::Checkbox("Show Hero Name", &NameTagSettings.bShowHeroName);
-		ImGui::Checkbox("Show Health", &NameTagSettings.bShowHealth);
-		ImGui::Checkbox("Show Distance", &NameTagSettings.bShowDistance);
-		ImGui::Unindent();
-	}
+	ImGui::Checkbox("Draw Troopers", &Draw_Troopers::bMasterToggle);
+	ImGui::Checkbox("Hide Friendly Troopers", &Draw_Troopers::bHideFriendly);
 
-	if (ImGui::CollapsingHeader("Player Bones"))
-	{
-		ImGui::Indent();
-		ImGui::Checkbox("Draw Bones", &SkeletonSettings.bDrawSkeleton);
-		ImGui::Checkbox("Hide Friendly Bones", &SkeletonSettings.bHideFriendly);
-		ImGui::Unindent();
-	}
+	ImGui::Checkbox("Draw Monster Camps", &Draw_Camps::bMasterToggle);
 
-	if (ImGui::CollapsingHeader("Debug"))
-	{
-		ImGui::Indent();
-		ImGui::Checkbox("Bone Numbers", &bBoneNumbers);
-		ImGui::Unindent();
-	}*/
+	ImGui::Checkbox("Draw Sinners", &Draw_Sinners::bMasterToggle);
 
 	ImGui::End();
 }

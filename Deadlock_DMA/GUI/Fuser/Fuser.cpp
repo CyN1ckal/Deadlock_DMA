@@ -5,7 +5,7 @@
 
 void Fuser::OnFrame()
 {
-	if (!bFuser) return;
+	if (!bMasterToggle) return;
 
 	ZoneScoped;
 
@@ -31,7 +31,7 @@ void Fuser::RenderSettings()
 {
 	ImGui::Begin("Fuser Settings");
 
-	ImGui::Checkbox("Enable Fuser", &bFuser);
+	ImGui::Checkbox("Enable Fuser", &bMasterToggle);
 
 	ImGui::PushItemWidth(60.0f);
 

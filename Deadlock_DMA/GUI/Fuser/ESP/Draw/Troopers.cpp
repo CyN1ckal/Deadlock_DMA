@@ -21,12 +21,17 @@ void Draw_Troopers::operator()()
 
 		if (Trooper.IsDormant()) continue;
 
+		auto bIsFriend = Trooper.IsFriendly();
+
+		if (bHideFriendly && bIsFriend)
+			continue;
+
 		Vector2 ScreenPos{};
 		if (!Deadlock::WorldToScreen(Trooper.m_Position, ScreenPos)) continue;
 
 		std::string TrooperString = std::format("{}", Trooper.m_CurrentHealth);
 		auto TextSize = ImGui::CalcTextSize(TrooperString.c_str());
 		ImGui::SetCursorPos({ ScreenPos.x - (TextSize.x / 2.0f), ScreenPos.y });
-		ImGui::TextColored((Trooper.IsFriendly()) ? ColorPicker::FriendlyTrooperColor : ColorPicker::EnemyTrooperColor, TrooperString.c_str());
+		ImGui::TextColored((bHideFriendly) ? ColorPicker::FriendlyTrooperColor : ColorPicker::EnemyTrooperColor, TrooperString.c_str());
 	}
 }
