@@ -1,4 +1,5 @@
 #pragma once
+#include "Deadlock/Classes/CCitadelPlayerPawn.h"
 
 TEST_CASE("CCitadelPlayerPawn::Missing m_EntityAddress")
 {
