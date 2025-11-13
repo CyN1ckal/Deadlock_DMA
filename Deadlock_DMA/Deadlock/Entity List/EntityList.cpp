@@ -3,6 +3,8 @@
 #include "EntityList.h"
 #include "GUI/Fuser/ESP/ESP.h"
 
+#include "GUI/Query.h"
+
 void EntityList::FullUpdate(DMA_Connection* Conn, Process* Proc)
 {
 	ZoneScoped;
@@ -119,6 +121,8 @@ void EntityList::SortEntityList()
 
 void EntityList::FullControllerRefresh_lk(DMA_Connection* Conn, Process* Proc)
 {
+	if (Query::IsUsingPlayers() == false) return;
+	
 	ZoneScoped;
 
 	std::scoped_lock Lock(m_ControllerMutex);
@@ -152,6 +156,8 @@ void EntityList::FullControllerRefresh(DMA_Connection* Conn, Process* Proc)
 
 void EntityList::FullPawnRefresh_lk(DMA_Connection* Conn, Process* Proc)
 {
+	if (Query::IsUsingPlayers() == false) return;
+
 	ZoneScoped;
 
 	std::scoped_lock Lock(m_PawnMutex);
@@ -161,6 +167,8 @@ void EntityList::FullPawnRefresh_lk(DMA_Connection* Conn, Process* Proc)
 
 void EntityList::FullPawnRefresh(DMA_Connection* Conn, Process* Proc)
 {
+	ZoneScoped;
+
 	m_PlayerPawns.clear();
 
 	for (auto& addr : m_PlayerPawn_Addresses)
@@ -192,6 +200,8 @@ void EntityList::FullPawnRefresh(DMA_Connection* Conn, Process* Proc)
 
 void EntityList::QuickPawnRefresh(DMA_Connection* Conn, Process* Proc)
 {
+	if (Query::IsUsingPlayers() == false) return;
+
 	ZoneScoped;
 
 	std::scoped_lock Lock(m_PawnMutex);
@@ -208,6 +218,8 @@ void EntityList::QuickPawnRefresh(DMA_Connection* Conn, Process* Proc)
 
 void EntityList::FullMonsterCampRefresh(DMA_Connection* Conn, Process* Proc)
 {
+	if (Query::IsUsingCamps() == false) return;
+
 	ZoneScoped;
 
 	std::scoped_lock Lock(m_MonsterCampMutex);
@@ -236,6 +248,8 @@ void EntityList::FullMonsterCampRefresh(DMA_Connection* Conn, Process* Proc)
 
 void EntityList::QuickMonsterCampRefresh(DMA_Connection* Conn, Process* Proc)
 {
+	if (Query::IsUsingCamps() == false) return;
+
 	ZoneScoped;
 
 	std::scoped_lock Lock(m_MonsterCampMutex);
@@ -252,6 +266,8 @@ void EntityList::QuickMonsterCampRefresh(DMA_Connection* Conn, Process* Proc)
 
 void EntityList::FullTrooperRefresh(DMA_Connection* Conn, Process* Proc)
 {
+	if (Query::IsUsingTroopers() == false) return;
+
 	ZoneScoped;
 
 	std::scoped_lock Lock(m_TrooperMutex);
@@ -282,6 +298,8 @@ void EntityList::FullTrooperRefresh(DMA_Connection* Conn, Process* Proc)
 
 void EntityList::QuickTrooperRefresh(DMA_Connection* Conn, Process* Proc)
 {
+	if (Query::IsUsingTroopers() == false) return;
+
 	ZoneScoped;
 
 	std::scoped_lock Lock(m_TrooperMutex);
@@ -300,6 +318,8 @@ void EntityList::QuickTrooperRefresh(DMA_Connection* Conn, Process* Proc)
 
 void EntityList::FullSinnerRefresh(DMA_Connection* Conn, Process* Proc)
 {
+	if (Query::IsUsingSinners() == false) return;
+
 	ZoneScoped;
 
 	std::scoped_lock Lock(m_SinnerMutex);

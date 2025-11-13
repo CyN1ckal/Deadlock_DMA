@@ -166,13 +166,14 @@ bool MainWindow::OnFrame()
 {
 	PreFrame();
 
-	ImGui::DockSpaceOverViewport(ImGui::GetMainViewport()->ID,nullptr, ImGuiDockNodeFlags_PassthruCentralNode);
+	ImGui::DockSpaceOverViewport(ImGui::GetMainViewport()->ID, nullptr, ImGuiDockNodeFlags_PassthruCentralNode);
 
 	Fuser::RenderSettings();
-	Fuser::OnFrame();
+	ESP::RenderSettings();
 	ColorPicker::RenderColorPicker();
 
-	//ESP::RenderSettings();
+	Fuser::OnFrame();
+
 	//Radar::Render();
 	//Radar::RenderSettings();
 	//PlayerList::Render();

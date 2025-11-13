@@ -45,13 +45,15 @@ void Draw_Players::DrawPlayer(const CCitadelPlayerController& PC, const CCitadel
 	auto DrawList = ImGui::GetWindowDrawList();
 	auto WindowPos = ImGui::GetWindowPos();
 
-	DrawSkeleton(PC, Pawn, DrawList, WindowPos);
+	if (bDrawBones)
+		DrawSkeleton(PC, Pawn, DrawList, WindowPos);
 
 	int LineNumber = 0;
 
 	DrawNameTag(PC, Pawn, DrawList, WindowPos, LineNumber);
 
-	DrawHealthBar(PC, Pawn, ImVec2(ScreenPos.x + WindowPos.x, ScreenPos.y + WindowPos.y), DrawList, LineNumber);
+	if (bDrawHealthBar)
+		DrawHealthBar(PC, Pawn, ImVec2(ScreenPos.x + WindowPos.x, ScreenPos.y + WindowPos.y), DrawList, LineNumber);
 }
 
 void Draw_Players::DrawHealthBar(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, const ImVec2& PawnScreenPos, ImDrawList* DrawList, int& LineNumber)
@@ -112,11 +114,13 @@ void Draw_Players::DrawNameTag(const CCitadelPlayerController& PC, const CCitade
 
 	std::string NameTagString{};
 
-	NameTagString += std::format("({0:d}) ", PC.m_CurrentLevel);
+	if (bShowLevel)
+		NameTagString += std::format("({0:d}) ", PC.m_CurrentLevel);
 
 	NameTagString += std::format("{0:s} ", PC.GetHeroName());
 
-	NameTagString += std::format("[{0:.0f}m] ", Pawn.DistanceFromLocalPlayer(true));
+	if (bShowDistance)
+		NameTagString += std::format("[{0:.0f}m] ", Pawn.DistanceFromLocalPlayer(true));
 
 	if (NameTagString.back() == ' ') NameTagString.pop_back();
 

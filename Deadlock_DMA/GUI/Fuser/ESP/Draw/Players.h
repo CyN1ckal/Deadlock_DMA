@@ -5,7 +5,14 @@ class Draw_Players
 {
 public:
 	static void operator()();
+
+public:
+	static inline bool bMasterToggle{ true };
+	static inline bool bDrawBones{ true };
+	static inline bool bDrawHealthBar{ true };
 	static inline bool bHideLocalPlayer{ true };
+	static inline bool bShowLevel{ true };
+	static inline bool bShowDistance{ true };
 
 private:
 	static void DrawPlayer(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn);
