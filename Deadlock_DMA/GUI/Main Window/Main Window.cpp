@@ -12,6 +12,9 @@
 
 #include "Styles/DeepDark.hpp"
 
+#include "GUI/Fonts/Fonts.h"
+#include "GUI/Fonts/Data/Font Data.h"
+
 bool MainWindow::CreateDeviceD3D(HWND hWnd)
 {
 	// Setup swap chain
@@ -132,6 +135,9 @@ bool MainWindow::Initialize()
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
 
+	g_StackedSans_SemiBold = io.Fonts->AddFontFromMemoryTTF(StackSans_SemiBold_Data, sizeof(StackSans_SemiBold_Data), 16.0f);
+	g_StackedSans_Regular = io.Fonts->AddFontFromMemoryTTF(StackSans_Regular_Data, sizeof(StackSans_Regular_Data), 16.0f);
+
 	ImGui::StyleColorsDark();
 
 	ImGuiStyle& style = ImGui::GetStyle();
@@ -160,16 +166,15 @@ bool MainWindow::OnFrame()
 {
 	PreFrame();
 
-	Fuser::OnFrame();
+	ImGui::DockSpaceOverViewport(ImGui::GetMainViewport()->ID,nullptr, ImGuiDockNodeFlags_PassthruCentralNode);
+
 	Fuser::RenderSettings();
-
-	ESP::RenderSettings();
-
+	Fuser::OnFrame();
 	ColorPicker::RenderColorPicker();
 
-	Radar::Render();
-	Radar::RenderSettings();
-
+	//ESP::RenderSettings();
+	//Radar::Render();
+	//Radar::RenderSettings();
 	//PlayerList::Render();
 	//TrooperList::Render();
 	//ClassList::Render();

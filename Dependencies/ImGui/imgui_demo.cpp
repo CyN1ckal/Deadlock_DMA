@@ -1,4 +1,4 @@
-// dear imgui, v1.92.4 WIP
+// dear imgui, v1.92.5 WIP
 // (demo code)
 
 // Help:
@@ -640,6 +640,7 @@ void ImGui::ShowDemoWindow(bool* p_open)
             ImGui::CheckboxFlags("io.BackendFlags: HasSetMousePos",         &io.BackendFlags, ImGuiBackendFlags_HasSetMousePos);
             ImGui::CheckboxFlags("io.BackendFlags: PlatformHasViewports",   &io.BackendFlags, ImGuiBackendFlags_PlatformHasViewports);
             ImGui::CheckboxFlags("io.BackendFlags: HasMouseHoveredViewport",&io.BackendFlags, ImGuiBackendFlags_HasMouseHoveredViewport);
+            ImGui::CheckboxFlags("io.BackendFlags: HasParentViewport",      &io.BackendFlags, ImGuiBackendFlags_HasParentViewport);
             ImGui::CheckboxFlags("io.BackendFlags: RendererHasVtxOffset",   &io.BackendFlags, ImGuiBackendFlags_RendererHasVtxOffset);
             ImGui::CheckboxFlags("io.BackendFlags: RendererHasTextures",    &io.BackendFlags, ImGuiBackendFlags_RendererHasTextures);
             ImGui::CheckboxFlags("io.BackendFlags: RendererHasViewports",   &io.BackendFlags, ImGuiBackendFlags_RendererHasViewports);
@@ -955,8 +956,9 @@ static void DemoWindowWidgetsBasic()
         ImGui::SeparatorText("Inputs");
 
         {
-            // To wire InputText() with std::string or any other custom string type,
-            // see the "Text Input > Resize Callback" section of this demo, and the misc/cpp/imgui_stdlib.h file.
+            // If you want to use InputText() with std::string or any custom dynamic string type:
+            // - For std::string: use the wrapper in misc/cpp/imgui_stdlib.h/.cpp
+            // - Otherwise, see the 'Dear ImGui Demo->Widgets->Text Input->Resize Callback' for using ImGuiInputTextFlags_CallbackResize.
             IMGUI_DEMO_MARKER("Widgets/Basic/InputText");
             static char str0[128] = "Hello, world!";
             ImGui::InputText("input text", str0, IM_ARRAYSIZE(str0));
@@ -2730,6 +2732,10 @@ static void DemoWindowWidgetsSelectionAndMultiSelect(ImGuiDemoWindowData* demo_d
     {
         HelpMarker("Selections can be built using Selectable(), TreeNode() or other widgets. Selection state is owned by application code/data.");
 
+        ImGui::BulletText("Wiki page:");
+        ImGui::SameLine();
+        ImGui::TextLinkOpenURL("imgui/wiki/Multi-Select", "https://github.com/ocornut/imgui/wiki/Multi-Select");
+
         // Without any fancy API: manage single-selection yourself.
         IMGUI_DEMO_MARKER("Widgets/Selection State/Single-Select");
         if (ImGui::TreeNode("Single-Select"))
@@ -3263,6 +3269,7 @@ static void DemoWindowWidgetsSelectionAndMultiSelect(ImGuiDemoWindowData* demo_d
                 ImGui::CheckboxFlags("ImGuiMultiSelectFlags_NoAutoSelect", &flags, ImGuiMultiSelectFlags_NoAutoSelect);
                 ImGui::CheckboxFlags("ImGuiMultiSelectFlags_NoAutoClear", &flags, ImGuiMultiSelectFlags_NoAutoClear);
                 ImGui::CheckboxFlags("ImGuiMultiSelectFlags_NoAutoClearOnReselect", &flags, ImGuiMultiSelectFlags_NoAutoClearOnReselect);
+                ImGui::CheckboxFlags("ImGuiMultiSelectFlags_NoSelectOnRightClick", &flags, ImGuiMultiSelectFlags_NoSelectOnRightClick);
                 ImGui::CheckboxFlags("ImGuiMultiSelectFlags_BoxSelect1d", &flags, ImGuiMultiSelectFlags_BoxSelect1d);
                 ImGui::CheckboxFlags("ImGuiMultiSelectFlags_BoxSelect2d", &flags, ImGuiMultiSelectFlags_BoxSelect2d);
                 ImGui::CheckboxFlags("ImGuiMultiSelectFlags_BoxSelectNoScroll", &flags, ImGuiMultiSelectFlags_BoxSelectNoScroll);
@@ -3774,8 +3781,10 @@ static void DemoWindowWidgetsTextInput()
         IMGUI_DEMO_MARKER("Widgets/Text Input/Multi-line Text Input");
         if (ImGui::TreeNode("Multi-line Text Input"))
         {
-            // Note: we are using a fixed-sized buffer for simplicity here. See ImGuiInputTextFlags_CallbackResize
-            // and the code in misc/cpp/imgui_stdlib.h for how to setup InputText() for dynamically resizing strings.
+            // WE ARE USING A FIXED-SIZE BUFFER FOR SIMPLICITY HERE.
+            // If you want to use InputText() with std::string or any custom dynamic string type:
+            // - For std::string: use the wrapper in misc/cpp/imgui_stdlib.h/.cpp
+            // - Otherwise, see the 'Dear ImGui Demo->Widgets->Text Input->Resize Callback' for using ImGuiInputTextFlags_CallbackResize.
             static char text[1024 * 16] =
                 "/*\n"
                 " The Pentium F00F bug, shorthand for F0 0F C7 C8,\n"
@@ -4878,15 +4887,18 @@ static void DemoWindowLayout()
 
         ImGui::Checkbox("Decoration", &enable_extra_decorations);
 
+        ImGui::PushItemWidth(ImGui::GetFontSize() * 10);
+        enable_track |= ImGui::DragInt("##item", &track_item, 0.25f, 0, 99, "Item = %d");
+        ImGui::SameLine();
         ImGui::Checkbox("Track", &enable_track);
-        ImGui::PushItemWidth(100);
-        ImGui::SameLine(140); enable_track |= ImGui::DragInt("##item", &track_item, 0.25f, 0, 99, "Item = %d");
 
-        bool scroll_to_off = ImGui::Button("Scroll Offset");
-        ImGui::SameLine(140); scroll_to_off |= ImGui::DragFloat("##off", &scroll_to_off_px, 1.00f, 0, FLT_MAX, "+%.0f px");
+        bool scroll_to_off = ImGui::DragFloat("##off", &scroll_to_off_px, 1.00f, 0, FLT_MAX, "+%.0f px");
+        ImGui::SameLine();
+        scroll_to_off |= ImGui::Button("Scroll Offset");
 
-        bool scroll_to_pos = ImGui::Button("Scroll To Pos");
-        ImGui::SameLine(140); scroll_to_pos |= ImGui::DragFloat("##pos", &scroll_to_pos_px, 1.00f, -10, FLT_MAX, "X/Y = %.0f px");
+        bool scroll_to_pos = ImGui::DragFloat("##pos", &scroll_to_pos_px, 1.00f, -10, FLT_MAX, "X/Y = %.0f px");
+        ImGui::SameLine();
+        scroll_to_pos |= ImGui::Button("Scroll To Pos");
         ImGui::PopItemWidth();
 
         if (scroll_to_off || scroll_to_pos)
@@ -7103,7 +7115,7 @@ static void DemoWindowTables()
         // [2.3] Right-click in columns to open another custom popup
         HelpMarker(
             "Demonstrate mixing table context menu (over header), item context button (over button) "
-            "and custom per-colunm context menu (over column body).");
+            "and custom per-column context menu (over column body).");
         ImGuiTableFlags flags2 = ImGuiTableFlags_Resizable | ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Borders;
         if (ImGui::BeginTable("table_context_menu_2", COLUMNS_COUNT, flags2))
         {
@@ -8263,6 +8275,25 @@ void ImGui::ShowAboutWindow(bool* p_open)
 #ifdef IMGUI_HAS_DOCK
         ImGui::Text("define: IMGUI_HAS_DOCK");
 #endif
+#ifdef NDEBUG
+        ImGui::Text("define: NDEBUG");
+#endif
+
+        // Heuristic to detect no-op IM_ASSERT() macros
+        // - This is designed so people opening bug reports would convey and notice that they have disabled asserts for Dear ImGui code.
+        // - 16 is > strlen("((void)(_EXPR))") which we suggested in our imconfig.h template as a possible way to disable.
+        int assert_runs_expression = 0;
+        IM_ASSERT(++assert_runs_expression);
+        int assert_expand_len = (int)strlen(IM_STRINGIFY((IM_ASSERT(true))));
+        bool assert_maybe_disabled = (!assert_runs_expression || assert_expand_len <= 16);
+        ImGui::Text("IM_ASSERT: runs expression: %s. expand size: %s%s",
+            assert_runs_expression ? "OK" : "KO", (assert_expand_len > 16) ? "OK" : "KO", assert_maybe_disabled ? " (MAYBE DISABLED?!)" : "");
+        if (assert_maybe_disabled)
+        {
+            ImGui::SameLine();
+            HelpMarker("IM_ASSERT() calls assert() by default. Compiling with NDEBUG will usually strip out assert() to nothing, which is NOT recommended because we use asserts to notify of programmer mistakes!");
+        }
+
         ImGui::Separator();
         ImGui::Text("io.BackendPlatformName: %s", io.BackendPlatformName ? io.BackendPlatformName : "NULL");
         ImGui::Text("io.BackendRendererName: %s", io.BackendRendererName ? io.BackendRendererName : "NULL");
@@ -8298,6 +8329,7 @@ void ImGui::ShowAboutWindow(bool* p_open)
         if (io.BackendFlags & ImGuiBackendFlags_HasSetMousePos)         ImGui::Text(" HasSetMousePos");
         if (io.BackendFlags & ImGuiBackendFlags_PlatformHasViewports)   ImGui::Text(" PlatformHasViewports");
         if (io.BackendFlags & ImGuiBackendFlags_HasMouseHoveredViewport)ImGui::Text(" HasMouseHoveredViewport");
+        if (io.BackendFlags & ImGuiBackendFlags_HasParentViewport)      ImGui::Text(" HasParentViewport");
         if (io.BackendFlags & ImGuiBackendFlags_RendererHasVtxOffset)   ImGui::Text(" RendererHasVtxOffset");
         if (io.BackendFlags & ImGuiBackendFlags_RendererHasTextures)    ImGui::Text(" RendererHasTextures");
         if (io.BackendFlags & ImGuiBackendFlags_RendererHasViewports)   ImGui::Text(" RendererHasViewports");
@@ -10243,37 +10275,27 @@ static void ShowExampleAppCustomRendering(bool* p_open)
 // [SECTION] Example App: Docking, DockSpace / ShowExampleAppDockSpace()
 //-----------------------------------------------------------------------------
 
-// Demonstrate using DockSpace() to create an explicit docking node within an existing window.
-// Note: You can use most Docking facilities without calling any API. You DO NOT need to call DockSpace() to use Docking!
-// - Drag from window title bar or their tab to dock/undock. Hold SHIFT to disable docking.
-// - Drag from window menu button (upper-left button) to undock an entire node (all windows).
-// - When io.ConfigDockingWithShift == true, you instead need to hold SHIFT to enable docking.
-// About dockspaces:
-// - Use DockSpace() to create an explicit dock node _within_ an existing window.
-// - Use DockSpaceOverViewport() to create an explicit dock node covering the screen or a specific viewport.
-//   This is often used with ImGuiDockNodeFlags_PassthruCentralNode.
-// - Important: Dockspaces need to be submitted _before_ any window they can host. Submit it early in your frame! (*)
-// - Important: Dockspaces need to be kept alive if hidden, otherwise windows docked into it will be undocked.
-//   e.g. if you have multiple tabs with a dockspace inside each tab: submit the non-visible dockspaces with ImGuiDockNodeFlags_KeepAliveOnly.
-// (*) because of this constraint, the implicit \"Debug\" window can not be docked into an explicit DockSpace() node,
-// because that window is submitted as part of the part of the NewFrame() call. An easy workaround is that you can create
-// your own implicit "Debug##2" window after calling DockSpace() and leave it in the window stack for anyone to use.
+// Demonstrate using DockSpace() to create an explicit docking node within an existing window, with various options.
+// THIS IS A DEMO FOR ADVANCED USAGE OF DockSpace().
+// MOST REGULAR APPLICATIONS WHO WANT TO ALLOW DOCKING WINDOWS ON THE EDGE OF YOUR SCREEN CAN SIMPLY USE:
+//    ImGui::NewFrame();
+//    ImGui::DockSpaceOverViewport(); // Create a dockspace in main viewport
+// OR:
+//    ImGui::NewFrame();
+//    ImGui::DockSpaceOverViewport(0, nullptr, ImGuiDockNodeFlags_PassthruCentralNode); // Create a dockspace in main viewport, where central node is transparent.
+// Read https://github.com/ocornut/imgui/wiki/Docking for details.
+// The reasons we do not use DockSpaceOverViewport() in this demo is because:
+// - (1) we allow the host window to be floating/moveable instead of filling the viewport (when opt_fullscreen == false)
+//       which is mostly to showcase the idea that DockSpace() may be submitted anywhere.
+// - (2) we allow the host window to have padding (when opt_padding == true)
+// - (3) we expose many flags and need a way to have them visible.
+// - (4) we have a local menu bar in the host window (vs. you could use BeginMainMenuBar() + DockSpaceOverViewport()
+//       in your code, but we don't here because we allow the window to be floating)
 void ShowExampleAppDockSpace(bool* p_open)
 {
-    // READ THIS !!!
     // TL;DR; this demo is more complicated than what most users you would normally use.
-    // If we remove all options we are showcasing, this demo would become:
-    //     void ShowExampleAppDockSpace()
-    //     {
-    //         ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport());
-    //     }
-    // In most cases you should be able to just call DockSpaceOverViewport() and ignore all the code below!
+    // If we remove all options we are showcasing, this demo would become a simple call to ImGui::DockSpaceOverViewport() !!
     // In this specific demo, we are not using DockSpaceOverViewport() because:
-    // - (1) we allow the host window to be floating/moveable instead of filling the viewport (when opt_fullscreen == false)
-    // - (2) we allow the host window to have padding (when opt_padding == true)
-    // - (3) we expose many flags and need a way to have them visible.
-    // - (4) we have a local menu bar in the host window (vs. you could use BeginMainMenuBar() + DockSpaceOverViewport()
-    //      in your code, but we don't here because we allow the window to be floating)
 
     static bool opt_fullscreen = true;
     static bool opt_padding = false;
@@ -10318,6 +10340,8 @@ void ShowExampleAppDockSpace(bool* p_open)
         ImGui::PopStyleVar(2);
 
     // Submit the DockSpace
+    // REMINDER: THIS IS A DEMO FOR ADVANCED USAGE OF DockSpace()!
+    // MOST REGULAR APPLICATIONS WILL SIMPLY WANT TO CALL DockSpaceOverViewport(). READ COMMENTS ABOVE.
     ImGuiIO& io = ImGui::GetIO();
     if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
     {
@@ -10329,6 +10353,7 @@ void ShowExampleAppDockSpace(bool* p_open)
         ShowDockingDisabledMessage();
     }
 
+    // Show demo options and help
     if (ImGui::BeginMenuBar())
     {
         if (ImGui::BeginMenu("Options"))
@@ -10351,16 +10376,23 @@ void ShowExampleAppDockSpace(bool* p_open)
                 *p_open = false;
             ImGui::EndMenu();
         }
-        HelpMarker(
-            "When docking is enabled, you can ALWAYS dock MOST window into another! Try it now!" "\n"
-            "- Drag from window title bar or their tab to dock/undock." "\n"
-            "- Drag from window menu button (upper-left button) to undock an entire node (all windows)." "\n"
-            "- Hold SHIFT to disable docking (if io.ConfigDockingWithShift == false, default)" "\n"
-            "- Hold SHIFT to enable docking (if io.ConfigDockingWithShift == true)" "\n"
-            "This demo app has nothing to do with enabling docking!" "\n\n"
-            "This demo app only demonstrate the use of ImGui::DockSpace() which allows you to manually create a docking node _within_ another window." "\n\n"
-            "Read comments in ShowExampleAppDockSpace() for more details.");
-
+        if (ImGui::BeginMenu("Help"))
+        {
+            ImGui::TextUnformatted(
+                "This demo has nothing to do with enabling docking!" "\n"
+                "This demo only demonstrate the use of ImGui::DockSpace() which allows you to manually\ncreate a docking node _within_ another window." "\n"
+                "Most application can simply call ImGui::DockSpaceOverViewport() and be done with it.");
+            ImGui::Separator();
+            ImGui::TextUnformatted("When docking is enabled, you can ALWAYS dock MOST window into another! Try it now!" "\n"
+                "- Drag from window title bar or their tab to dock/undock." "\n"
+                "- Drag from window menu button (upper-left button) to undock an entire node (all windows)." "\n"
+                "- Hold SHIFT to disable docking (if io.ConfigDockingWithShift == false, default)" "\n"
+                "- Hold SHIFT to enable docking (if io.ConfigDockingWithShift == true)");
+            ImGui::Separator();
+            ImGui::TextUnformatted("More details:"); ImGui::Bullet(); ImGui::SameLine(); ImGui::TextLinkOpenURL("Docking Wiki page", "https://github.com/ocornut/imgui/wiki/Docking");
+            ImGui::BulletText("Read comments in ShowExampleAppDockSpace()");
+            ImGui::EndMenu();
+        }
         ImGui::EndMenuBar();
     }
 

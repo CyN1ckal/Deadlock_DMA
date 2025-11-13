@@ -8,7 +8,7 @@ template <typename T, typename F>
 class CTimer
 {
 public:
-	CTimer(T _Interval, F _Function): m_Interval(_Interval), m_Function(_Function){}
+	CTimer(T _Interval, F _Function) : m_Interval(_Interval), m_Function(_Function) {}
 
 	void Tick(std::chrono::steady_clock::time_point CurrentTime)
 	{
@@ -32,23 +32,23 @@ void DMAThread(DMA_Connection* Conn, Process* Deadlock)
 	tracy::SetThreadName("DMA Thread");
 #endif
 
-	CTimer ViewMatrixTimer(std::chrono::milliseconds(1), [&Conn] {Deadlock::UpdateViewMatrix(Conn);});
-	CTimer YawTimer(std::chrono::milliseconds(10), [&Conn] {Deadlock::UpdateClientYaw(Conn);});
-	CTimer ServerTimeTimer(std::chrono::milliseconds(1000), [&Conn] {Deadlock::UpdateServerTime(Conn);});
-	CTimer LocalControllerAddressTime(std::chrono::seconds(15), [&Conn] {Deadlock::UpdateLocalPlayerControllerAddress(Conn);});
+	CTimer ViewMatrixTimer(std::chrono::milliseconds(1), [&Conn] {Deadlock::UpdateViewMatrix(Conn); });
+	CTimer YawTimer(std::chrono::milliseconds(10), [&Conn] {Deadlock::UpdateClientYaw(Conn); });
+	CTimer ServerTimeTimer(std::chrono::milliseconds(1000), [&Conn] {Deadlock::UpdateServerTime(Conn); });
+	CTimer LocalControllerAddressTime(std::chrono::seconds(15), [&Conn] {Deadlock::UpdateLocalPlayerControllerAddress(Conn); });
 
-	CTimer FullTrooperTimer(std::chrono::seconds(3), [&Conn, &Deadlock] {EntityList::FullTrooperRefresh(Conn, Deadlock);});
-	CTimer QuickTrooperTimer(std::chrono::milliseconds(100), [&Conn, &Deadlock] {EntityList::QuickTrooperRefresh(Conn, Deadlock);});
+	CTimer FullTrooperTimer(std::chrono::seconds(3), [&Conn, &Deadlock] {EntityList::FullTrooperRefresh(Conn, Deadlock); });
+	CTimer QuickTrooperTimer(std::chrono::milliseconds(100), [&Conn, &Deadlock] {EntityList::QuickTrooperRefresh(Conn, Deadlock); });
 
-	CTimer FullPawnTimer(std::chrono::seconds(2), [&Conn, &Deadlock] {EntityList::FullPawnRefresh(Conn, Deadlock);});
-	CTimer QuickPawnTimer(std::chrono::milliseconds(10), [&Conn, &Deadlock] {EntityList::QuickPawnRefresh(Conn, Deadlock);});
+	CTimer FullPawnTimer(std::chrono::seconds(2), [&Conn, &Deadlock] {EntityList::FullPawnRefresh_lk(Conn, Deadlock); });
+	CTimer QuickPawnTimer(std::chrono::milliseconds(10), [&Conn, &Deadlock] {EntityList::QuickPawnRefresh(Conn, Deadlock); });
 
-	CTimer FullMonsterCampTimer(std::chrono::seconds(2), [&Conn, &Deadlock] {EntityList::FullMonsterCampRefresh(Conn, Deadlock);});
-	CTimer QuickMonsterCampTimer(std::chrono::milliseconds(100), [&Conn, &Deadlock] {EntityList::QuickMonsterCampRefresh(Conn, Deadlock);});
+	CTimer FullMonsterCampTimer(std::chrono::seconds(2), [&Conn, &Deadlock] {EntityList::FullMonsterCampRefresh(Conn, Deadlock); });
+	CTimer QuickMonsterCampTimer(std::chrono::milliseconds(100), [&Conn, &Deadlock] {EntityList::QuickMonsterCampRefresh(Conn, Deadlock); });
 
-	CTimer FullControllerTimer(std::chrono::milliseconds(50), [&Conn, &Deadlock] {EntityList::FullControllerRefresh(Conn, Deadlock);});
-	CTimer FullSinnerTimer(std::chrono::milliseconds(1000), [&Conn, &Deadlock] {EntityList::FullSinnerRefresh(Conn, Deadlock);});
-	CTimer FullUpdateTimer(std::chrono::seconds(5), [&Conn, &Deadlock] {EntityList::FullUpdate(Conn, Deadlock);});
+	CTimer FullControllerTimer(std::chrono::milliseconds(50), [&Conn, &Deadlock] {EntityList::FullControllerRefresh_lk(Conn, Deadlock); });
+	CTimer FullSinnerTimer(std::chrono::milliseconds(1000), [&Conn, &Deadlock] {EntityList::FullSinnerRefresh(Conn, Deadlock); });
+	CTimer FullUpdateTimer(std::chrono::seconds(5), [&Conn, &Deadlock] {EntityList::FullUpdate(Conn, Deadlock); });
 
 	while (bRunning)
 	{
