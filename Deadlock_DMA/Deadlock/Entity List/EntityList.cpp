@@ -54,6 +54,8 @@ void EntityList::GetEntityListAddresses(DMA_Connection* Conn, Process* Proc)
 
 void EntityList::UpdateEntityMap(DMA_Connection* Conn, Process* Proc)
 {
+	std::scoped_lock Lock(m_PawnMutex, m_ControllerMutex);
+
 	for (auto& Arr : m_CompleteEntityList)
 		Arr.fill({});
 
@@ -115,12 +117,17 @@ void EntityList::SortEntityList()
 	}
 }
 
-void EntityList::FullControllerRefresh(DMA_Connection* Conn, Process* Proc)
+void EntityList::FullControllerRefresh_lk(DMA_Connection* Conn, Process* Proc)
 {
 	ZoneScoped;
 
 	std::scoped_lock Lock(m_ControllerMutex);
 
+	FullControllerRefresh(Conn, Proc);
+}
+
+void EntityList::FullControllerRefresh(DMA_Connection* Conn, Process* Proc)
+{
 	m_PlayerControllers.clear();
 
 	for (auto& addr : m_PlayerController_Addresses)
@@ -143,12 +150,17 @@ void EntityList::FullControllerRefresh(DMA_Connection* Conn, Process* Proc)
 	VMMDLL_Scatter_CloseHandle(vmsh);
 }
 
-void EntityList::FullPawnRefresh(DMA_Connection* Conn, Process* Proc)
+void EntityList::FullPawnRefresh_lk(DMA_Connection* Conn, Process* Proc)
 {
 	ZoneScoped;
 
 	std::scoped_lock Lock(m_PawnMutex);
 
+	FullPawnRefresh(Conn, Proc);
+}
+
+void EntityList::FullPawnRefresh(DMA_Connection* Conn, Process* Proc)
+{
 	m_PlayerPawns.clear();
 
 	for (auto& addr : m_PlayerPawn_Addresses)
@@ -196,8 +208,6 @@ void EntityList::QuickPawnRefresh(DMA_Connection* Conn, Process* Proc)
 
 void EntityList::FullMonsterCampRefresh(DMA_Connection* Conn, Process* Proc)
 {
-	if (!ESP::bDrawCamps) return;
-
 	ZoneScoped;
 
 	std::scoped_lock Lock(m_MonsterCampMutex);
@@ -226,8 +236,6 @@ void EntityList::FullMonsterCampRefresh(DMA_Connection* Conn, Process* Proc)
 
 void EntityList::QuickMonsterCampRefresh(DMA_Connection* Conn, Process* Proc)
 {
-	if (!ESP::bDrawCamps) return;
-
 	ZoneScoped;
 
 	std::scoped_lock Lock(m_MonsterCampMutex);
@@ -244,8 +252,6 @@ void EntityList::QuickMonsterCampRefresh(DMA_Connection* Conn, Process* Proc)
 
 void EntityList::FullTrooperRefresh(DMA_Connection* Conn, Process* Proc)
 {
-	if (!ESP::bDrawTroopers) return;
-
 	ZoneScoped;
 
 	std::scoped_lock Lock(m_TrooperMutex);
@@ -276,8 +282,6 @@ void EntityList::FullTrooperRefresh(DMA_Connection* Conn, Process* Proc)
 
 void EntityList::QuickTrooperRefresh(DMA_Connection* Conn, Process* Proc)
 {
-	if (!ESP::bDrawTroopers) return;
-
 	ZoneScoped;
 
 	std::scoped_lock Lock(m_TrooperMutex);
@@ -296,8 +300,6 @@ void EntityList::QuickTrooperRefresh(DMA_Connection* Conn, Process* Proc)
 
 void EntityList::FullSinnerRefresh(DMA_Connection* Conn, Process* Proc)
 {
-	if (!ESP::bDrawSinners) return;
-
 	ZoneScoped;
 
 	std::scoped_lock Lock(m_SinnerMutex);

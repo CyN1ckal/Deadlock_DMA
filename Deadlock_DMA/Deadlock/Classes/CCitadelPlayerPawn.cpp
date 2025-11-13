@@ -1,87 +1,21 @@
 #include "pch.h"
 #include "CCitadelPlayerPawn.h"
-#include "Deadlock/Entity List/EntityList.h"
-#include "Deadlock/Const/HeroEnum.hpp"
-#include "Deadlock/Const/BoneLists.hpp"
-#include "GUI/Color Picker/Color Picker.h"
-#include "GUI/Fuser/ESP/ESP.h"	
 
-void CCitadelPlayerPawn::DrawSkeleton(const ImVec2& WindowPos, ImDrawList* DrawList) const
-{
-	if (!m_hController.IsValid()) return;
-
-	if (ESP::SkeletonSettings.bHideFriendly && IsFriendly()) return;
-
-	const auto ControllerAddress = EntityList::GetEntityAddressFromHandle(m_hController);
-
-	auto ControllerIt = std::find(EntityList::m_PlayerControllers.begin(), EntityList::m_PlayerControllers.end(), ControllerAddress);
-
-	if (ControllerIt == EntityList::m_PlayerControllers.end()) return;
-
-	auto It = g_HeroBoneMap.find(ControllerIt->m_HeroID);
-	if (It == g_HeroBoneMap.end()) return;
-
-	auto SkeletonColor = ControllerIt->IsFriendly() ? ColorPicker::FriendlyBoneColor : ColorPicker::EnemyBoneColor;
-
-	for (const auto& [StartBone, EndBone] : It->second)
-	{
-		Vector2 Start2D, End2D;
-
-		if (!Deadlock::WorldToScreen(m_BonePositions[StartBone], Start2D)) continue;
-		if (!Deadlock::WorldToScreen(m_BonePositions[EndBone], End2D)) continue;
-
-		ImVec2 Start = ImVec2(Start2D.x + WindowPos.x, Start2D.y + WindowPos.y);
-		ImVec2 End = ImVec2(End2D.x + WindowPos.x, End2D.y + WindowPos.y);
-		DrawList->AddLine(Start, End, ImGui::GetColorU32(SkeletonColor), 3.0f);
-	}
-}
-
-void CCitadelPlayerPawn::DrawNameTag(const ImVec2& WindowPos, ImDrawList* DrawList, CCitadelPlayerController& AssociatedController) const
-{
-	if (ESP::NameTagSettings.bHideFriendly && IsFriendly()) return;
-
-	Vector2 ScreenPos{};
-	if (!Deadlock::WorldToScreen(m_Position, ScreenPos)) return;
-
-	std::string NameTagString{};
-
-	if (ESP::NameTagSettings.bShowLevel)	NameTagString += std::format("L{0:d} ", AssociatedController.m_CurrentLevel);
-
-	if (ESP::NameTagSettings.bShowHeroName)	NameTagString += std::format("{0:s} ", AssociatedController.GetHeroName());
-
-	if (ESP::NameTagSettings.bShowHealth)	NameTagString += std::format("{0:d}HP ", AssociatedController.m_CurrentHealth);
-
-	if (ESP::NameTagSettings.bShowDistance)	NameTagString += std::format("{0:.0f}m ", this->DistanceFromLocalPlayer(true));
-
-	if (NameTagString.back() == ' ') NameTagString.pop_back();
-
-	auto TextSize = ImGui::CalcTextSize(NameTagString.c_str());
-
-	auto BackgroundColor = AssociatedController.IsFriendly() ? ColorPicker::FriendlyNameTagColor : ColorPicker::EnemyNameTagColor;
-
-	ImVec2 UpperLeft = ImVec2(ScreenPos.x - (TextSize.x / 2.0f) + WindowPos.x, ScreenPos.y + WindowPos.y);
-	ImVec2 LowerRight = ImVec2(ScreenPos.x + (TextSize.x / 2.0f) + WindowPos.x, ScreenPos.y + TextSize.y + WindowPos.y);
-	DrawList->AddRectFilled(UpperLeft, LowerRight, ImGui::GetColorU32(BackgroundColor));
-
-	ImGui::SetCursorPos(ImVec2(ScreenPos.x - (TextSize.x / 2.0f), ScreenPos.y));
-	ImGui::Text(NameTagString.c_str());
-}
-
-void CCitadelPlayerPawn::DrawBoneNumbers() const
-{
-	ImGui::PushFont(nullptr, 12.0f);
-
-	for (int i = 0; i < MAX_BONES; i++)
-	{
-		Vector2 ScreenPos{};
-		if (!Deadlock::WorldToScreen(m_BonePositions[i], ScreenPos)) continue;
-
-		std::string BoneString = std::to_string(i);
-		auto TextSize = ImGui::CalcTextSize(BoneString.c_str());
-
-		ImGui::SetCursorPos(ImVec2(ScreenPos.x - (TextSize.x / 2.0f), ScreenPos.y));
-		ImGui::Text(BoneString.c_str());
-	}
-
-	ImGui::PopFont();
-}
+//void CCitadelPlayerPawn::DrawBoneNumbers() const
+//{
+//	ImGui::PushFont(nullptr, 12.0f);
+//
+//	for (int i = 0; i < MAX_BONES; i++)
+//	{
+//		Vector2 ScreenPos{};
+//		if (!Deadlock::WorldToScreen(m_BonePositions[i], ScreenPos)) continue;
+//
+//		std::string BoneString = std::to_string(i);
+//		auto TextSize = ImGui::CalcTextSize(BoneString.c_str());
+//
+//		ImGui::SetCursorPos(ImVec2(ScreenPos.x - (TextSize.x / 2.0f), ScreenPos.y));
+//		ImGui::Text(BoneString.c_str());
+//	}
+//
+//	ImGui::PopFont();
+//}
