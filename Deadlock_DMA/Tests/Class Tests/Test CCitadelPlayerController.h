@@ -1,4 +1,5 @@
 #pragma once
+#include "Deadlock/Classes/CCitadelPlayerController.h"
 
 TEST_CASE("CCitadelPlayerController::Missing m_EntityAddress")
 {
