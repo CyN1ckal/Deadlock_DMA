@@ -6,6 +6,11 @@
 
 #include "GUI/Color Picker/Color Picker.h"
 
+#include "Draw/Players.h"
+#include "Draw/Troopers.h"
+#include "Draw/Camps.h"
+#include "Draw/Sinners.h"
+
 void ESP::OnFrame()
 {
 	ZoneScoped;
@@ -15,13 +20,10 @@ void ESP::OnFrame()
 
 	ImGui::PushFont(nullptr, 16.0f);
 
-	RenderPlayers(WindowPos, DrawList);
-
-	if (bDrawTroopers) RenderTroopers();
-
-	if (bDrawCamps) RenderMonsterCamps();
-
-	RenderSinners();
+	Draw_Players()();
+	Draw_Troopers()();
+	Draw_Camps()();
+	Draw_Sinners()();
 
 	ImGui::PopFont();
 }
@@ -30,7 +32,7 @@ void ESP::RenderSettings()
 {
 	ImGui::Begin("ESP Settings");
 
-	if (ImGui::CollapsingHeader("Master Settings", ImGuiTreeNodeFlags_DefaultOpen))
+	/*if (ImGui::CollapsingHeader("Master Settings", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::Indent();
 
@@ -67,138 +69,7 @@ void ESP::RenderSettings()
 		ImGui::Indent();
 		ImGui::Checkbox("Bone Numbers", &bBoneNumbers);
 		ImGui::Unindent();
-	}
+	}*/
 
 	ImGui::End();
-}
-
-void ESP::RenderPlayers(const ImVec2 WindowPos, ImDrawList* DrawList)
-{
-	ZoneScoped;
-
-	std::scoped_lock lock(EntityList::m_PawnMutex, EntityList::m_ControllerMutex);
-
-	for (auto& Pawn : EntityList::m_PlayerPawns)
-	{
-		if (Pawn.IsInvalid()) continue;
-
-		auto AssociatedControllerAddr = EntityList::GetEntityAddressFromHandle(Pawn.m_hController);
-
-		if (!AssociatedControllerAddr) continue;
-
-		if (bHideLocal && Pawn.IsLocalPlayer()) continue;
-
-		auto ControllerIt = std::find(EntityList::m_PlayerControllers.begin(), EntityList::m_PlayerControllers.end(), AssociatedControllerAddr);
-
-		if (ControllerIt == EntityList::m_PlayerControllers.end())
-			continue;
-
-		if (ControllerIt->IsInvalid()) continue;
-
-		if (ControllerIt->IsDead()) continue;
-
-		if (NameTagSettings.bDrawNameTags) Pawn.DrawNameTag(WindowPos, DrawList, *ControllerIt);
-
-		if (bBoneNumbers) Pawn.DrawBoneNumbers();
-
-		if (SkeletonSettings.bDrawSkeleton) Pawn.DrawSkeleton(WindowPos, DrawList);
-	}
-}
-
-void ESP::RenderTroopers()
-{
-	ZoneScoped;
-
-	/* m_ControllerMutex is required for friendly check */
-	std::scoped_lock Lock(EntityList::m_TrooperMutex, EntityList::m_ControllerMutex);
-
-	for (auto& Trooper : EntityList::m_Troopers)
-	{
-		if (Trooper.IsInvalid()) continue;
-
-		if (Trooper.IsDormant()) continue;
-
-		if (Trooper.m_CurrentHealth < 1) continue;
-
-		DrawTrooper(Trooper);
-	}
-}
-
-void ESP::RenderMonsterCamps()
-{
-	ZoneScoped;
-
-	std::scoped_lock Lock(EntityList::m_MonsterCampMutex);
-
-	ImGui::PushStyleColor(ImGuiCol_Text, ColorPicker::MonsterCampColor);
-
-	for (auto& Camp : EntityList::m_MonsterCamps)
-	{
-		if (Camp.IsInvalid()) continue;
-
-		if (Camp.IsDormant()) continue;
-
-		if (Camp.m_CurrentHealth < 1) continue;
-
-		Vector2 ScreenPos{};
-		if (!Deadlock::WorldToScreen(Camp.m_Position, ScreenPos)) continue;
-
-		std::string CampString = std::format("[{}]", Camp.m_CurrentHealth);
-
-		auto TextSize = ImGui::CalcTextSize(CampString.c_str());
-
-		ImGui::SetCursorPos({ ScreenPos.x - (TextSize.x / 2.0f), ScreenPos.y });
-
-		ImGui::Text(CampString.c_str());
-	}
-
-	ImGui::PopStyleColor(1);
-}
-
-void ESP::RenderSinners()
-{
-	ZoneScoped;
-
-	std::scoped_lock Lock(EntityList::m_SinnerMutex);
-
-	ImGui::PushStyleColor(ImGuiCol_Text, ColorPicker::SinnersColor);
-
-	for (auto& Sinner : EntityList::m_Sinners)
-	{
-		if (Sinner.IsInvalid()) continue;
-
-		if (Sinner.IsDormant()) continue;
-
-		if (Sinner.m_CurrentHealth < 1) continue;
-
-		Vector2 ScreenPos{};
-		if (!Deadlock::WorldToScreen(Sinner.m_Position, ScreenPos)) continue;
-
-		static const std::string SinnerString = "SS";
-
-		auto TextSize = ImGui::CalcTextSize(SinnerString.c_str());
-
-		ImGui::SetCursorPos({ ScreenPos.x - (TextSize.x / 2.0f), ScreenPos.y });
-
-		ImGui::Text(SinnerString.c_str());
-	}
-
-	ImGui::PopStyleColor(1);
-}
-
-void ESP::DrawTrooper(CBaseEntity& Trooper)
-{
-	Vector2 ScreenPos{};
-	if (!Deadlock::WorldToScreen(Trooper.m_Position, ScreenPos)) return;
-
-	auto HealthString = std::to_string(Trooper.m_CurrentHealth);
-	auto TextSize = ImGui::CalcTextSize(HealthString.c_str());
-
-	ImGui::PushStyleColor(ImGuiCol_Text, (Trooper.IsFriendly()) ? ColorPicker::FriendlyNameTagColor : ColorPicker::EnemyNameTagColor);
-
-	ImGui::SetCursorPos({ ScreenPos.x - (TextSize.x / 2.0f), ScreenPos.y });
-
-	ImGui::Text(HealthString.c_str());
-
-	ImGui::PopStyleColor();
 }

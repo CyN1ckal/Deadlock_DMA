@@ -13,11 +13,6 @@ public:
 	uintptr_t m_BoneArrayAddress{ 0 };
 	CHandle m_hController{ 0 };
 
-public:
-	void DrawSkeleton(const ImVec2& WindowPos, ImDrawList* DrawList) const;
-	void DrawNameTag(const ImVec2& WindowPos, ImDrawList* DrawList, CCitadelPlayerController& AssociatedController) const;
-	void DrawBoneNumbers() const;
-
 private:
 	void PrepareBoneRead(VMMDLL_SCATTER_HANDLE vmsh)
 	{

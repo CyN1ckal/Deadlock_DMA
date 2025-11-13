@@ -66,7 +66,7 @@ void Radar::DrawEntities()
 
 		ImVec2 EntityDrawPos = { Center.x - (RawRelativePos.x / fRadarScale), Center.y + (RawRelativePos.y / fRadarScale) };
 
-		ImU32 Color = Pawn.IsFriendly() ? ImGui::GetColorU32(ColorPicker::FriendlyRadarColor) : ImGui::GetColorU32((ColorPicker::EnemyRadarColor));
+		ImU32 Color = Pawn.IsFriendly() ? ColorPicker::FriendlyRadarColor : ColorPicker::EnemyRadarColor;
 
 		DrawList->AddCircleFilled(EntityDrawPos, 5.0f, Color);
 	}

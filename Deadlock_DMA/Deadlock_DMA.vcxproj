@@ -624,6 +624,10 @@
     <ClCompile Include="GUI\Debug GUI\Class List\Class List.cpp" />
     <ClCompile Include="GUI\Debug GUI\Player List\Player List.cpp" />
     <ClCompile Include="GUI\Debug GUI\Trooper List\Trooper List.cpp" />
+    <ClCompile Include="GUI\Fuser\ESP\Draw\Camps.cpp" />
+    <ClCompile Include="GUI\Fuser\ESP\Draw\Players.cpp" />
+    <ClCompile Include="GUI\Fuser\ESP\Draw\Sinners.cpp" />
+    <ClCompile Include="GUI\Fuser\ESP\Draw\Troopers.cpp" />
     <ClCompile Include="GUI\Fuser\ESP\ESP.cpp" />
     <ClCompile Include="GUI\Fuser\Fuser.cpp" />
     <ClCompile Include="GUI\Main Window\Main Window.cpp" />
@@ -642,6 +646,14 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DbgPrint|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClInclude Include="DMA\DMA Thread.h" />
+    <ClInclude Include="GUI\Fonts\Data\Font Data.h" />
+    <ClInclude Include="GUI\Fonts\Data\StackSans-Regular.h" />
+    <ClInclude Include="GUI\Fonts\Data\StackSans-SemiBold.h" />
+    <ClInclude Include="GUI\Fonts\Fonts.h" />
+    <ClInclude Include="GUI\Fuser\ESP\Draw\Camps.h" />
+    <ClInclude Include="GUI\Fuser\ESP\Draw\Players.h" />
+    <ClInclude Include="GUI\Fuser\ESP\Draw\Sinners.h" />
+    <ClInclude Include="GUI\Fuser\ESP\Draw\Troopers.h" />
     <ClInclude Include="Tests\All Tests.h" />
     <ClInclude Include="Tests\Class Tests\Test CBaseEntity.h" />
     <ClInclude Include="Tests\Class Tests\Class Tests.h" />

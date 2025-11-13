@@ -17,9 +17,11 @@ public: /* Interface methods */
 	static uintptr_t GetEntityAddressFromHandle(CHandle Handle);
 
 
+	static void FullControllerRefresh_lk(DMA_Connection* Conn, Process* Proc);
 	static void FullControllerRefresh(DMA_Connection* Conn, Process* Proc);
 	static void FullSinnerRefresh(DMA_Connection* Conn, Process* Proc);
 
+	static void FullPawnRefresh_lk(DMA_Connection* Conn, Process* Proc);
 	static void FullPawnRefresh(DMA_Connection* Conn, Process* Proc);
 	static void QuickPawnRefresh(DMA_Connection* Conn, Process* Proc);
 
