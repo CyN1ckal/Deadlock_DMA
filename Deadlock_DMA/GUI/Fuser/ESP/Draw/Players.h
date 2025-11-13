@@ -8,6 +8,7 @@ public:
 
 public:
 	static inline bool bMasterToggle{ true };
+	static inline bool bHideFriendly{ false };
 	static inline bool bDrawBones{ true };
 	static inline bool bDrawHealthBar{ true };
 	static inline bool bHideLocalPlayer{ true };

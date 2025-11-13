@@ -47,12 +47,13 @@ void ESP::RenderSettings()
 	if (ImGui::CollapsingHeader("Players", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::Indent();
-		ImGui::Checkbox("Enable Player ESP", &Draw_Players::bMasterToggle);
-		ImGui::Checkbox("Draw Player Bones", &Draw_Players::bDrawBones);
-		ImGui::Checkbox("Draw Player Health Bars", &Draw_Players::bDrawHealthBar);
-		ImGui::Checkbox("Hide Local Player", &Draw_Players::bHideLocalPlayer);
-		ImGui::Checkbox("Show Player Level", &Draw_Players::bShowLevel);
-		ImGui::Checkbox("Show Player Distance", &Draw_Players::bShowDistance);
+		ImGui::Checkbox("Master Toggle", &Draw_Players::bMasterToggle);
+		ImGui::Checkbox("Hide Friendly", &Draw_Players::bHideFriendly);
+		ImGui::Checkbox("Bones", &Draw_Players::bDrawBones);
+		ImGui::Checkbox("Health Bars", &Draw_Players::bDrawHealthBar);
+		ImGui::Checkbox("Hide Local", &Draw_Players::bHideLocalPlayer);
+		ImGui::Checkbox("Show Level", &Draw_Players::bShowLevel);
+		ImGui::Checkbox("Show Distance", &Draw_Players::bShowDistance);
 		ImGui::Unindent();
 	}
 
