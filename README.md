@@ -2,7 +2,7 @@
 
 This is an open-source DMA client for Valve's latest game, **Deadlock**. The project is written using **C++23**.
 
-<img width="2010" height="1131" alt="Screenshot 2025-10-01 195604" src="https://raw.githubusercontent.com/CyN1ckal/Deadlock_DMA/refs/heads/master/Deadlock.png" />
+<img width="1920" height="1079" alt="Showcase image" src="https://raw.githubusercontent.com/CyN1ckal/Deadlock_DMA/refs/heads/master/Deadlock%201.1.png" />
 
 
 ## Build
