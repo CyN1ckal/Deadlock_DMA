@@ -61,6 +61,7 @@ void ESP::RenderSettings()
 		ImGui::Checkbox("Hide Local", &Draw_Players::bHideLocalPlayer);
 		ImGui::Checkbox("Show Level", &Draw_Players::bShowLevel);
 		ImGui::Checkbox("Show Distance", &Draw_Players::bShowDistance);
+		ImGui::Checkbox("Bone Numbers", &Draw_Players::bBoneNumbers);
 		ImGui::Unindent();
 	}
 

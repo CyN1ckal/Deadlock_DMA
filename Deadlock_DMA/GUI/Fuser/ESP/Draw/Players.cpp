@@ -51,6 +51,9 @@ void Draw_Players::DrawPlayer(const CCitadelPlayerController& PC, const CCitadel
 	if (bDrawBones)
 		DrawSkeleton(PC, Pawn, DrawList, WindowPos);
 
+	if(bBoneNumbers)
+		DrawBoneNumbers(Pawn);
+
 	int LineNumber = 0;
 
 	DrawNameTag(PC, Pawn, DrawList, WindowPos, LineNumber);
@@ -108,6 +111,25 @@ void Draw_Players::DrawSkeleton(const CCitadelPlayerController& PC, const CCitad
 		ImVec2 End = ImVec2(End2D.x + WindowPos.x, End2D.y + WindowPos.y);
 		DrawList->AddLine(Start, End, SkeletonColor, 3.0f);
 	}
+}
+
+void Draw_Players::DrawBoneNumbers(const CCitadelPlayerPawn& Pawn)
+{
+	ImGui::PushFont(nullptr, 12.0f);
+
+	for (int i = 0; i < MAX_BONES; i++)
+	{
+		Vector2 ScreenPos{};
+		if (!Deadlock::WorldToScreen(Pawn.m_BonePositions[i], ScreenPos)) continue;
+
+		std::string BoneString = std::to_string(i);
+		auto TextSize = ImGui::CalcTextSize(BoneString.c_str());
+
+		ImGui::SetCursorPos(ImVec2(ScreenPos.x - (TextSize.x / 2.0f), ScreenPos.y));
+		ImGui::Text(BoneString.c_str());
+	}
+
+	ImGui::PopFont();
 }
 
 void Draw_Players::DrawNameTag(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos, int& LineNumber)
