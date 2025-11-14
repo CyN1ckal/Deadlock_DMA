@@ -176,11 +176,11 @@ bool MainWindow::OnFrame()
 
 	Fuser::OnFrame();
 	Keybinds::Render();
-	Aimbot::Render();
+	Aimbot::RenderSettings();
 
 	//Radar::Render();
 	//Radar::RenderSettings();
-	//PlayerList::Render();
+	PlayerList::Render();
 	//TrooperList::Render();
 	//ClassList::Render();
 

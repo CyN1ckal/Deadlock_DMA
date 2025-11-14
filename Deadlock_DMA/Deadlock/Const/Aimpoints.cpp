@@ -9,7 +9,7 @@ namespace Aimpoints
 		switch (ID)
 		{
 		case HeroId::Abrams:
-			return { 7,15 };
+			return { 7,5 };
 
 		case HeroId::Bebop:
 			return { 6,4 };
@@ -29,6 +29,9 @@ namespace Aimpoints
 		case HeroId::Dynamo:
 			return { 23,26 };
 
+		case HeroId::Dummy:
+			return { 12,10 };
+
 		case HeroId::GreyTalon:
 			return { 17,15 };
 
@@ -39,7 +42,7 @@ namespace Aimpoints
 			return { 13,11 };
 
 		case HeroId::Infernus:
-			return { 11,15 };
+			return { 30,11 };
 
 		case HeroId::Ivy:
 			return { 13,10 };

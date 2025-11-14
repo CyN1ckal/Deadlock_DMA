@@ -120,6 +120,23 @@ namespace BoneLists
 		{27,28},
 		{28,29}
 	};
+	const inline std::vector<std::pair<uint32_t, uint32_t>> Dummy_BonePairs{
+		{6,10},
+		{10,11},
+		{11,12},
+		{11,14},
+		{14,15},
+		{15,16},
+		{11,18},
+		{18,19},
+		{19,20},
+		{6,24},
+		{24,25},
+		{25,26},
+		{6,28},
+		{28,29},
+		{29,30}
+	};
 	const inline std::vector<std::pair<uint32_t, uint32_t>> Dynamo_BonePairs{
 		{18,22},
 		{22,23},
@@ -620,6 +637,7 @@ const inline std::unordered_map<HeroId, std::vector<std::pair<uint32_t, uint32_t
 	{HeroId::Doorman, BoneLists::Doorman_BonePairs},
 	{HeroId::Drifter, BoneLists::Drifter_BonePairs},
 	{HeroId::Dynamo, BoneLists::Dynamo_BonePairs},
+	{HeroId::Dummy, BoneLists::Dummy_BonePairs},
 	{HeroId::GreyTalon, BoneLists::GreyTalon_BonePairs},
 	{HeroId::Haze, BoneLists::Haze_BonePairs},
 	{HeroId::Holliday, BoneLists::Holliday_BonePairs},

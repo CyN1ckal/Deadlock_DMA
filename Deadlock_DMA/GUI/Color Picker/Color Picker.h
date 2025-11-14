@@ -24,4 +24,5 @@ public:
 	static inline ImColor EnemySoulsStatusBarColor{ 1.0f,0.5f,0.0f,1.0f };
 	static inline ImColor HealthBarForegroundColor{ 0.0f,0.8f,0.0f,1.0f };
 	static inline ImColor HealthBarBackgroundColor{ 0.2f,0.2f,0.2f,1.0f };
+	static inline ImColor AimbotFOVCircle{ 1.0f,0.0f,0.0f,1.0f };
 };
