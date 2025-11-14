@@ -4,6 +4,8 @@
 #include "Deadlock/Deadlock.h"
 #include "Deadlock/Entity List/EntityList.h"
 
+#include "GUI/Keybinds/Keybinds.h"
+
 template <typename T, typename F>
 class CTimer
 {
@@ -50,6 +52,8 @@ void DMAThread(DMA_Connection* Conn, Process* Deadlock)
 	CTimer FullSinnerTimer(std::chrono::milliseconds(1000), [&Conn, &Deadlock] {EntityList::FullSinnerRefresh(Conn, Deadlock); });
 	CTimer FullUpdateTimer(std::chrono::seconds(5), [&Conn, &Deadlock] {EntityList::FullUpdate(Conn, Deadlock); });
 
+	CTimer HotkeyTimer(std::chrono::milliseconds(10), [&Conn] { Keybinds::OnFrame(Conn); });
+
 	while (bRunning)
 	{
 		auto CurrentTime = std::chrono::steady_clock::now();
@@ -66,5 +70,6 @@ void DMAThread(DMA_Connection* Conn, Process* Deadlock)
 		FullControllerTimer.Tick(CurrentTime);
 		FullSinnerTimer.Tick(CurrentTime);
 		FullUpdateTimer.Tick(CurrentTime);
+		HotkeyTimer.Tick(CurrentTime);
 	}
 }

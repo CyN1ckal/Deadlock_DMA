@@ -618,6 +618,7 @@
     <ClCompile Include="Deadlock\Offsets.cpp" />
     <ClCompile Include="DMA\DMA Thread.cpp" />
     <ClCompile Include="DMA\DMA.cpp" />
+    <ClCompile Include="DMA\Input Manager.cpp" />
     <ClCompile Include="DMA\MultiScan.cpp" />
     <ClCompile Include="DMA\Process.cpp" />
     <ClCompile Include="GUI\Color Picker\Color Picker.cpp" />
@@ -631,6 +632,7 @@
     <ClCompile Include="GUI\Fuser\ESP\ESP.cpp" />
     <ClCompile Include="GUI\Fuser\Fuser.cpp" />
     <ClCompile Include="GUI\Fuser\Status Bars\Status Bars.cpp" />
+    <ClCompile Include="GUI\Keybinds\Keybinds.cpp" />
     <ClCompile Include="GUI\Main Window\Main Window.cpp" />
     <ClCompile Include="GUI\Query.cpp" />
     <ClCompile Include="GUI\Radar\Radar.cpp" />
@@ -648,6 +650,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DbgPrint|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClInclude Include="DMA\DMA Thread.h" />
+    <ClInclude Include="DMA\Input Manager.h" />
     <ClInclude Include="GUI\Fonts\Data\Font Data.h" />
     <ClInclude Include="GUI\Fonts\Data\StackSans-Regular.h" />
     <ClInclude Include="GUI\Fonts\Data\StackSans-SemiBold.h" />
@@ -657,6 +660,7 @@
     <ClInclude Include="GUI\Fuser\ESP\Draw\Sinners.h" />
     <ClInclude Include="GUI\Fuser\ESP\Draw\Troopers.h" />
     <ClInclude Include="GUI\Fuser\Status Bars\Status Bars.h" />
+    <ClInclude Include="GUI\Keybinds\Keybinds.h" />
     <ClInclude Include="GUI\Query.h" />
     <ClInclude Include="Tests\All Tests.h" />
     <ClInclude Include="Tests\Class Tests\Test CBaseEntity.h" />

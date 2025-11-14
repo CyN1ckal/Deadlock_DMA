@@ -9,6 +9,7 @@
 #include "GUI/Debug GUI/Class List/Class List.h"
 #include "GUI/Color Picker/Color Picker.h"
 #include "GUI/Radar/Radar.h"
+#include "GUI/Keybinds/Keybinds.h"
 
 #include "Styles/DeepDark.hpp"
 
@@ -173,6 +174,7 @@ bool MainWindow::OnFrame()
 	ColorPicker::RenderColorPicker();
 
 	Fuser::OnFrame();
+	Keybinds::Render();
 
 	//Radar::Render();
 	//Radar::RenderSettings();

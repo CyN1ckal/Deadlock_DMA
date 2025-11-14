@@ -6,8 +6,13 @@
 
 #include "GUI/Fuser/Fuser.h"
 
+#include "DMA/Input Manager.h"
+
 bool Deadlock::Initialize(DMA_Connection* Conn)
 {
+	if (c_keys::InitKeyboard(Conn))
+		std::println("[+] Target PC keyboard connected");
+
 	auto& Process = Deadlock::Proc();
 
 	Process.GetProcessInfo("deadlock.exe", Conn);
