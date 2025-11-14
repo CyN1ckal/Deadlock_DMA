@@ -7,7 +7,6 @@ public:
 	static void OnFrame(DMA_Connection* Conn);
 
 public:
-
-private:
 	static inline uint32_t m_DebugHotkey = VK_F12;
+	static inline uint32_t m_AimbotHotkey = VK_XBUTTON2;
 };

@@ -154,6 +154,24 @@ void EntityList::FullControllerRefresh(DMA_Connection* Conn, Process* Proc)
 	VMMDLL_Scatter_CloseHandle(vmsh);
 }
 
+void EntityList::QuickControllerRefresh(DMA_Connection* Conn, Process* Proc)
+{	
+	if (Query::IsUsingPlayers() == false) return;
+
+	ZoneScoped;
+
+	std::scoped_lock Lock(m_ControllerMutex);
+
+	auto vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), Proc->GetPID(), VMMDLL_FLAG_NOCACHE);
+
+	for (auto& PC : m_PlayerControllers)
+		PC.QuickRead(vmsh);
+
+	VMMDLL_Scatter_Execute(vmsh);
+
+	VMMDLL_Scatter_CloseHandle(vmsh);
+}
+
 void EntityList::FullPawnRefresh_lk(DMA_Connection* Conn, Process* Proc)
 {
 	if (Query::IsUsingPlayers() == false) return;

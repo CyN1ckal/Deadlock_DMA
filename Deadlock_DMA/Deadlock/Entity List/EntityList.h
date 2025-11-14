@@ -19,6 +19,8 @@ public: /* Interface methods */
 
 	static void FullControllerRefresh_lk(DMA_Connection* Conn, Process* Proc);
 	static void FullControllerRefresh(DMA_Connection* Conn, Process* Proc);
+	static void QuickControllerRefresh(DMA_Connection* Conn, Process* Proc);
+
 	static void FullSinnerRefresh(DMA_Connection* Conn, Process* Proc);
 
 	static void FullPawnRefresh_lk(DMA_Connection* Conn, Process* Proc);

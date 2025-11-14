@@ -53,7 +53,18 @@ public:
 		uintptr_t TotalSoulsAddress = PlayerDataAddress + Offsets::Controller::PlayerDataOffsets::TotalSouls;
 		VMMDLL_Scatter_PrepareEx(vmsh, TotalSoulsAddress, sizeof(int32_t), reinterpret_cast<BYTE*>(&m_TotalSouls), nullptr);
 	}
+	void QuickRead(VMMDLL_SCATTER_HANDLE vmsh)
+	{
+		if (IsInvalid())
+			return;
 
+		CBaseEntity::QuickRead(vmsh, false);
+
+		uintptr_t PlayerDataAddress = m_EntityAddress + Offsets::Controller::PlayerData;
+
+		uintptr_t CurrentHealthAddress = PlayerDataAddress + Offsets::Controller::PlayerDataOffsets::CurrentHealth;
+		VMMDLL_Scatter_PrepareEx(vmsh, CurrentHealthAddress, sizeof(int32_t), reinterpret_cast<BYTE*>(&m_CurrentHealth), nullptr);
+	}
 private:
 
 };

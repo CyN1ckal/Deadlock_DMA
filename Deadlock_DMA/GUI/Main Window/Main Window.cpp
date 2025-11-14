@@ -10,6 +10,7 @@
 #include "GUI/Color Picker/Color Picker.h"
 #include "GUI/Radar/Radar.h"
 #include "GUI/Keybinds/Keybinds.h"
+#include "GUI/Aimbot/Aimbot.h"
 
 #include "Styles/DeepDark.hpp"
 
@@ -175,6 +176,7 @@ bool MainWindow::OnFrame()
 
 	Fuser::OnFrame();
 	Keybinds::Render();
+	Aimbot::Render();
 
 	//Radar::Render();
 	//Radar::RenderSettings();
