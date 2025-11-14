@@ -65,6 +65,18 @@ void StatusBars::RenderTeamSoulsBars(GameStatistics& Stats, const ImVec2& Window
 	);
 }
 
+void StatusBars::RenderUnspentSoulsBar(GameStatistics& Stats, const ImVec2& WindowPos, const ImVec2& WindowSize, ImDrawList* DrawList, int& LineNumber)
+{
+	RenderGenericComparisonBar(
+		ValuePair(Stats.m_FriendlyUnspentSouls, Stats.m_EnemyUnspentSouls),
+		ColorPair(ColorPicker::FriendlySoulsStatusBarColor, ColorPicker::EnemySoulsStatusBarColor),
+		LineNumber,
+		DrawList,
+		WindowPos,
+		WindowSize
+	);
+}
+
 void StatusBars::Render()
 {
 	ZoneScoped;
@@ -82,6 +94,9 @@ void StatusBars::Render()
 
 	if (bRenderTeamSoulsBar)
 		RenderTeamSoulsBars(Stats, WindowPos, WindowSize, DrawList, LineNumber);
+
+	if (bRenderUnspentSoulsBar)
+		RenderUnspentSoulsBar(Stats, WindowPos, WindowSize, DrawList, LineNumber);
 }
 
 GameStatistics::GameStatistics()
@@ -107,13 +122,15 @@ GameStatistics::GameStatistics()
 		{
 			if (Controller.m_CurrentHealth > 0)
 				m_FriendlyTeamHealth += Controller.m_CurrentHealth;
-			m_FriendlySoulsCollected += Pawn.m_TotalSouls;
+			m_FriendlySoulsCollected += Controller.m_TotalSouls;
+			m_FriendlyUnspentSouls += Pawn.m_TotalUnspentSouls;
 		}
 		else
 		{
 			if (Controller.m_CurrentHealth > 0)
 				m_EnemyTeamHealth += Controller.m_CurrentHealth;
-			m_EnemySoulsCollected += Pawn.m_TotalSouls;
+			m_EnemySoulsCollected += Controller.m_TotalSouls;
+			m_EnemyUnspentSouls += Pawn.m_TotalUnspentSouls;
 		}
 	}
 }
