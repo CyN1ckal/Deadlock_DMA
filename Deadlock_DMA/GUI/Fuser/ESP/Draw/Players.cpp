@@ -71,13 +71,13 @@ void Draw_Players::DrawHealthBar(const CCitadelPlayerController& PC, const CCita
 
 	ImVec2 BarTopLeft = ImVec2(PawnScreenPos.x - (HealthBarWidth / 2.0f), PawnScreenPos.y + (LineNumber * TextLineHeight));
 	ImVec2 BarBottomRight = ImVec2(BarTopLeft.x + HealthBarWidth, BarTopLeft.y + TextLineHeight);
-	DrawList->AddRectFilled(BarTopLeft, BarBottomRight, IM_COL32(55, 55, 55, 255));
+	DrawList->AddRectFilled(BarTopLeft, BarBottomRight, ColorPicker::HealthBarBackgroundColor);
 
 	BarTopLeft.x += Padding;
 	BarTopLeft.y += Padding;
 	BarBottomRight.x = BarTopLeft.x + (UnpaddedWidth * HealthPercent);
 	BarBottomRight.y -= Padding;
-	DrawList->AddRectFilled(BarTopLeft, BarBottomRight, IM_COL32(0, 205, 0, 255));
+	DrawList->AddRectFilled(BarTopLeft, BarBottomRight, ColorPicker::HealthBarForegroundColor);
 
 	ImGui::PushFont(nullptr, ImGui::GetTextLineHeight() - Padding);
 
@@ -137,6 +137,32 @@ void Draw_Players::DrawNameTag(const CCitadelPlayerController& PC, const CCitade
 
 	ImGui::SetCursorPos(ImVec2(ScreenPos.x - (TextSize.x / 2.0f), ScreenPos.y + (LineNumber * TextSize.y)));
 	ImGui::Text(NameTagString.c_str());
+
+	LineNumber++;
+
+	if (bDrawUnsecuredSouls)
+		DrawUnsecuredSouls(Pawn, ScreenPos, LineNumber);
+}
+
+void Draw_Players::DrawUnsecuredSouls(const CCitadelPlayerPawn& Pawn, const Vector2& ScreenPos, int& LineNumber)
+{
+	if (Pawn.m_UnsecuredSouls < UnsecuredSoulsMinimumThreshold)
+		return;
+
+	ImColor UnsecuredSoulColor = ColorPicker::UnsecuredSoulsTextColor;
+	std::string SoulText = std::format("{} ", Pawn.m_UnsecuredSouls);
+
+	if (Pawn.m_UnsecuredSouls > UnsecuredSoulsHighlightThreshold)
+	{
+		UnsecuredSoulColor = ColorPicker::UnsecuredSoulsHighlightedTextColor;
+		SoulText += "UNSECURED";
+	}
+	else
+		SoulText += "Unsecured";
+
+	auto SoulTextSize = ImGui::CalcTextSize(SoulText.c_str());
+	ImGui::SetCursorPos(ImVec2(ScreenPos.x - (SoulTextSize.x / 2.0f), ScreenPos.y + (LineNumber * SoulTextSize.y)));
+	ImGui::TextColored(UnsecuredSoulColor, SoulText.c_str());
 
 	LineNumber++;
 }

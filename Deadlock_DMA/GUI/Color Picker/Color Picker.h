@@ -16,4 +16,12 @@ public:
 	static inline ImColor EnemyRadarColor{ 1.0f,0.0f,0.0f,1.0f };
 	static inline ImColor FriendlyTrooperColor{ 0.31f,0.79f,1.0f,1.0f };
 	static inline ImColor EnemyTrooperColor{ 1.0f,0.33f,0.33f,1.0f };
+	static inline ImColor UnsecuredSoulsTextColor{ 1.0f,1.0f,1.0f,1.0f };
+	static inline ImColor UnsecuredSoulsHighlightedTextColor{ 1.0f,1.0f,0.0f,1.0f };
+	static inline ImColor FriendlyHealthStatusBarColor{ 0.0f,0.8f,0.0f,1.0f };
+	static inline ImColor EnemyHealthStatusBarColor{ 0.8f,0.0f,0.0f,1.0f };
+	static inline ImColor FriendlySoulsStatusBarColor{ 0.0f,0.5f,1.0f,1.0f };
+	static inline ImColor EnemySoulsStatusBarColor{ 1.0f,0.5f,0.0f,1.0f };
+	static inline ImColor HealthBarForegroundColor{ 0.0f,0.8f,0.0f,1.0f };
+	static inline ImColor HealthBarBackgroundColor{ 0.2f,0.2f,0.2f,1.0f };
 };

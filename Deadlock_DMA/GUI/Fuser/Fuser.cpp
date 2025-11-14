@@ -59,16 +59,29 @@ void Fuser::RenderSoulsPerMinute()
 
 	ZoneScoped;
 
-	std::scoped_lock Lock(EntityList::m_ControllerMutex, Deadlock::m_LocalAddressMutex, Deadlock::m_ServerTimeMutex);
+	CCitadelPlayerPawn* pPawn = nullptr;
 
-	auto ControllerIt = std::find(EntityList::m_PlayerControllers.begin(), EntityList::m_PlayerControllers.end(), Deadlock::m_LocalPlayerControllerAddress);
+	std::scoped_lock PawnLock(EntityList::m_PawnMutex);
 
-	if (ControllerIt == EntityList::m_PlayerControllers.end()) return;
+	{
+		std::scoped_lock AddrLock(Deadlock::m_LocalAddressMutex);
+		auto PawnIt = std::find(EntityList::m_PlayerPawns.begin(), EntityList::m_PlayerPawns.end(), Deadlock::m_LocalPlayerPawnAddress);
+		if (PawnIt == EntityList::m_PlayerPawns.end()) return;
+		pPawn = &*PawnIt;
+	}
 
-	auto Souls = ControllerIt->m_TotalSouls;
-	auto SoulsPerSecond = static_cast<float>(ControllerIt->m_TotalSouls) / Deadlock::m_ServerTime;
+	if (!pPawn) return;
+
+	auto Souls = pPawn->m_TotalSouls;
+	float SoulsPerSecond = 0.0f;
+
+	{
+		std::scoped_lock timeLock(Deadlock::m_ServerTimeMutex);
+		SoulsPerSecond = static_cast<float>(pPawn->m_TotalSouls) / Deadlock::m_ServerTime;
+	}
+
 	auto SoulsPerMinute = SoulsPerSecond * 60.0f;
-	ImGui::PushFont(nullptr, 16.0f);
+	ImGui::PushFont(nullptr, 24.0f);
 	ImGui::SetCursorPos({ 2.0f, ScreenSize.y - ImGui::GetTextLineHeight() });
 	ImGui::Text("%.1f Souls/Min", SoulsPerMinute);
 	ImGui::PopFont();
