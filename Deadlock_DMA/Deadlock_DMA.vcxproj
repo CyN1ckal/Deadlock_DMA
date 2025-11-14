@@ -630,6 +630,7 @@
     <ClCompile Include="GUI\Fuser\ESP\Draw\Troopers.cpp" />
     <ClCompile Include="GUI\Fuser\ESP\ESP.cpp" />
     <ClCompile Include="GUI\Fuser\Fuser.cpp" />
+    <ClCompile Include="GUI\Fuser\Status Bars\Status Bars.cpp" />
     <ClCompile Include="GUI\Main Window\Main Window.cpp" />
     <ClCompile Include="GUI\Query.cpp" />
     <ClCompile Include="GUI\Radar\Radar.cpp" />
@@ -655,6 +656,7 @@
     <ClInclude Include="GUI\Fuser\ESP\Draw\Players.h" />
     <ClInclude Include="GUI\Fuser\ESP\Draw\Sinners.h" />
     <ClInclude Include="GUI\Fuser\ESP\Draw\Troopers.h" />
+    <ClInclude Include="GUI\Fuser\Status Bars\Status Bars.h" />
     <ClInclude Include="GUI\Query.h" />
     <ClInclude Include="Tests\All Tests.h" />
     <ClInclude Include="Tests\Class Tests\Test CBaseEntity.h" />

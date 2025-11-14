@@ -2,6 +2,7 @@
 #include "Fuser.h"
 #include "ESP/ESP.h"
 #include "Deadlock/Entity List/EntityList.h"
+#include "Status Bars/Status Bars.h"
 
 void Fuser::OnFrame()
 {
@@ -22,6 +23,8 @@ void Fuser::OnFrame()
 
 	RenderSoulsPerMinute();
 
+	StatusBars::Render();
+
 	ImGui::End();
 
 	ImGui::PopStyleColor(1);
@@ -40,6 +43,10 @@ void Fuser::RenderSettings()
 	ImGui::InputFloat("Screen Size Y", &ScreenSize.y, 0.0f, 0.0f, "%.0f");
 
 	ImGui::Checkbox("Draw Souls Per Minute", &bDrawSoulsPerMinute);
+
+	ImGui::Checkbox("Healh Status Bar", &StatusBars::bRenderTeamHealthBar);
+
+	ImGui::Checkbox("Souls Status Bar", &StatusBars::bRenderTeamSoulsBar);
 
 	ImGui::PopItemWidth();
 
