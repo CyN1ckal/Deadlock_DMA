@@ -120,6 +120,12 @@
     <ClCompile Include="GUI\Fuser\Status Bars\Status Bars.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DMA\Input Manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\Keybinds\Keybinds.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -288,6 +294,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GUI\Fuser\Status Bars\Status Bars.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DMA\Input Manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Keybinds\Keybinds.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
