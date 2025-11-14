@@ -10,6 +10,7 @@ namespace HeroNames
 	const inline std::string Calico = "Calico";
 	const inline std::string Doorman = "Doorman";
 	const inline std::string Drifter = "Drifter";
+	const inline std::string Dummy = "Dummy";
 	const inline std::string Dynamo = "Dynamo";
 	const inline std::string GreyTalon = "Grey Talon";
 	const inline std::string Haze = "Haze";
@@ -44,6 +45,7 @@ namespace HeroNames
 		{HeroId::Calico, Calico},
 		{HeroId::Doorman, Doorman},
 		{HeroId::Drifter, Drifter},
+		{HeroId::Dummy, Dummy},
 		{HeroId::Dynamo, Dynamo},
 		{HeroId::GreyTalon, GreyTalon},
 		{HeroId::Haze, Haze},

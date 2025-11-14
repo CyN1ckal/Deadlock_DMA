@@ -3,6 +3,7 @@
 #include "ESP/ESP.h"
 #include "Deadlock/Entity List/EntityList.h"
 #include "Status Bars/Status Bars.h"
+#include "GUI/Aimbot/Aimbot.h"
 
 void Fuser::OnFrame()
 {
@@ -24,6 +25,8 @@ void Fuser::OnFrame()
 	RenderSoulsPerMinute();
 
 	StatusBars::Render();
+
+	Aimbot::RenderFOVCircle();
 
 	ImGui::End();
 

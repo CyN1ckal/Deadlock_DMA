@@ -4,8 +4,9 @@
 #include "GUI/Keybinds/Keybinds.h"
 #include "Aimbot.h"
 #include "GUI/Fuser/Fuser.h"
+#include "GUI/Color Picker/Color Picker.h"
 
-void Aimbot::Render()
+void Aimbot::RenderSettings()
 {
 	if (m_Device.isConnected() == false)
 		m_Device.connect();
@@ -20,6 +21,12 @@ void Aimbot::Render()
 	ImGui::SliderFloat("Dampen", &fDampen, 0.1f, 1.0f, "%.2f");
 
 	ImGui::SliderFloat("Max Pixel Distance", &fMaxPixelDistance, 10.0f, 500.0f, "%.1f");
+
+	ImGui::Checkbox("Aim Head?", &bAimHead);
+
+	ImGui::SameLine();
+
+	ImGui::Checkbox("FOV Circle", &bDrawMaxFOV);
 
 	ImGui::End();
 }
@@ -53,8 +60,8 @@ Vector2 Aimbot::GetAimDelta(const Vector2& CenterScreen)
 
 		auto& HeroId = ControllerIt->m_HeroID;
 
-		/* Implement bone changing; now hardcoded head */
-		size_t FinalAimpointIndex = Aimpoints::GetAimpoints(HeroId).first;
+		auto AimList = Aimpoints::GetAimpoints(HeroId);
+		size_t FinalAimpointIndex = (bAimHead) ? AimList.first : AimList.second;
 
 		Vector2 ScreenPos{};
 		if (!Deadlock::WorldToScreen(Pawn.m_BonePositions[FinalAimpointIndex], ScreenPos)) continue;
@@ -106,4 +113,15 @@ void Aimbot::OnFrame(DMA_Connection* Conn)
 		EntityList::QuickControllerRefresh(Conn, &Deadlock::Proc());
 
 	} while (c_keys::IsKeyDown(Conn, Keybinds::m_AimbotHotkey));
+}
+
+void Aimbot::RenderFOVCircle()
+{
+	if (!bDrawMaxFOV)
+		return;
+
+	auto WindowSize = ImGui::GetWindowSize();
+	auto WindowPos = ImGui::GetWindowPos();
+	ImVec2 CenterScreen{ WindowPos.x + (WindowSize.x / 2.0f), WindowPos.y + (WindowSize.y / 2.0f) };
+	ImGui::GetWindowDrawList()->AddCircle(CenterScreen, fMaxPixelDistance, ColorPicker::AimbotFOVCircle, 100, 1.5f);
 }
