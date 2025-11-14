@@ -48,6 +48,8 @@ void Fuser::RenderSettings()
 
 	ImGui::Checkbox("Souls Status Bar", &StatusBars::bRenderTeamSoulsBar);
 
+	ImGui::Checkbox("Unspent Souls Status Bar", &StatusBars::bRenderUnspentSoulsBar);
+
 	ImGui::PopItemWidth();
 
 	ImGui::End();
@@ -59,25 +61,25 @@ void Fuser::RenderSoulsPerMinute()
 
 	ZoneScoped;
 
-	CCitadelPlayerPawn* pPawn = nullptr;
+	CCitadelPlayerController* pController = nullptr;
 
-	std::scoped_lock PawnLock(EntityList::m_PawnMutex);
+	std::scoped_lock PawnLock(EntityList::m_ControllerMutex);
 
 	{
 		std::scoped_lock AddrLock(Deadlock::m_LocalAddressMutex);
-		auto PawnIt = std::find(EntityList::m_PlayerPawns.begin(), EntityList::m_PlayerPawns.end(), Deadlock::m_LocalPlayerPawnAddress);
-		if (PawnIt == EntityList::m_PlayerPawns.end()) return;
-		pPawn = &*PawnIt;
+		auto ControllerIt = std::find(EntityList::m_PlayerControllers.begin(), EntityList::m_PlayerControllers.end(), Deadlock::m_LocalPlayerControllerAddress);
+		if (ControllerIt == EntityList::m_PlayerControllers.end()) return;
+		pController = &*ControllerIt;
 	}
 
-	if (!pPawn) return;
+	if (!pController) return;
 
-	auto Souls = pPawn->m_TotalSouls;
+	auto Souls = pController->m_TotalSouls;
 	float SoulsPerSecond = 0.0f;
 
 	{
 		std::scoped_lock timeLock(Deadlock::m_ServerTimeMutex);
-		SoulsPerSecond = static_cast<float>(pPawn->m_TotalSouls) / Deadlock::m_ServerTime;
+		SoulsPerSecond = static_cast<float>(pController->m_TotalSouls) / Deadlock::m_ServerTime;
 	}
 
 	auto SoulsPerMinute = SoulsPerSecond * 60.0f;

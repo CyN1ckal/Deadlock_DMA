@@ -12,7 +12,7 @@ public:
 	Vector3 m_BonePositions[MAX_BONES]{ 0.0f };
 	uintptr_t m_BoneArrayAddress{ 0 };
 	CHandle m_hController{ 0 };
-	int32_t m_TotalSouls{ 0 };
+	int32_t m_TotalUnspentSouls{ 0 };
 	int32_t m_UnsecuredSouls{ 0 };
 
 private:
@@ -36,8 +36,8 @@ public:
 		uintptr_t UnsecuredSoulsPtr = m_EntityAddress + Offsets::Pawn::UnsecuredSouls;
 		VMMDLL_Scatter_PrepareEx(vmsh, UnsecuredSoulsPtr, sizeof(int32_t), reinterpret_cast<BYTE*>(&m_UnsecuredSouls), nullptr);
 
-		uintptr_t TotalSoulsPtr = m_EntityAddress + Offsets::Pawn::TotalSouls;
-		VMMDLL_Scatter_PrepareEx(vmsh, TotalSoulsPtr, sizeof(int32_t), reinterpret_cast<BYTE*>(&m_TotalSouls), nullptr);
+		uintptr_t TotalUnspentSoulsPtr = m_EntityAddress + Offsets::Pawn::TotalUnspentSouls;
+		VMMDLL_Scatter_PrepareEx(vmsh, TotalUnspentSoulsPtr, sizeof(int32_t), reinterpret_cast<BYTE*>(&m_TotalUnspentSouls), nullptr);
 	}
 
 	void PrepareRead_2(VMMDLL_SCATTER_HANDLE vmsh)
