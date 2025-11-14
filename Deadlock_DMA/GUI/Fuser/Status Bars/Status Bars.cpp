@@ -4,6 +4,8 @@
 
 #include "Deadlock/Entity List/EntityList.h"
 
+#include "GUI/Color Picker/Color Picker.h"
+
 void StatusBars::RenderGenericComparisonBar(ValuePair Values, ColorPair Colors, int& LineNumber, ImDrawList* DrawList, const ImVec2& WindowPos, const ImVec2& WindowSize)
 {
 	constexpr float TotalWidth = 200.0f;
@@ -40,12 +42,10 @@ void StatusBars::RenderGenericComparisonBar(ValuePair Values, ColorPair Colors, 
 
 void StatusBars::RenderTeamHealthBars(GameStatistics& Stats, const ImVec2& WindowPos, const ImVec2& WindowSize, ImDrawList* DrawList, int& LineNumber)
 {
-	ImColor FriendlyColor = ImColor(0, 200, 0, 200);
-	ImColor EnemyColor = ImColor(200, 0, 0, 200);
 
 	RenderGenericComparisonBar(
 		ValuePair(Stats.m_FriendlyTeamHealth, Stats.m_EnemyTeamHealth),
-		ColorPair(FriendlyColor, EnemyColor),
+		ColorPair(ColorPicker::FriendlyHealthStatusBarColor, ColorPicker::EnemyHealthStatusBarColor),
 		LineNumber,
 		DrawList,
 		WindowPos,
@@ -55,12 +55,9 @@ void StatusBars::RenderTeamHealthBars(GameStatistics& Stats, const ImVec2& Windo
 
 void StatusBars::RenderTeamSoulsBars(GameStatistics& Stats, const ImVec2& WindowPos, const ImVec2& WindowSize, ImDrawList* DrawList, int& LineNumber)
 {
-	ImColor FriendlyColor = ImColor(0, 150, 255, 200);
-	ImColor EnemyColor = ImColor(255, 150, 0, 200);
-
 	RenderGenericComparisonBar(
 		ValuePair(Stats.m_FriendlySoulsCollected, Stats.m_EnemySoulsCollected),
-		ColorPair(FriendlyColor, EnemyColor),
+		ColorPair(ColorPicker::FriendlySoulsStatusBarColor, ColorPicker::EnemySoulsStatusBarColor),
 		LineNumber,
 		DrawList,
 		WindowPos,
@@ -89,23 +86,34 @@ void StatusBars::Render()
 
 GameStatistics::GameStatistics()
 {
-	std::scoped_lock Lock(EntityList::m_ControllerMutex);
+	std::scoped_lock Lock(EntityList::m_ControllerMutex, EntityList::m_PawnMutex);
 
 	for (auto& Controller : EntityList::m_PlayerControllers)
 	{
 		if (Controller.IsInvalid()) continue;
 
+		auto AssociatedPawnAddr = EntityList::GetEntityAddressFromHandle(Controller.m_hPawn);
+
+		if (!AssociatedPawnAddr) continue;
+
+		auto PawnIt = std::find(EntityList::m_PlayerPawns.begin(), EntityList::m_PlayerPawns.end(), AssociatedPawnAddr);
+
+		if (PawnIt == EntityList::m_PlayerPawns.end())
+			continue;
+
+		auto& Pawn = *PawnIt;
+
 		if (Controller.IsFriendly())
 		{
 			if (Controller.m_CurrentHealth > 0)
 				m_FriendlyTeamHealth += Controller.m_CurrentHealth;
-			m_FriendlySoulsCollected += Controller.m_TotalSouls;
+			m_FriendlySoulsCollected += Pawn.m_TotalSouls;
 		}
 		else
 		{
 			if (Controller.m_CurrentHealth > 0)
 				m_EnemyTeamHealth += Controller.m_CurrentHealth;
-			m_EnemySoulsCollected += Controller.m_TotalSouls;
+			m_EnemySoulsCollected += Pawn.m_TotalSouls;
 		}
 	}
 }

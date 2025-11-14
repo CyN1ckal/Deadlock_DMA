@@ -51,6 +51,13 @@ void ESP::RenderSettings()
 		ImGui::Checkbox("Hide Friendly", &Draw_Players::bHideFriendly);
 		ImGui::Checkbox("Bones", &Draw_Players::bDrawBones);
 		ImGui::Checkbox("Health Bars", &Draw_Players::bDrawHealthBar);
+		ImGui::Checkbox("Unsecured Souls", &Draw_Players::bDrawUnsecuredSouls);
+		ImGui::Indent();
+		ImGui::SetNextItemWidth(50.0f);
+		ImGui::InputScalarN("Minimum Threshold", ImGuiDataType_S32, &Draw_Players::UnsecuredSoulsMinimumThreshold, 1);
+		ImGui::SetNextItemWidth(50.0f);
+		ImGui::InputScalarN("Highlight Threshold", ImGuiDataType_S32, &Draw_Players::UnsecuredSoulsHighlightThreshold, 1);
+		ImGui::Unindent();
 		ImGui::Checkbox("Hide Local", &Draw_Players::bHideLocalPlayer);
 		ImGui::Checkbox("Show Level", &Draw_Players::bShowLevel);
 		ImGui::Checkbox("Show Distance", &Draw_Players::bShowDistance);
