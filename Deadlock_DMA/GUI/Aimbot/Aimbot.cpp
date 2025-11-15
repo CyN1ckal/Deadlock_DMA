@@ -74,7 +74,7 @@ Vector2 Aimbot::GetAimDelta(const Vector2& CenterScreen)
 		/* magic velocity formula; WIP */
 		if (bPrediction)
 		{
-			float VelocityMultiplier{ (DistanceFromOrigin / fBulletVelocity) * 0.02f };
+			float VelocityMultiplier{ (DistanceFromOrigin / fBulletVelocity) * 0.02479975f };
 			AimPointWorldPos += (Pawn.m_Velocity * VelocityMultiplier);
 		}
 
