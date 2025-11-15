@@ -10,6 +10,7 @@ class CCitadelPlayerPawn : public CBaseEntity
 {
 public:
 	Vector3 m_BonePositions[MAX_BONES]{ 0.0f };
+	Vector3 m_Velocity{ 0.0f };
 	uintptr_t m_BoneArrayAddress{ 0 };
 	CHandle m_hController{ 0 };
 	int32_t m_TotalUnspentSouls{ 0 };
@@ -38,6 +39,9 @@ public:
 
 		uintptr_t TotalUnspentSoulsPtr = m_EntityAddress + Offsets::Pawn::TotalUnspentSouls;
 		VMMDLL_Scatter_PrepareEx(vmsh, TotalUnspentSoulsPtr, sizeof(int32_t), reinterpret_cast<BYTE*>(&m_TotalUnspentSouls), nullptr);
+
+		uintptr_t VelocityPtr = m_EntityAddress + Offsets::Pawn::Velocity;
+		VMMDLL_Scatter_PrepareEx(vmsh, VelocityPtr, sizeof(Vector3), reinterpret_cast<BYTE*>(&m_Velocity), nullptr);
 	}
 
 	void PrepareRead_2(VMMDLL_SCATTER_HANDLE vmsh)
@@ -67,6 +71,9 @@ public:
 			return;
 
 		CBaseEntity::QuickRead(vmsh, false);
+
+		uintptr_t VelocityPtr = m_EntityAddress + Offsets::Pawn::Velocity;
+		VMMDLL_Scatter_PrepareEx(vmsh, VelocityPtr, sizeof(Vector3), reinterpret_cast<BYTE*>(&m_Velocity), nullptr);
 
 		PrepareBoneRead(vmsh);
 	}
