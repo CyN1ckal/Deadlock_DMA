@@ -50,6 +50,7 @@ void ESP::RenderSettings()
 		ImGui::Checkbox("Master Toggle", &Draw_Players::bMasterToggle);
 		ImGui::Checkbox("Hide Friendly", &Draw_Players::bHideFriendly);
 		ImGui::Checkbox("Bones", &Draw_Players::bDrawBones);
+		ImGui::Checkbox("Velocity Vector", &Draw_Players::bDrawVelocityVector);
 		ImGui::Checkbox("Health Bars", &Draw_Players::bDrawHealthBar);
 		ImGui::Checkbox("Unsecured Souls", &Draw_Players::bDrawUnsecuredSouls);
 		ImGui::Indent();

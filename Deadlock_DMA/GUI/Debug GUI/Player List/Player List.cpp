@@ -10,14 +10,17 @@ void PlayerList::Render()
 
 	ImGui::Begin("Controller List");
 
-	if (ImGui::BeginTable("Players Table", 5))
+	if (ImGui::BeginTable("Players Table", 6))
 	{
 		ImGui::TableSetupColumn("Health");
 		ImGui::TableSetupColumn("Hero ID");
 		ImGui::TableSetupColumn("Hero Name");
 		ImGui::TableSetupColumn("Distance");
 		ImGui::TableSetupColumn("Souls");
+		ImGui::TableSetupColumn("Pawn Address");
 		ImGui::TableHeadersRow();
+
+		uint32_t PlayerNum = 0;
 
 		for (auto& Pawn : EntityList::m_PlayerPawns)
 		{
@@ -40,6 +43,10 @@ void PlayerList::Render()
 			ImGui::Text("%.2f m", Pawn.DistanceFromLocalPlayer(true));
 			ImGui::TableNextColumn();
 			ImGui::Text("%d", ControllerIt->m_TotalSouls);
+			ImGui::TableNextColumn();
+			if (ImGui::Button(std::format("Copy Address##{}", PlayerNum).c_str()))
+				ImGui::SetClipboardText(std::format("0x{:X}", Pawn.m_EntityAddress).c_str());
+			PlayerNum++;
 		}
 
 		ImGui::EndTable();

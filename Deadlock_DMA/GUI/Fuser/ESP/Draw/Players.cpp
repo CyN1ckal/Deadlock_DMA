@@ -51,7 +51,10 @@ void Draw_Players::DrawPlayer(const CCitadelPlayerController& PC, const CCitadel
 	if (bDrawBones)
 		DrawSkeleton(PC, Pawn, DrawList, WindowPos);
 
-	if(bBoneNumbers)
+	if (bDrawVelocityVector)
+		DrawVelocityVector(Pawn, DrawList, WindowPos);
+
+	if (bBoneNumbers)
 		DrawBoneNumbers(Pawn);
 
 	int LineNumber = 0;
@@ -111,6 +114,17 @@ void Draw_Players::DrawSkeleton(const CCitadelPlayerController& PC, const CCitad
 		ImVec2 End = ImVec2(End2D.x + WindowPos.x, End2D.y + WindowPos.y);
 		DrawList->AddLine(Start, End, SkeletonColor, 3.0f);
 	}
+}
+
+void Draw_Players::DrawVelocityVector(const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos)
+{
+	Vector3 FuturePosition = Pawn.m_Position + Pawn.m_Velocity;
+	Vector2 Start2D, End2D;
+	if (!Deadlock::WorldToScreen(Pawn.m_Position, Start2D)) return;
+	if (!Deadlock::WorldToScreen(FuturePosition, End2D)) return;
+	ImVec2 Start = ImVec2(Start2D.x + WindowPos.x, Start2D.y + WindowPos.y);
+	ImVec2 End = ImVec2(End2D.x + WindowPos.x, End2D.y + WindowPos.y);
+	DrawList->AddLine(Start, End, ImColor(255, 255, 255), 5.0f);
 }
 
 void Draw_Players::DrawBoneNumbers(const CCitadelPlayerPawn& Pawn)

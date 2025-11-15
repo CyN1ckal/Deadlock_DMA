@@ -36,6 +36,7 @@ namespace Offsets
 
 	namespace Pawn
 	{
+		inline constexpr std::ptrdiff_t Velocity = 0x438;
 		inline constexpr std::ptrdiff_t hController = 0x10F8;
 		inline constexpr std::ptrdiff_t TotalUnspentSouls = 0x1338;
 		inline constexpr std::ptrdiff_t UnsecuredSouls = 0x1344;

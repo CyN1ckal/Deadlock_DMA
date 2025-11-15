@@ -22,6 +22,10 @@ void Aimbot::RenderSettings()
 
 	ImGui::SliderFloat("Max Pixel Distance", &fMaxPixelDistance, 10.0f, 500.0f, "%.1f");
 
+	ImGui::InputFloat("Bullet Velocity", &fBulletVelocity);
+
+	ImGui::Checkbox("Prediction", &bPrediction);
+
 	ImGui::Checkbox("Aim Head?", &bAimHead);
 
 	ImGui::SameLine();
@@ -63,8 +67,19 @@ Vector2 Aimbot::GetAimDelta(const Vector2& CenterScreen)
 		auto AimList = Aimpoints::GetAimpoints(HeroId);
 		size_t FinalAimpointIndex = (bAimHead) ? AimList.first : AimList.second;
 
+		Vector3 AimPointWorldPos = Pawn.m_BonePositions[FinalAimpointIndex];
+
+		float DistanceFromOrigin = Pawn.DistanceFromLocalPlayer(false);
+
+		/* magic velocity formula; WIP */
+		if (bPrediction)
+		{
+			float VelocityMultiplier{ (DistanceFromOrigin / fBulletVelocity) * 0.02f };
+			AimPointWorldPos += (Pawn.m_Velocity * VelocityMultiplier);
+		}
+
 		Vector2 ScreenPos{};
-		if (!Deadlock::WorldToScreen(Pawn.m_BonePositions[FinalAimpointIndex], ScreenPos)) continue;
+		if (!Deadlock::WorldToScreen(AimPointWorldPos, ScreenPos)) continue;
 
 		Vector2 Delta = ScreenPos - CenterScreen;
 		float Distance = sqrtf(Delta.x * Delta.x + Delta.y * Delta.y);
