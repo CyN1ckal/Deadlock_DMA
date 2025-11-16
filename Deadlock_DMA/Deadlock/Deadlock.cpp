@@ -21,7 +21,7 @@ bool Deadlock::Initialize(DMA_Connection* Conn)
 
 	EntityList::FullUpdate(Conn, &Process);
 
-	UpdateLocalPlayerControllerAddress(Conn);
+	UpdateLocalPlayerAddresses(Conn);
 
 	GetPredictionAddress(Conn);
 
@@ -72,7 +72,7 @@ bool Deadlock::WorldToScreen(const Vector3& Pos, Vector2& ScreenPos)
 	return true;
 }
 
-bool Deadlock::UpdateLocalPlayerControllerAddress(DMA_Connection* Conn)
+bool Deadlock::UpdateLocalPlayerAddresses(DMA_Connection* Conn)
 {
 	ZoneScoped;
 

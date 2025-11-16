@@ -37,7 +37,7 @@ void DMAThread(DMA_Connection* Conn, Process* Deadlock)
 	CTimer ViewMatrixTimer(std::chrono::milliseconds(1), [&Conn] {Deadlock::UpdateViewMatrix(Conn); });
 	CTimer YawTimer(std::chrono::milliseconds(10), [&Conn] {Deadlock::UpdateClientYaw(Conn); });
 	CTimer ServerTimeTimer(std::chrono::milliseconds(1000), [&Conn] {Deadlock::UpdateServerTime(Conn); });
-	CTimer LocalControllerAddressTime(std::chrono::seconds(15), [&Conn] {Deadlock::UpdateLocalPlayerControllerAddress(Conn); });
+	CTimer LocalControllerAddressTime(std::chrono::seconds(15), [&Conn] {Deadlock::UpdateLocalPlayerAddresses(Conn); });
 
 	CTimer FullTrooperTimer(std::chrono::seconds(3), [&Conn, &Deadlock] {EntityList::FullTrooperRefresh(Conn, Deadlock); });
 	CTimer QuickTrooperTimer(std::chrono::milliseconds(100), [&Conn, &Deadlock] {EntityList::QuickTrooperRefresh(Conn, Deadlock); });

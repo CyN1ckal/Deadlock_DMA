@@ -64,25 +64,18 @@ void Fuser::RenderSoulsPerMinute()
 
 	ZoneScoped;
 
-	CCitadelPlayerController* pController = nullptr;
-
 	std::scoped_lock PawnLock(EntityList::m_ControllerMutex);
 
-	{
-		std::scoped_lock AddrLock(Deadlock::m_LocalAddressMutex);
-		auto ControllerIt = std::find(EntityList::m_PlayerControllers.begin(), EntityList::m_PlayerControllers.end(), Deadlock::m_LocalPlayerControllerAddress);
-		if (ControllerIt == EntityList::m_PlayerControllers.end()) return;
-		pController = &*ControllerIt;
-	}
+	if (EntityList::m_LocalControllerIndex < 0) return;
 
-	if (!pController) return;
+	auto& LocalController = EntityList::m_PlayerControllers[EntityList::m_LocalControllerIndex];
 
-	auto Souls = pController->m_TotalSouls;
+	auto Souls = LocalController.m_TotalSouls;
 	float SoulsPerSecond = 0.0f;
 
 	{
 		std::scoped_lock timeLock(Deadlock::m_ServerTimeMutex);
-		SoulsPerSecond = static_cast<float>(pController->m_TotalSouls) / Deadlock::m_ServerTime;
+		SoulsPerSecond = static_cast<float>(LocalController.m_TotalSouls) / Deadlock::m_ServerTime;
 	}
 
 	auto SoulsPerMinute = SoulsPerSecond * 60.0f;

@@ -50,12 +50,11 @@ void Radar::DrawEntities()
 
 	std::scoped_lock Lock(EntityList::m_PawnMutex, EntityList::m_ControllerMutex);
 
-	auto LocalPlayerIt = std::find(EntityList::m_PlayerPawns.begin(), EntityList::m_PlayerPawns.end(), Deadlock::m_LocalPlayerPawnAddress);
+	if (EntityList::m_LocalPawnIndex < 0) return;
 
-	if (LocalPlayerIt == EntityList::m_PlayerPawns.end())
-		return;
+	auto& LocalPawn = EntityList::m_PlayerPawns[EntityList::m_LocalPawnIndex];
 
-	Vector3& LocalPlayerPos = LocalPlayerIt->m_Position;
+	Vector3& LocalPlayerPos = LocalPawn.m_Position;
 
 	for (auto& Pawn : EntityList::m_PlayerPawns)
 	{

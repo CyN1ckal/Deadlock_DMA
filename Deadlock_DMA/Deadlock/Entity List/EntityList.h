@@ -35,9 +35,11 @@ public: /* Interface methods */
 
 public: /* Interface variables */
 	static inline std::mutex m_PawnMutex{};
+	static inline int32_t m_LocalPawnIndex = -1;
 	static inline std::vector<CCitadelPlayerPawn> m_PlayerPawns{};
 
 	static inline std::mutex m_ControllerMutex{};
+	static inline int32_t m_LocalControllerIndex = -1;
 	static inline std::vector<CCitadelPlayerController> m_PlayerControllers{};
 
 	static inline std::mutex m_TrooperMutex{};
