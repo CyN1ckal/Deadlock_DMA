@@ -122,7 +122,7 @@ void EntityList::SortEntityList()
 void EntityList::FullControllerRefresh_lk(DMA_Connection* Conn, Process* Proc)
 {
 	if (Query::IsUsingPlayers() == false) return;
-	
+
 	ZoneScoped;
 
 	std::scoped_lock Lock(m_ControllerMutex);
@@ -152,10 +152,24 @@ void EntityList::FullControllerRefresh(DMA_Connection* Conn, Process* Proc)
 	VMMDLL_Scatter_Execute(vmsh);
 
 	VMMDLL_Scatter_CloseHandle(vmsh);
+
+	for (int i = 0; i < m_PlayerControllers.size(); i++)
+	{
+		if (m_PlayerControllers[i].IsLocalPlayer())
+		{
+			m_LocalControllerIndex = i;
+
+			break;
+		}
+		else if (i == m_PlayerControllers.size() - 1)
+		{
+			m_LocalControllerIndex = -1;
+		}
+	}
 }
 
 void EntityList::QuickControllerRefresh(DMA_Connection* Conn, Process* Proc)
-{	
+{
 	if (Query::IsUsingPlayers() == false) return;
 
 	ZoneScoped;
@@ -214,6 +228,19 @@ void EntityList::FullPawnRefresh(DMA_Connection* Conn, Process* Proc)
 	VMMDLL_Scatter_Execute(vmsh);
 
 	VMMDLL_Scatter_CloseHandle(vmsh);
+
+	for (int i = 0; i < m_PlayerPawns.size(); i++)
+	{
+		if (m_PlayerPawns[i].IsLocalPlayer())
+		{
+			m_LocalPawnIndex = i;
+			break;
+		}
+		else if (i == m_PlayerPawns.size() - 1)
+		{
+			m_LocalPawnIndex = -1;
+		}
+	}
 }
 
 void EntityList::QuickPawnRefresh(DMA_Connection* Conn, Process* Proc)

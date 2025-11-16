@@ -24,7 +24,7 @@ public:
 	static inline std::mutex m_LocalAddressMutex{};
 	static inline uintptr_t m_LocalPlayerControllerAddress = 0;
 	static inline uintptr_t m_LocalPlayerPawnAddress = 0;
-	static bool UpdateLocalPlayerControllerAddress(DMA_Connection* Conn);
+	static bool UpdateLocalPlayerAddresses(DMA_Connection* Conn);
 
 public:
 	static inline std::mutex m_ServerTimeMutex{};
