@@ -15,9 +15,10 @@ This is an open-source DMA client for Valve's latest game, **Deadlock**. The pro
 
 ## Runtime
 
-When launching, place the following libraries from [MemProcFS](https://github.com/ufrisk/MemProcFS) next to the executable:
+When launching, place the following libraries from [MemProcFS](https://github.com/ufrisk/MemProcFS) and [Makcu C++](https://github.com/K4HVH/makcu-cpp) next to the executable:
 -  `FTD3XX.dll`
 -  `FTD3XXWU.dll`
 -  `leechore.dll`
 -  `leechore_driver.dll`
 -  `vmm.dll`
+- `makcu-cpp.dll`
