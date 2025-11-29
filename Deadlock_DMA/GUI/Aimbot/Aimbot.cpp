@@ -8,8 +8,12 @@
 
 void Aimbot::RenderSettings()
 {
-	if (m_Device.isConnected() == false)
+	static bool bFirstFrame{ true };
+	if (bFirstFrame)
+	{
 		m_Device.connect();
+		bFirstFrame = false;
+	}
 
 	ImGui::Begin("Aimbot");
 

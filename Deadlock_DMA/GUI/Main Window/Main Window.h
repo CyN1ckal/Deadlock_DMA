@@ -23,6 +23,7 @@ public:
 	static bool Initialize();
 	static bool OnFrame();
 	static bool Cleanup();
+	static void RenderOnly();
 
 private:
 	static bool PreFrame();
