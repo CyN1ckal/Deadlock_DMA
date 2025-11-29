@@ -2,15 +2,15 @@
 
 namespace ConstStrings
 {
-	const std::string Game = "Deadlock.exe";
+	const std::string Game = "deadlock.exe";
 	const std::string Client = "client.dll";
 }
 
 class Process
 {
 private:
-	DWORD m_PID = 0;
-	std::unordered_map<std::string, uintptr_t> m_Modules;
+	DWORD m_PID{ 0 };
+	std::unordered_map<std::string, uintptr_t> m_Modules{};
 
 public:
 	bool GetProcessInfo(const std::string& ProcessName, DMA_Connection* Conn);

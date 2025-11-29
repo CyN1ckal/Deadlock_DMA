@@ -170,19 +170,7 @@ bool MainWindow::OnFrame()
 
 	ImGui::DockSpaceOverViewport(ImGui::GetMainViewport()->ID, nullptr, ImGuiDockNodeFlags_PassthruCentralNode);
 
-	Fuser::RenderSettings();
-	ESP::RenderSettings();
-	ColorPicker::RenderColorPicker();
-
-	Fuser::OnFrame();
-	Keybinds::Render();
-	Aimbot::RenderSettings();
-
-	//Radar::Render();
-	//Radar::RenderSettings();
-	PlayerList::Render();
-	//TrooperList::Render();
-	//ClassList::Render();
+	RenderOnly();
 
 	PostFrame();
 
@@ -201,6 +189,17 @@ bool MainWindow::Cleanup()
 	::UnregisterClassW(wc.lpszClassName, wc.hInstance);
 
 	return false;
+}
+
+void MainWindow::RenderOnly()
+{
+	Fuser::RenderSettings();
+	ESP::RenderSettings();
+	ColorPicker::RenderColorPicker();
+	Fuser::OnFrame();
+	Keybinds::Render();
+	Aimbot::RenderSettings();
+	PlayerList::Render();
 }
 
 bool MainWindow::PreFrame()
