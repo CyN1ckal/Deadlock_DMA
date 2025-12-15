@@ -197,6 +197,7 @@ void MainWindow::RenderOnly()
 	ESP::RenderSettings();
 	ColorPicker::RenderColorPicker();
 	Fuser::OnFrame();
+	Radar::Render();
 	Keybinds::Render();
 	Aimbot::RenderSettings();
 	PlayerList::Render();

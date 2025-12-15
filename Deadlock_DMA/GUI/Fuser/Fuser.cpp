@@ -4,7 +4,6 @@
 #include "Deadlock/Entity List/EntityList.h"
 #include "Status Bars/Status Bars.h"
 #include "GUI/Aimbot/Aimbot.h"
-#include <GUI/Radar/Radar.h>
 
 void Fuser::OnFrame()
 {
@@ -21,18 +20,13 @@ void Fuser::OnFrame()
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar;
 	ImGui::Begin("Fuser", nullptr, window_flags);
 
-	if (Radar::bDrawRadar) {
-		Radar::Render();
-	}
-	else {
-		ESP::OnFrame();
+	ESP::OnFrame();
 
-		RenderSoulsPerMinute();
+	RenderSoulsPerMinute();
 
-		StatusBars::Render();
+	StatusBars::Render();
 
-		Aimbot::RenderFOVCircle();
-	}
+	Aimbot::RenderFOVCircle();
 
 	ImGui::End();
 
