@@ -200,6 +200,7 @@ void MainWindow::RenderOnly()
 	Keybinds::Render();
 	Aimbot::RenderSettings();
 	PlayerList::Render();
+	Radar::RenderSettings();
 }
 
 bool MainWindow::PreFrame()
