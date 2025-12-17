@@ -128,7 +128,6 @@ void Radar::DrawNameTag(const CCitadelPlayerController& PC, const CCitadelPlayer
 	std::string text;
 	text += std::format("({}) ", PC.m_CurrentLevel);
 	text += std::format("{} ", PC.GetHeroName());
-	text += std::format("[{:.0f}m]", Pawn.DistanceFromLocalPlayer(true));
 
 	ImVec2 size = ImGui::CalcTextSize(text.c_str());
 
