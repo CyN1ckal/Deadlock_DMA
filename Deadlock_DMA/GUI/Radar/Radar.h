@@ -27,8 +27,7 @@ private:
 public:
 	static inline bool bDrawRadar{ true };
 	static inline bool bDrawRadarSettings{ true };
-	static inline bool bHideFriendly{ true };
-	static inline bool bHideLocal{ true };
+	static inline bool bHideFriendly{ false };
 	static inline bool bMobaStyle{ false };
 	static inline float fRadarScale{ 10.0f };
 	static inline float fRaySize{ 100.0f };

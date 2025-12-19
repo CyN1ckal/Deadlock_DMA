@@ -35,8 +35,6 @@ void Radar::RenderSettings()
 
 	ImGui::Checkbox("Hide Friendly", &bHideFriendly);
 
-	ImGui::Checkbox("Hide Local Player", &bHideLocal);
-
 	ImGui::Checkbox("MOBA Style", &bMobaStyle);
 
 	ImGui::End();
@@ -52,9 +50,7 @@ void Radar::DrawEntities()
 
 	ImVec2 Center = { WindowPos.x + (WindowSize.x / 2.0f), WindowPos.y + (WindowSize.y / 2.0f) };
 
-	if (!bHideLocal) {
-		DrawLocalPlayer(DrawList, Center);
-	}
+	DrawLocalPlayer(DrawList, Center);
 
 	std::scoped_lock Lock(EntityList::m_PawnMutex, EntityList::m_ControllerMutex);
 
@@ -138,7 +134,10 @@ void Radar::DrawPlayer(const CCitadelPlayerController& PC, const CCitadelPlayerP
 
 void Radar::DrawNameTag(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& AnchorPos, int& LineNumber) {
 	std::string text;
-	text += std::format("({}) ", PC.m_CurrentLevel);
+
+	if(bMobaStyle)
+		text += std::format("({}) ", PC.m_CurrentLevel);
+
 	text += std::format("{} ", PC.GetHeroName());
 
 	ImVec2 size = ImGui::CalcTextSize(text.c_str());
