@@ -31,9 +31,13 @@ void Radar::RenderSettings()
 
 	ImGui::SliderFloat("Radar Scale", &fRadarScale, 1.0f, 50.0f, "%.1f");
 
-	ImGui::SliderFloat("Ray Size", &fRaySize, 50.0f, 500.0f, "%.1f");
+	ImGui::SliderFloat("Ray Size", &fRaySize, 0.0f, 500.0f, "%.1f");
 
 	ImGui::Checkbox("Hide Friendly", &bHideFriendly);
+
+	ImGui::Checkbox("Hide Local Player", &bHideLocal);
+
+	ImGui::Checkbox("MOBA Style", &bMobaStyle);
 
 	ImGui::End();
 }
@@ -48,7 +52,9 @@ void Radar::DrawEntities()
 
 	ImVec2 Center = { WindowPos.x + (WindowSize.x / 2.0f), WindowPos.y + (WindowSize.y / 2.0f) };
 
-	DrawLocalPlayer(DrawList, Center);
+	if (!bHideLocal) {
+		DrawLocalPlayer(DrawList, Center);
+	}
 
 	std::scoped_lock Lock(EntityList::m_PawnMutex, EntityList::m_ControllerMutex);
 
@@ -66,6 +72,14 @@ void Radar::DrawEntities()
 		Vector3 RawRelativePos = { Pawn.m_Position.x - LocalPlayerPos.x, Pawn.m_Position.y - LocalPlayerPos.y, Pawn.m_Position.z - LocalPlayerPos.z };
 
 		ImVec2 EntityDrawPos = { Center.x - (RawRelativePos.x / fRadarScale), Center.y + (RawRelativePos.y / fRadarScale) };
+
+		// optional, MOBA-only clamp so dots stay inside window
+		if (bMobaStyle)
+		{
+			const ImVec2 radarTL = { WindowPos.x + fRadarPadding, WindowPos.y + fRadarPadding };
+			const ImVec2 radarBR = { WindowPos.x + WindowSize.x - fRadarPadding, WindowPos.y + WindowSize.y - fRadarPadding };
+			EntityDrawPos = ClampToRect(EntityDrawPos, radarTL, radarBR);
+		}
 
 		ImU32 Color = Pawn.IsFriendly() ? ColorPicker::FriendlyRadarColor : ColorPicker::EnemyRadarColor;
 
@@ -89,11 +103,6 @@ void Radar::DrawEntities()
 
 		DrawPlayer(*ControllerIt, Pawn, EntityDrawPos);
 	}
-}
-
-inline float DegToRad(float Deg)
-{
-	return Deg * 0.01745329f;
 }
 
 void Radar::DrawLocalPlayer(ImDrawList* DrawList, const ImVec2& Center)
