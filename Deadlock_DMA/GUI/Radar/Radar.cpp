@@ -130,7 +130,10 @@ void Radar::DrawPlayer(const CCitadelPlayerController& PC, const CCitadelPlayerP
 	int LineNumber = 0;
 	auto DrawList = ImGui::GetWindowDrawList();
 	DrawNameTag(PC, Pawn, DrawList, RadarPos, LineNumber);
-	DrawHealthBar(PC, Pawn, DrawList, RadarPos, LineNumber);
+
+	if (bMobaStyle) {
+		DrawHealthBar(PC, Pawn, DrawList, RadarPos, LineNumber);
+	}
 }
 
 void Radar::DrawNameTag(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& AnchorPos, int& LineNumber) {
