@@ -32,7 +32,5 @@ public:
 	static inline bool bMobaStyle{ false };
 	static inline float fRadarScale{ 10.0f };
 	static inline float fRaySize{ 100.0f };
-	static inline float fLocalAnchorX = 0.50f;   // used only for MOBA style
-	static inline float fLocalAnchorY = 0.75f;
 	static inline float fRadarPadding = 10.0f;
 };
