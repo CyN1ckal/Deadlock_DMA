@@ -57,6 +57,7 @@ void DMAThread(DMA_Connection* Conn, Process* Deadlock)
 	while (bRunning)
 	{
 		auto CurrentTime = std::chrono::steady_clock::now();
+
 		ViewMatrixTimer.Tick(CurrentTime);
 		YawTimer.Tick(CurrentTime);
 		ServerTimeTimer.Tick(CurrentTime);
@@ -71,5 +72,11 @@ void DMAThread(DMA_Connection* Conn, Process* Deadlock)
 		FullSinnerTimer.Tick(CurrentTime);
 		FullUpdateTimer.Tick(CurrentTime);
 		HotkeyTimer.Tick(CurrentTime);
+
+		auto ElapsedTime = std::chrono::steady_clock::now() - CurrentTime;
+		auto TargetTime = std::chrono::milliseconds(2);
+
+		if (ElapsedTime < TargetTime)
+			std::this_thread::sleep_for(TargetTime - ElapsedTime);
 	}
 }
