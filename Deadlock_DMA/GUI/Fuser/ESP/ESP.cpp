@@ -58,8 +58,7 @@ void ESP::RenderSettings()
 			ImGui::Unindent();
 		};
 
-		ImGui::Unindent();
-
+		ImGui::Checkbox("Head Circle", &Draw_Players::bDrawHead);
 		ImGui::Checkbox("Velocity Vector", &Draw_Players::bDrawVelocityVector);
 		ImGui::Checkbox("Health Bars", &Draw_Players::bDrawHealthBar);
 		ImGui::Checkbox("Unsecured Souls", &Draw_Players::bDrawUnsecuredSouls);
