@@ -49,7 +49,17 @@ void ESP::RenderSettings()
 		ImGui::Indent();
 		ImGui::Checkbox("Master Toggle", &Draw_Players::bMasterToggle);
 		ImGui::Checkbox("Hide Friendly", &Draw_Players::bHideFriendly);
+
 		ImGui::Checkbox("Bones", &Draw_Players::bDrawBones);
+		if (Draw_Players::bDrawBones)
+		{
+			ImGui::Indent();
+			ImGui::SliderFloat("Bones Thickness", &Draw_Players::fBonesThickness, 0.1f, 5.0f, "%.1f");
+			ImGui::Unindent();
+		};
+
+		ImGui::Unindent();
+
 		ImGui::Checkbox("Velocity Vector", &Draw_Players::bDrawVelocityVector);
 		ImGui::Checkbox("Health Bars", &Draw_Players::bDrawHealthBar);
 		ImGui::Checkbox("Unsecured Souls", &Draw_Players::bDrawUnsecuredSouls);
