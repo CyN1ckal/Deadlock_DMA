@@ -14,11 +14,15 @@ void Radar::Render()
 
 	ZoneScoped;
 
+	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(ColorPicker::RadarBackgroundColor));
+
 	ImGui::Begin("Radar");
 
 	DrawEntities();
 
 	ImGui::End();
+
+	ImGui::PopStyleColor(1);
 }
 
 void Radar::RenderSettings()

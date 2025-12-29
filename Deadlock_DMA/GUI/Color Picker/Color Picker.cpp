@@ -50,5 +50,7 @@ void ColorPicker::RenderColorPicker()
 
 	MyColorEdit4("Aimbot FOV Circle", ColorPicker::AimbotFOVCircle);
 
+	MyColorEdit4("Radar Background", ColorPicker::RadarBackgroundColor);
+
 	ImGui::End();
 }

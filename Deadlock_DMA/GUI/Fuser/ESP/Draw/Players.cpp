@@ -113,7 +113,7 @@ void Draw_Players::DrawSkeleton(const CCitadelPlayerController& PC, const CCitad
 
 		ImVec2 Start = ImVec2(Start2D.x + WindowPos.x, Start2D.y + WindowPos.y);
 		ImVec2 End = ImVec2(End2D.x + WindowPos.x, End2D.y + WindowPos.y);
-		DrawList->AddLine(Start, End, SkeletonColor, 3.0f);
+		DrawList->AddLine(Start, End, SkeletonColor, fBonesThickness);
 	}
 }
 

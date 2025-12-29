@@ -10,6 +10,7 @@ public:
 	static inline bool bMasterToggle{ true };
 	static inline bool bHideFriendly{ false };
 	static inline bool bDrawBones{ true };
+	static inline float fBonesThickness{ 3.f };
 	static inline bool bDrawVelocityVector{ false };
 	static inline bool bDrawUnsecuredSouls{ true };
 	static inline int32_t UnsecuredSoulsMinimumThreshold{ 1 };
