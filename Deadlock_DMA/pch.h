@@ -7,6 +7,7 @@
 #include <memory>
 #include <mutex>
 #include <set>
+#include <iostream>
 
 #ifdef DBGPRINT
 #define DbgPrintln(...) std::println(__VA_ARGS__)

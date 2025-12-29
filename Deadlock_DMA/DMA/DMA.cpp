@@ -24,18 +24,30 @@ bool DMA_Connection::EndConnection()
 
 DMA_Connection::DMA_Connection()
 {
-	ZoneScoped;
+    ZoneScoped;
 
-	std::println("Connecting to DMA...");
+    std::println("Connecting to DMA...");
 
-	LPCSTR args[] = { "", "-device", "FPGA" };
+    try {
+        LPCSTR args[] = { "", "-device", "FPGA" };
+        m_VMMHandle = VMMDLL_Initialize(3, args);
 
-	m_VMMHandle = VMMDLL_Initialize(3, args);
+        if (!m_VMMHandle)
+            throw std::runtime_error("VMMDLL_Initialize failed (Check FPGA connection/drivers)");
 
-	if (!m_VMMHandle)
-		throw std::runtime_error("Failed to initialize VMM DLL");
+        std::println("Connected to DMA!");
+    }
+    catch (const std::exception& e) {
+        std::println(stderr, "\n--- CRITICAL ERROR ---");
+        std::println(stderr, "{}", e.what());
+        std::println(stderr, "Press ENTER to exit...");
 
-	std::println("Connected to DMA!");
+        // Wait for user input so the window stays open
+        std::cin.get();
+
+        // Re-throw so the program doesn't try to use a null handle
+        throw;
+    }
 }
 
 DMA_Connection::~DMA_Connection()
