@@ -6,7 +6,6 @@
 #include <array>
 #include <memory>
 #include <mutex>
-#include <set>
 #include <iostream>
 
 #ifdef DBGPRINT

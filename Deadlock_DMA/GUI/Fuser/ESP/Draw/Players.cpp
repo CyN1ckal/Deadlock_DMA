@@ -5,6 +5,7 @@
 #include "Deadlock/Const/BoneLists.hpp"
 #include "GUI/Color Picker/Color Picker.h"
 #include "GUI/Fonts/Fonts.h"
+#include "Deadlock/Const/Aimpoints.h"
 
 void Draw_Players::operator()()
 {
@@ -122,32 +123,9 @@ void Draw_Players::DrawSkeleton(const CCitadelPlayerController& PC, const CCitad
 
 void Draw_Players::DrawHeadCircle(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos)
 {
-	auto It = g_HeroBoneMap.find(PC.m_HeroID);
-	if (It == g_HeroBoneMap.end()) return;
-
 	auto HeadColor = PC.IsFriendly() ? ColorPicker::FriendlyBoneColor : ColorPicker::EnemyBoneColor;
 
-	// Find the bone that's only used as EndBone (never StartBone)
-	// This is typically the head since nothing connects FROM it
-	std::set<int> StartBones, EndBones;
-	for (const auto& [start, end] : It->second)
-	{
-		StartBones.insert(start);
-		EndBones.insert(end);
-	}
-
-	int HeadBoneIndex = -1;
-	for (int endBone : EndBones)
-	{
-		if (StartBones.find(endBone) == StartBones.end())
-		{
-			// This bone is never a start bone, likely the head
-			HeadBoneIndex = endBone;
-			break;
-		}
-	}
-
-	if (HeadBoneIndex == -1) return;
+	auto HeadBoneIndex = Aimpoints::GetAimpoints(PC.m_HeroID).first;
 
 	Vector2 Head2D;
 	if (!Deadlock::WorldToScreen(Pawn.m_BonePositions[HeadBoneIndex], Head2D)) return;
