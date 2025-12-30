@@ -9,7 +9,7 @@ private:
 	static inline DMA_Connection* m_Instance = nullptr;
 
 public:
-	VMM_HANDLE GetHandle();
+	VMM_HANDLE GetHandle() const;
 	bool EndConnection();
 
 private:

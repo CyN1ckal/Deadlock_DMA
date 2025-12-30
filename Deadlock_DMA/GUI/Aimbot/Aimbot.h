@@ -12,6 +12,9 @@ public:
 
 private:
 	static inline makcu::Device m_Device{};
+
+public:
+	static inline bool bSettings{ false };
 	static inline float fDampen{ 1.0f };
 	static inline float fMaxPixelDistance{ 100.0f };
 	static inline float fBulletVelocity{ 500.0f };

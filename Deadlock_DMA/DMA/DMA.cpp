@@ -10,7 +10,7 @@ DMA_Connection* DMA_Connection::GetInstance()
 	return m_Instance;
 }
 
-VMM_HANDLE DMA_Connection::GetHandle()
+VMM_HANDLE DMA_Connection::GetHandle() const
 {
 	return m_VMMHandle;
 }

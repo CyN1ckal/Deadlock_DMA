@@ -8,6 +8,8 @@
 
 void Aimbot::RenderSettings()
 {
+	if (!bSettings) return;
+
 	static bool bFirstFrame{ true };
 	if (bFirstFrame)
 	{
@@ -15,11 +17,12 @@ void Aimbot::RenderSettings()
 		bFirstFrame = false;
 	}
 
-	ImGui::Begin("Aimbot");
+	ImGui::Begin("Aimbot", &bSettings);
 
 	if (m_Device.isConnected())
 		ImGui::TextColored(ImColor(0, 255, 0), "Makcu Connected!");
 	else
+		bDrawMaxFOV = false;
 		ImGui::TextColored(ImColor(255, 0, 0), "Makcu Disconnected!");
 
 	ImGui::SliderFloat("Dampen", &fDampen, 0.1f, 1.0f, "%.2f");
@@ -131,7 +134,7 @@ void Aimbot::OnFrame(DMA_Connection* Conn)
 		EntityList::QuickPawnRefresh(Conn, &Deadlock::Proc());
 		EntityList::QuickControllerRefresh(Conn, &Deadlock::Proc());
 
-	} while (c_keys::IsKeyDown(Conn, Keybinds::m_AimbotHotkey));
+	} while (Keybinds::Aimbot.IsActive(Conn));
 }
 
 void Aimbot::RenderFOVCircle()
