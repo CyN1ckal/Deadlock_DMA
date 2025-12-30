@@ -52,7 +52,7 @@ void DMAThread(DMA_Connection* Conn, Process* Deadlock)
 	CTimer FullSinnerTimer(std::chrono::milliseconds(1000), [&Conn, &Deadlock] {EntityList::FullSinnerRefresh(Conn, Deadlock); });
 	CTimer FullUpdateTimer(std::chrono::seconds(5), [&Conn, &Deadlock] {EntityList::FullUpdate(Conn, Deadlock); });
 
-	CTimer HotkeyTimer(std::chrono::milliseconds(10), [&Conn] { Keybinds::OnFrame(Conn); });
+	CTimer HotkeyTimer(std::chrono::milliseconds(10), [&Conn] { Keybinds::OnDMAFrame(Conn); });
 
 	while (bRunning)
 	{

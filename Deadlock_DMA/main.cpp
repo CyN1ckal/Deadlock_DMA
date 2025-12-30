@@ -5,6 +5,8 @@
 
 #include "DMA/DMA Thread.h"
 
+#include "GUI/Config/Config.h"
+
 #ifdef CATCH_ENABLE
 #include "Tests/All Tests.h"
 #endif
@@ -13,6 +15,10 @@ std::atomic<bool> bRunning{ true };
 #ifndef CATCH_ENABLE
 int main()
 {
+	std::println("Hello, DEADLOCK_DMA!");
+
+	Config::LoadConfig("default");
+
 	DMA_Connection* Conn = DMA_Connection::GetInstance();
 
 	Deadlock::Initialize(Conn);

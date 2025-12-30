@@ -6,6 +6,7 @@
 #include <array>
 #include <memory>
 #include <mutex>
+#include <iostream>
 
 #ifdef DBGPRINT
 #define DbgPrintln(...) std::println(__VA_ARGS__)
@@ -27,6 +28,8 @@
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
+
+#include <json.hpp>
 
 #include "DMA/DMA.h"
 #include "DMA/Process.h"

@@ -375,7 +375,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp23</LanguageStandard>
       <LanguageStandard_C>stdclatest</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Tracy\0.13.0;$(SolutionDir)Dependencies\ImGui;$(SolutionDir)Dependencies\MemProcFS;$(ProjectDir);%(AdditionalIncludeDirectories);$(SolutionDir)Dependencies\Makcu\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Tracy\0.13.0;$(SolutionDir)Dependencies\ImGui;$(SolutionDir)Dependencies\MemProcFS;$(ProjectDir);%(AdditionalIncludeDirectories);$(SolutionDir)Dependencies\Makcu\include;$(SolutionDir)Dependencies\nlohmann</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -790,6 +790,7 @@
     <ClCompile Include="DMA\Process.cpp" />
     <ClCompile Include="GUI\Aimbot\Aimbot.cpp" />
     <ClCompile Include="GUI\Color Picker\Color Picker.cpp" />
+    <ClCompile Include="GUI\Config\Config.cpp" />
     <ClCompile Include="GUI\Debug GUI\Class List\Class List.cpp" />
     <ClCompile Include="GUI\Debug GUI\Player List\Player List.cpp" />
     <ClCompile Include="GUI\Debug GUI\Trooper List\Trooper List.cpp" />
@@ -822,6 +823,7 @@
     <ClInclude Include="DMA\DMA Thread.h" />
     <ClInclude Include="DMA\Input Manager.h" />
     <ClInclude Include="GUI\Aimbot\Aimbot.h" />
+    <ClInclude Include="GUI\Config\Config.h" />
     <ClInclude Include="GUI\Fonts\Data\Font Data.h" />
     <ClInclude Include="GUI\Fonts\Data\StackSans-Regular.h" />
     <ClInclude Include="GUI\Fonts\Data\StackSans-SemiBold.h" />

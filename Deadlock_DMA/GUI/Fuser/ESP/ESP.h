@@ -4,7 +4,7 @@
 
 class ESP
 {
-private:
+public:
 	static inline bool bMasterToggle{ true };
 
 public:

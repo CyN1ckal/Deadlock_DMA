@@ -5,6 +5,7 @@
 #include "Deadlock/Const/BoneLists.hpp"
 #include "GUI/Color Picker/Color Picker.h"
 #include "GUI/Fonts/Fonts.h"
+#include "Deadlock/Const/Aimpoints.h"
 
 void Draw_Players::operator()()
 {
@@ -51,6 +52,9 @@ void Draw_Players::DrawPlayer(const CCitadelPlayerController& PC, const CCitadel
 
 	if (bDrawBones)
 		DrawSkeleton(PC, Pawn, DrawList, WindowPos);
+
+	if (bDrawHead)
+		DrawHeadCircle(PC, Pawn, DrawList, WindowPos);
 
 	if (bDrawVelocityVector)
 		DrawVelocityVector(Pawn, DrawList, WindowPos);
@@ -115,6 +119,28 @@ void Draw_Players::DrawSkeleton(const CCitadelPlayerController& PC, const CCitad
 		ImVec2 End = ImVec2(End2D.x + WindowPos.x, End2D.y + WindowPos.y);
 		DrawList->AddLine(Start, End, SkeletonColor, fBonesThickness);
 	}
+}
+
+void Draw_Players::DrawHeadCircle(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos)
+{
+	auto HeadColor = PC.IsFriendly() ? ColorPicker::FriendlyBoneColor : ColorPicker::EnemyBoneColor;
+
+	auto HeadBoneIndex = Aimpoints::GetAimpoints(PC.m_HeroID).first;
+
+	Vector2 Head2D;
+	if (!Deadlock::WorldToScreen(Pawn.m_BonePositions[HeadBoneIndex], Head2D)) return;
+
+	ImVec2 HeadPos = ImVec2(Head2D.x + WindowPos.x, Head2D.y + WindowPos.y);
+
+	// Calculate dynamic radius based on distance
+	float Distance = Pawn.DistanceFromLocalPlayer(false); // Distance in Hammer units
+	float BaseRadius = 5.f;
+
+	// Scale radius inversely with distance
+	float DistanceScale = 1000.f / (Distance + 100.f);
+	float HeadRadius = BaseRadius * DistanceScale;
+
+	DrawList->AddCircle(HeadPos, HeadRadius, HeadColor, 32, fBonesThickness);
 }
 
 void Draw_Players::DrawVelocityVector(const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos)
