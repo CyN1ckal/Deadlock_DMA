@@ -11,6 +11,7 @@
 #include "GUI/Radar/Radar.h"
 #include "GUI/Keybinds/Keybinds.h"
 #include "GUI/Aimbot/Aimbot.h"
+#include "GUI/Config/Config.h"
 
 #include "Styles/DeepDark.hpp"
 
@@ -202,6 +203,7 @@ void MainWindow::RenderOnly()
 	Aimbot::RenderSettings();
 	PlayerList::Render();
 	Radar::RenderSettings();
+	Config::Render();
 }
 
 bool MainWindow::PreFrame()
