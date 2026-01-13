@@ -135,6 +135,15 @@
     <ClCompile Include="GUI\Config\Config.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GUI\Main Menu\Main Menu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GUI\Fonts\Fonts.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Makcu\MyMakcu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -236,9 +245,6 @@
     <ClInclude Include="GUI\Debug GUI\Player List\Player List.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GUI\Main Window\Styles\DeepDark.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GUI\Debug GUI\Trooper List\Trooper List.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -273,15 +279,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DMA\DMA Thread.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GUI\Fonts\Data\Font Data.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GUI\Fonts\Data\StackSans-Regular.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GUI\Fonts\Data\StackSans-SemiBold.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GUI\Fonts\Fonts.h">
@@ -321,6 +318,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GUI\Config\Config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Main Menu\Main Menu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI\Fonts\Data\IBMPlexMono.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Makcu\MyMakcu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

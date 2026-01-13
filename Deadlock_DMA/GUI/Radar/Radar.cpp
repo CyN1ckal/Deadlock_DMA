@@ -10,36 +10,57 @@
 
 void Radar::Render()
 {
-	if (!bDrawRadar) return;
+	if (!bMasterToggle) return;
 
 	ZoneScoped;
 
 	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(ColorPicker::RadarBackgroundColor));
 
-	ImGui::Begin("Radar");
+	ImGui::Begin("Radar", &bMasterToggle);
 
 	DrawEntities();
 
 	ImGui::End();
 
-	ImGui::PopStyleColor(1);
+	ImGui::PopStyleColor();
 }
 
 void Radar::RenderSettings()
 {
-	if (!bDrawRadarSettings) return;
+	if (!bSettings) return;
 
-	ImGui::Begin("Radar Settings");
+	ImGui::Begin("Radar Settings", &bSettings);
 
-	ImGui::Checkbox("Enable Radar", &bDrawRadar);
+	ImGui::Checkbox("Enable Radar", &bMasterToggle);
 
-	ImGui::SliderFloat("Radar Scale", &fRadarScale, 1.0f, 50.0f, "%.1f");
+	ImGui::Spacing();
+	ImGui::Separator();
+	ImGui::Spacing();
 
-	ImGui::SliderFloat("Ray Size", &fRaySize, 0.0f, 500.0f, "%.1f");
+	if (ImGui::CollapsingHeader("Display Settings", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ImGui::Indent();
 
-	ImGui::Checkbox("Hide Friendly", &bHideFriendly);
+		ImGui::SeparatorText("Style");
+		ImGui::Checkbox("MOBA Style", &bMobaStyle);
+		if (bMobaStyle)
+		{
+			ImGui::Indent();
+			ImGui::TextDisabled("(Top-down minimap view)");
+			ImGui::Unindent();
+		}
 
-	ImGui::Checkbox("MOBA Style", &bMobaStyle);
+		ImGui::Spacing();
+		ImGui::SeparatorText("Scale & Range");
+		ImGui::SliderFloat("Radar Scale", &fRadarScale, 1.0f, 50.0f, "%.1f");
+		ImGui::SliderFloat("View Distance", &fRaySize, 0.0f, 500.0f, "%.1f");
+
+		ImGui::Spacing();
+		ImGui::SeparatorText("Filters");
+		ImGui::Checkbox("Hide Friendly Players", &bHideFriendly);
+
+		ImGui::Unindent();
+	}
 
 	ImGui::End();
 }

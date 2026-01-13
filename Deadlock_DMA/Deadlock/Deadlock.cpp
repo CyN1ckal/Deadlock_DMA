@@ -10,9 +10,6 @@
 
 bool Deadlock::Initialize(DMA_Connection* Conn)
 {
-	if (c_keys::InitKeyboard(Conn))
-		std::println("[+] Target PC keyboard connected");
-
 	auto& Process = Deadlock::Proc();
 
 	Process.GetProcessInfo("deadlock.exe", Conn);
@@ -27,7 +24,7 @@ bool Deadlock::Initialize(DMA_Connection* Conn)
 
 	DbgPrintln("Deadlock Initialized.");
 
-	return false;
+	return true;
 }
 
 Process& Deadlock::Proc()
@@ -60,11 +57,11 @@ bool Deadlock::WorldToScreen(const Vector3& Pos, Vector2& ScreenPos)
 	ScreenPos.x *= inv_w;
 	ScreenPos.y *= inv_w;
 
-	float x = Fuser::ScreenSize.x * .5f;
-	float y = Fuser::ScreenSize.y * .5f;
+	float x = Fuser::m_ScreenSize.x * .5f;
+	float y = Fuser::m_ScreenSize.y * .5f;
 
-	x += 0.5f * ScreenPos.x * Fuser::ScreenSize.x + 0.5f;
-	y -= 0.5f * ScreenPos.y * Fuser::ScreenSize.y + 0.5f;
+	x += 0.5f * ScreenPos.x * Fuser::m_ScreenSize.x + 0.5f;
+	y -= 0.5f * ScreenPos.y * Fuser::m_ScreenSize.y + 0.5f;
 
 	ScreenPos.x = x;
 	ScreenPos.y = y;

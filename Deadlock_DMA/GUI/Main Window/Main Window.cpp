@@ -2,21 +2,62 @@
 
 #include "Main Window.h"
 
-#include "GUI/Fuser/Fuser.h"
+#include "GUI/Main Menu/Main Menu.h"
+#include "GUI/Fonts/Fonts.h"
+#include "GUI/Radar/Radar.h"
 #include "GUI/Fuser/ESP/ESP.h"
 #include "GUI/Debug GUI/Player List/Player List.h"
 #include "GUI/Debug GUI/Trooper List/Trooper List.h"
 #include "GUI/Debug GUI/Class List/Class List.h"
-#include "GUI/Color Picker/Color Picker.h"
-#include "GUI/Radar/Radar.h"
-#include "GUI/Keybinds/Keybinds.h"
+#include "GUI/Fuser/Fuser.h"
 #include "GUI/Aimbot/Aimbot.h"
+#include "GUI/Color Picker/Color Picker.h"
+#include "GUI/Keybinds/Keybinds.h"
 #include "GUI/Config/Config.h"
 
-#include "Styles/DeepDark.hpp"
 
-#include "GUI/Fonts/Fonts.h"
-#include "GUI/Fonts/Data/Font Data.h"
+void Render(ImGuiContext* ctx)
+{
+	ImGui::SetCurrentContext(ctx);
+
+	if (Fonts::m_IBMPlexMonoSemiBold == nullptr)
+		Fonts::Initialize(ImGui::GetIO());
+
+	ImGui::PushFont(Fonts::m_IBMPlexMonoSemiBold, 16.0f);
+	ImGui::DockSpaceOverViewport(ImGui::GetMainViewport()->ID, nullptr, ImGuiDockNodeFlags_PassthruCentralNode);
+
+
+	Fuser::Render();           // Main overlay window
+	Radar::Render();           // Radar overlay
+	ESP::OnFrame();            // ESP rendering
+
+	PlayerList::Render();      // Player debug info
+	TrooperList::Render();     // Trooper debug info
+	ClassList::Render();       // Class debug info
+
+	Radar::RenderSettings();   // Radar configuration
+	Fuser::RenderSettings();   // Fuser configuration
+	ESP::RenderSettings();     // ESP configuration
+	Aimbot::RenderSettings();  // Aimbot configuration
+
+	ColorPicker::Render();     // Color picker window
+	Keybinds::Render();        // Keybind editor
+	Config::Render();          // Config manager
+	MainMenu::Render();        // Main menu
+
+	ImGui::PopFont();
+}
+
+bool MainWindow::OnFrame()
+{
+	PreFrame();
+
+	Render(ImGui::GetCurrentContext());
+
+	PostFrame();
+
+	return true;
+}
 
 bool MainWindow::CreateDeviceD3D(HWND hWnd)
 {
@@ -107,15 +148,13 @@ LRESULT __stdcall MainWindow::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM
 
 bool MainWindow::Initialize()
 {
-	ZoneScoped;
-
 	ImGui_ImplWin32_EnableDpiAwareness();
 
 	float main_scale = ImGui_ImplWin32_GetDpiScaleForMonitor(::MonitorFromPoint(POINT{ 0, 0 }, MONITOR_DEFAULTTOPRIMARY));
 
 	wc = { sizeof(wc), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(nullptr), nullptr, nullptr, nullptr, nullptr, L"MainWindow", nullptr };
 	::RegisterClassExW(&wc);
-	g_hWnd = ::CreateWindowEx(NULL, wc.lpszClassName, L"Deadlock DMA", WS_OVERLAPPEDWINDOW, 100, 100, 800, 800, nullptr, nullptr, wc.hInstance, nullptr);
+	g_hWnd = ::CreateWindowEx(NULL, wc.lpszClassName, L"DEADLOCK DMA", WS_OVERLAPPEDWINDOW, 100, 100, 800, 800, nullptr, nullptr, wc.hInstance, nullptr);
 	// Initialize Direct3D
 	if (!CreateDeviceD3D(g_hWnd))
 	{
@@ -138,9 +177,6 @@ bool MainWindow::Initialize()
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
 
-	g_StackedSans_SemiBold = io.Fonts->AddFontFromMemoryTTF(StackSans_SemiBold_Data, sizeof(StackSans_SemiBold_Data), 16.0f);
-	g_StackedSans_Regular = io.Fonts->AddFontFromMemoryTTF(StackSans_Regular_Data, sizeof(StackSans_Regular_Data), 16.0f);
-
 	ImGui::StyleColorsDark();
 
 	ImGuiStyle& style = ImGui::GetStyle();
@@ -156,26 +192,11 @@ bool MainWindow::Initialize()
 		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 	}
 
-	SetDeepDarkStyle();
-
 	// Setup Platform/Renderer backends
 	ImGui_ImplWin32_Init(g_hWnd);
 	ImGui_ImplDX11_Init(g_pd3dDevice, g_pd3dDeviceContext);
 
 	return false;
-}
-
-bool MainWindow::OnFrame()
-{
-	PreFrame();
-
-	ImGui::DockSpaceOverViewport(ImGui::GetMainViewport()->ID, nullptr, ImGuiDockNodeFlags_PassthruCentralNode);
-
-	RenderOnly();
-
-	PostFrame();
-
-	return true;
 }
 
 bool MainWindow::Cleanup()
@@ -190,20 +211,6 @@ bool MainWindow::Cleanup()
 	::UnregisterClassW(wc.lpszClassName, wc.hInstance);
 
 	return false;
-}
-
-void MainWindow::RenderOnly()
-{
-	Fuser::RenderSettings();
-	ESP::RenderSettings();
-	ColorPicker::RenderColorPicker();
-	Fuser::OnFrame();
-	Radar::Render();
-	Keybinds::Render();
-	Aimbot::RenderSettings();
-	PlayerList::Render();
-	Radar::RenderSettings();
-	Config::Render();
 }
 
 bool MainWindow::PreFrame()

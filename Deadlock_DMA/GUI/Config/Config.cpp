@@ -64,73 +64,148 @@ void Config::RefreshConfigFilesList(std::vector<std::string>& outList) {
 
 void Config::Render()
 {
-	ImGui::Begin("Configs");
+	ImGui::Begin("Configuration Manager");
+
 	static char configNameBuf[128] = "default";
 	static int selectedConfig = -1;
 	static std::vector<std::string> configFiles;
+	static bool bFirstRun = true;
 
-	static bool bFirstRun{ true };
-	if (bFirstRun) {
+	if (bFirstRun)
+	{
 		RefreshConfigFilesList(configFiles);
 		bFirstRun = false;
 	}
 
-	ImGui::BeginChild("##ConfigsSettings", ImVec2(ImGui::GetContentRegionAvail().x / 2, ImGui::GetContentRegionAvail().y), false);
+	// ============================================
+	// LEFT PANEL - CONFIG ACTIONS
+	// ============================================
+	ImGui::BeginChild("##ConfigActions", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 0), true);
 
-	ImGui::SetNextItemWidth(180.0f);
-	ImGui::InputText("Config Name", configNameBuf, IM_ARRAYSIZE(configNameBuf));
+	ImGui::SeparatorText("Config Name");
+	ImGui::SetNextItemWidth(-1);
+	ImGui::InputTextWithHint("##ConfigName", "Enter config name...", configNameBuf, IM_ARRAYSIZE(configNameBuf));
 
-	if (ImGui::Button("Save Config"))
+	ImGui::Spacing();
+	ImGui::Separator();
+	ImGui::Spacing();
+
+	// Save/Load/Delete buttons
+	ImGui::SeparatorText("Actions");
+
+	ImVec2 buttonSize(ImGui::GetContentRegionAvail().x, 0);
+
+	if (ImGui::Button("Save Config", buttonSize))
 	{
-		SaveConfig(configNameBuf);
-		RefreshConfigFilesList(configFiles);
+		if (strlen(configNameBuf) > 0)
+		{
+			SaveConfig(configNameBuf);
+			RefreshConfigFilesList(configFiles);
+		}
 	}
-	ImGui::SameLine();
-	if (ImGui::Button("Load Config"))
+
+	if (ImGui::Button("Load Config", buttonSize))
 	{
-		LoadConfig(configNameBuf);
+		if (strlen(configNameBuf) > 0)
+		{
+			LoadConfig(configNameBuf);
+		}
 	}
-	ImGui::SameLine();
-	if (ImGui::Button("Delete Config")) {
-		if (selectedConfig >= 0 && selectedConfig < static_cast<int>(configFiles.size())) {
-			std::string fileToDelete = Config::getConfigPath(configFiles[selectedConfig]);
-			if (std::filesystem::exists(fileToDelete)) {
-				std::error_code ec;
-				std::filesystem::remove(fileToDelete, ec);
-				if (!ec) {
-					selectedConfig = -1;
-					strncpy_s(configNameBuf, sizeof(configNameBuf), "default", _TRUNCATE);
-					configNameBuf[sizeof(configNameBuf) - 1] = '\0';
-					RefreshConfigFilesList(configFiles);
-				}
+
+	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.2f, 0.2f, 1.0f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1.0f, 0.3f, 0.3f, 1.0f));
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.6f, 0.1f, 0.1f, 1.0f));
+
+	bool canDelete = selectedConfig >= 0 && selectedConfig < static_cast<int>(configFiles.size());
+	if (!canDelete) ImGui::BeginDisabled();
+
+	if (ImGui::Button("Delete Config", buttonSize))
+	{
+		std::string fileToDelete = Config::getConfigPath(configFiles[selectedConfig]);
+		if (std::filesystem::exists(fileToDelete))
+		{
+			std::error_code ec;
+			std::filesystem::remove(fileToDelete, ec);
+			if (!ec)
+			{
+				selectedConfig = -1;
+				strncpy_s(configNameBuf, sizeof(configNameBuf), "default", _TRUNCATE);
+				RefreshConfigFilesList(configFiles);
 			}
 		}
 	}
-	if (ImGui::Button("Open Folder")) {
+
+	if (!canDelete) ImGui::EndDisabled();
+	ImGui::PopStyleColor(3);
+
+	ImGui::Spacing();
+	ImGui::Separator();
+	ImGui::Spacing();
+
+	// Utilities
+	ImGui::SeparatorText("Utilities");
+
+	if (ImGui::Button("Open Config Folder", buttonSize))
+	{
 		ShellExecuteA(nullptr, "open", getConfigDir().c_str(), nullptr, nullptr, SW_SHOWNORMAL);
 	}
-	ImGui::SameLine();
-	if (ImGui::Button("Refresh List")) {
+
+	if (ImGui::Button("Refresh List", buttonSize))
+	{
 		RefreshConfigFilesList(configFiles);
 	}
+
+	ImGui::Spacing();
+	ImGui::Separator();
+	ImGui::Spacing();
+
+	// Info
+	ImGui::SeparatorText("Info");
+	ImGui::TextDisabled("Total configs: %zu", configFiles.size());
+	if (selectedConfig >= 0)
+	{
+		ImGui::TextDisabled("Selected: %s", configFiles[selectedConfig].c_str());
+	}
+
 	ImGui::EndChild();
 
 	ImGui::SameLine();
 
-	ImGui::BeginChild("##ConfigFilesList", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y), false);
+	// ============================================
+	// RIGHT PANEL - CONFIG LIST
+	// ============================================
+	ImGui::BeginChild("##ConfigList", ImVec2(0, 0), true);
 
-	ImGui::Text("Config Files");
-	ImGui::Separator();
+	ImGui::SeparatorText("Available Configs");
 
-	for (size_t i = 0; i < configFiles.size(); ++i) {
-		if (ImGui::Selectable(configFiles[i].c_str(), selectedConfig == static_cast<int>(i))) {
-			selectedConfig = static_cast<int>(i);
-			strncpy_s(configNameBuf, sizeof(configNameBuf), configFiles[i].c_str(), _TRUNCATE);
-			configNameBuf[sizeof(configNameBuf) - 1] = '\0';
+	if (configFiles.empty())
+	{
+		ImGui::Spacing();
+		ImGui::TextDisabled("No config files found.");
+		ImGui::TextDisabled("Create one by entering a name and clicking 'Save Config'.");
+	}
+	else
+	{
+		for (size_t i = 0; i < configFiles.size(); ++i)
+		{
+			bool isSelected = (selectedConfig == static_cast<int>(i));
+
+			if (ImGui::Selectable(configFiles[i].c_str(), isSelected))
+			{
+				selectedConfig = static_cast<int>(i);
+				strncpy_s(configNameBuf, sizeof(configNameBuf), configFiles[i].c_str(), _TRUNCATE);
+			}
+
+			// Double-click to load
+			if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(0))
+			{
+				LoadConfig(configFiles[i]);
+			}
 		}
 	}
 
 	ImGui::EndChild();
+
 	ImGui::End();
 }
 
@@ -173,18 +248,37 @@ json Config::SerializeKeybinds(json& j) {
 json Config::SerializeConfig() {
 	json j;
 
+	// Aimbot
 	j["Aimbot"] = {
+		// General
 		{"bSettings", Aimbot::bSettings},
-		{"fDampen", Aimbot::fDampen},
+		{"bMasterToggle", Aimbot::bMasterToggle},
+
+		// Smoothing
+		{"fSmoothX", Aimbot::fSmoothX},
+		{"fSmoothY", Aimbot::fSmoothY},
+		{"bIndependentSmoothing", Aimbot::bIndependentSmoothing},
+
+		// Humanization
+		{"bHumanization", Aimbot::bHumanization},
+		{"fRandomness", Aimbot::fRandomness},
+		{"fMicroCorrection", Aimbot::fMicroCorrection},
+		{"fOvershootChance", Aimbot::fOvershootChance},
+		{"fOvershootAmount", Aimbot::fOvershootAmount},
+		{"bDistanceBasedSmoothing", Aimbot::bDistanceBasedSmoothing},
+
+		// Targeting
 		{"fMaxPixelDistance", Aimbot::fMaxPixelDistance},
-		{"fBulletVelocity", Aimbot::fBulletVelocity},
 		{"bAimHead", Aimbot::bAimHead},
 		{"bDrawMaxFOV", Aimbot::bDrawMaxFOV},
-		{"bPrediction", Aimbot::bPrediction}
+
+		// Prediction
+		{"bPrediction", Aimbot::bPrediction},
+		{"fBulletVelocity", Aimbot::fBulletVelocity}
 	};
 
 	j["Fuser"] = {
-		{"ScreenSize", {Fuser::ScreenSize.x, Fuser::ScreenSize.y}},
+		{"ScreenSize", {Fuser::m_ScreenSize.x, Fuser::m_ScreenSize.y}},
 		{"bDrawSoulsPerMinute", Fuser::bDrawSoulsPerMinute},
 		{"bMasterToggle", Fuser::bMasterToggle},
 
@@ -232,8 +326,8 @@ json Config::SerializeConfig() {
 	};
 
 	j["Radar"] = {
-		{"bDrawRadar", Radar::bDrawRadar},
-		{"bDrawRadarSettings", Radar::bDrawRadarSettings},
+		{"bMasterToggle", Radar::bMasterToggle},
+		{"bSettings", Radar::bSettings},
 		{"bHideFriendly", Radar::bHideFriendly},
 		{"bMobaStyle", Radar::bMobaStyle},
 		{"fRadarScale", Radar::fRadarScale},
@@ -273,13 +367,32 @@ void Config::DeserializeConfig(const json& j) {
 	// Aimbot
 	if (j.contains("Aimbot")) {
 		const auto& ab = j["Aimbot"];
+
+		// General
 		if (ab.contains("bSettings")) Aimbot::bSettings = ab["bSettings"].get<bool>();
-		if (ab.contains("fDampen")) Aimbot::fDampen = ab["fDampen"].get<float>();
+		if (ab.contains("bMasterToggle")) Aimbot::bMasterToggle = ab["bMasterToggle"].get<bool>();
+
+		// Smoothing
+		if (ab.contains("fSmoothX")) Aimbot::fSmoothX = ab["fSmoothX"].get<float>();
+		if (ab.contains("fSmoothY")) Aimbot::fSmoothY = ab["fSmoothY"].get<float>();
+		if (ab.contains("bIndependentSmoothing")) Aimbot::bIndependentSmoothing = ab["bIndependentSmoothing"].get<bool>();
+
+		// Humanization
+		if (ab.contains("bHumanization")) Aimbot::bHumanization = ab["bHumanization"].get<bool>();
+		if (ab.contains("fRandomness")) Aimbot::fRandomness = ab["fRandomness"].get<float>();
+		if (ab.contains("fMicroCorrection")) Aimbot::fMicroCorrection = ab["fMicroCorrection"].get<float>();
+		if (ab.contains("fOvershootChance")) Aimbot::fOvershootChance = ab["fOvershootChance"].get<float>();
+		if (ab.contains("fOvershootAmount")) Aimbot::fOvershootAmount = ab["fOvershootAmount"].get<float>();
+		if (ab.contains("bDistanceBasedSmoothing")) Aimbot::bDistanceBasedSmoothing = ab["bDistanceBasedSmoothing"].get<bool>();
+
+		// Targeting
 		if (ab.contains("fMaxPixelDistance")) Aimbot::fMaxPixelDistance = ab["fMaxPixelDistance"].get<float>();
-		if (ab.contains("fBulletVelocity")) Aimbot::fBulletVelocity = ab["fBulletVelocity"].get<float>();
 		if (ab.contains("bAimHead")) Aimbot::bAimHead = ab["bAimHead"].get<bool>();
 		if (ab.contains("bDrawMaxFOV")) Aimbot::bDrawMaxFOV = ab["bDrawMaxFOV"].get<bool>();
+
+		// Prediction
 		if (ab.contains("bPrediction")) Aimbot::bPrediction = ab["bPrediction"].get<bool>();
+		if (ab.contains("fBulletVelocity")) Aimbot::fBulletVelocity = ab["fBulletVelocity"].get<float>();
 	}
 
 	// Fuser
@@ -290,7 +403,7 @@ void Config::DeserializeConfig(const json& j) {
 		if (fuser.contains("ScreenSize")) {
 			const auto& screenSizeJson = fuser["ScreenSize"];
 			if (screenSizeJson.is_array() && screenSizeJson.size() == 2) {
-				Fuser::ScreenSize = ImVec2(screenSizeJson[0].get<float>(), screenSizeJson[1].get<float>());
+				Fuser::m_ScreenSize = ImVec2(screenSizeJson[0].get<float>(), screenSizeJson[1].get<float>());
 			}
 		}
 
@@ -355,8 +468,8 @@ void Config::DeserializeConfig(const json& j) {
 	// Radar
 	if (j.contains("Radar")) {
 		const auto& radar = j["Radar"];
-		if (radar.contains("bDrawRadar")) Radar::bDrawRadar = radar["bDrawRadar"].get<bool>();
-		if (radar.contains("bDrawRadarSettings")) Radar::bDrawRadarSettings = radar["bDrawRadarSettings"].get<bool>();
+		if (radar.contains("bMasterToggle")) Radar::bMasterToggle = radar["bMasterToggle"].get<bool>();
+		if (radar.contains("bSettings")) Radar::bSettings = radar["bSettings"].get<bool>();
 		if (radar.contains("bHideFriendly")) Radar::bHideFriendly = radar["bHideFriendly"].get<bool>();
 		if (radar.contains("bMobaStyle")) Radar::bMobaStyle = radar["bMobaStyle"].get<bool>();
 		if (radar.contains("fRadarScale")) Radar::fRadarScale = radar["fRadarScale"].get<float>();
