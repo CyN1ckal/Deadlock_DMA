@@ -21,6 +21,8 @@
 
 #include "GUI/Color Picker/Color Picker.h"
 
+#include "GUI/Main Menu/Main Menu.h"
+
 #include <shlobj.h>
 #include <fstream>
 
@@ -235,6 +237,11 @@ json Config::SerializeKeybinds(json& j) {
 json Config::SerializeConfig() {
 	json j;
 
+	j["MainMenu"] = {
+		{"bVSync", MainMenu::bVSync},
+		{"iTargetFPS", MainMenu::iTargetFPS},
+	};
+
 	// Aimbot
 	j["Aimbot"] = {
 		// General
@@ -351,6 +358,15 @@ json Config::SerializeConfig() {
 }
 
 void Config::DeserializeConfig(const json& j) {
+
+	// Main Menu
+	if (j.contains("Main Menu")) {
+		const auto m = j["Main Menu"];
+
+		if (m.contains("bVSync")) MainMenu::bVSync = m["bVSync"].get<bool>();
+		if (m.contains("iTargetFPS")) MainMenu::iTargetFPS = m["iTargetFPS"].get<bool>();
+	}
+
 	// Aimbot
 	if (j.contains("Aimbot")) {
 		const auto& ab = j["Aimbot"];

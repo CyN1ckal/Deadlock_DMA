@@ -243,6 +243,12 @@ bool MainWindow::PreFrame()
 
 bool MainWindow::PostFrame()
 {
+	static std::chrono::steady_clock::time_point lastFrameTime = std::chrono::steady_clock::now();
+
+	// we wanna always use steady clock since it always goes forward
+	auto frameStart = std::chrono::steady_clock::now();
+	std::chrono::duration<double, std::milli> work_time = frameStart - lastFrameTime;
+
 	ImGui::Render();
 	const float clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
 	g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, nullptr);
@@ -256,8 +262,23 @@ bool MainWindow::PostFrame()
 		ImGui::RenderPlatformWindowsDefault();
 	}
 
-	// Present
-	HRESULT hr = g_pSwapChain->Present(0, 0);   // Present with vsync
+	// Present with VSync toggle from Main Menu
+	HRESULT hr = g_pSwapChain->Present(MainMenu::bVSync ? 1 : 0, 0);
+
+	// Manual FPS limiting when VSync is off
+	if (!MainMenu::bVSync && MainMenu::iTargetFPS > 0)
+	{
+		double targetFrameTime = 1000.0 / MainMenu::iTargetFPS; // ms per frame
+
+		if (work_time.count() < targetFrameTime)
+		{
+			std::chrono::duration<double, std::milli> delta_ms(targetFrameTime - work_time.count());
+			auto delta_ms_duration = std::chrono::duration_cast<std::chrono::milliseconds>(delta_ms);
+			std::this_thread::sleep_for(delta_ms_duration);
+		}
+	}
+
+	lastFrameTime = std::chrono::steady_clock::now();
 
 	return true;
 }
