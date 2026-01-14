@@ -59,7 +59,6 @@ void ESP::RenderSettings()
 
 	ImGui::Spacing();
 
-	// Skeleton
 	ImGui::Checkbox("Bones", &Draw_Players::bDrawBones);
 	if (Draw_Players::bDrawBones)
 	{
@@ -69,7 +68,6 @@ void ESP::RenderSettings()
 		ImGui::Unindent();
 	}
 
-	// Other Visual Elements
 	ImGui::Checkbox("Head Circle", &Draw_Players::bDrawHead);
 	ImGui::Checkbox("Velocity Vector", &Draw_Players::bDrawVelocityVector);
 	ImGui::Checkbox("Health Bars", &Draw_Players::bDrawHealthBar);
