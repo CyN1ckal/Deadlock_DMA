@@ -77,9 +77,6 @@ void Config::Render()
 		bFirstRun = false;
 	}
 
-	// ============================================
-	// LEFT PANEL - CONFIG ACTIONS
-	// ============================================
 	ImGui::BeginChild("##ConfigActions", ImVec2(ImGui::GetContentRegionAvail().x * 0.5f, 0), true);
 
 	ImGui::SeparatorText("Config Name");
@@ -171,21 +168,11 @@ void Config::Render()
 
 	ImGui::SameLine();
 
-	// ============================================
-	// RIGHT PANEL - CONFIG LIST
-	// ============================================
 	ImGui::BeginChild("##ConfigList", ImVec2(0, 0), true);
 
 	ImGui::SeparatorText("Available Configs");
 
-	if (configFiles.empty())
-	{
-		ImGui::Spacing();
-		ImGui::TextDisabled("No config files found.");
-		ImGui::TextDisabled("Create one by entering a name and clicking 'Save Config'.");
-	}
-	else
-	{
+	if (!configFiles.empty()) {
 		for (size_t i = 0; i < configFiles.size(); ++i)
 		{
 			bool isSelected = (selectedConfig == static_cast<int>(i));

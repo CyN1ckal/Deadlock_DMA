@@ -147,38 +147,16 @@ void Keybinds::Render()
 
 	ImGui::Begin("Keybinds", &bSettings);
 
-	// ============================================
-	// STATUS CHECK
-	// ============================================
 	if (c_keys::IsInitialized() == false)
 	{
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.3f, 0.3f, 1.0f));
 		ImGui::Text("Input Manager not initialized!");
 		ImGui::PopStyleColor();
-		ImGui::Spacing();
-		ImGui::TextDisabled("Cannot assign keybinds until Input Manager is ready.");
 		ImGui::End();
 		return;
 	}
 
-	// ============================================
-	// INSTRUCTIONS
-	// ============================================
-	ImGui::SeparatorText("Instructions");
-	ImGui::TextWrapped("Click on a keybind button to rebind it. Press any key to assign.");
-	ImGui::Spacing();
-	ImGui::TextDisabled("Target PC: Read key state from target computer");
-	ImGui::TextDisabled("Radar PC: Read key state from radar computer");
-
-	ImGui::Spacing();
-	ImGui::Separator();
-	ImGui::Spacing();
-
-	// ============================================
-	// KEYBINDS
-	// ============================================
 	ImGui::SeparatorText("Keybinds");
-
 	// Table for better layout
 	if (ImGui::BeginTable("##KeybindsTable", 4, ImGuiTableFlags_SizingStretchProp))
 	{
@@ -200,16 +178,10 @@ void CKeybind::Render()
 {
 	ImGui::TableNextRow();
 
-	// ============================================
-	// ACTION NAME COLUMN
-	// ============================================
 	ImGui::TableNextColumn();
 	ImGui::AlignTextToFramePadding();
 	ImGui::Text("%s", m_Name.c_str());
 
-	// ============================================
-	// KEY BINDING COLUMN
-	// ============================================
 	ImGui::TableNextColumn();
 
 	if (m_bWaitingForKey)
@@ -261,9 +233,6 @@ void CKeybind::Render()
 		}
 	}
 
-	// ============================================
-	// TARGET PC COLUMN
-	// ============================================
 	ImGui::TableNextColumn();
 	ImGui::Checkbox(("##TargetPC_" + m_Name).c_str(), &m_bTargetPC);
 	if (ImGui::IsItemHovered())
@@ -271,9 +240,6 @@ void CKeybind::Render()
 		ImGui::SetTooltip("Read key state from target computer");
 	}
 
-	// ============================================
-	// RADAR PC COLUMN
-	// ============================================
 	ImGui::TableNextColumn();
 	ImGui::Checkbox(("##RadarPC_" + m_Name).c_str(), &m_bRadarPC);
 	if (ImGui::IsItemHovered())

@@ -41,35 +41,22 @@ void Fuser::RenderSettings()
 	ImGui::Spacing();
 
 
-	if (ImGui::CollapsingHeader("Screen Configuration", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		ImGui::Indent();
-		ImGui::Text("Overlay Resolution");
-		ImGui::SetNextItemWidth(150.0f);
-		ImGui::InputFloat("Width##Screen", &m_ScreenSize.x, 0.0f, 0.0f, "%.0f");
-		ImGui::SetNextItemWidth(150.0f);
-		ImGui::InputFloat("Height##Screen", &m_ScreenSize.y, 0.0f, 0.0f, "%.0f");
-		ImGui::TextDisabled("(Match your game resolution)");
-		ImGui::Unindent();
-	}
+	ImGui::SeparatorText("Screen Configuration");
+	ImGui::Text("Overlay Resolution");
+	ImGui::SetNextItemWidth(150.0f);
+	ImGui::InputFloat("Width##Screen", &m_ScreenSize.x, 0.0f, 0.0f, "%.0f");
+	ImGui::SetNextItemWidth(150.0f);
+	ImGui::InputFloat("Height##Screen", &m_ScreenSize.y, 0.0f, 0.0f, "%.0f");
+	ImGui::TextDisabled("(Match your game resolution)");
 
 	ImGui::Spacing();
 
-	if (ImGui::CollapsingHeader("HUD Elements", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		ImGui::Indent();
+	ImGui::SeparatorText("HUD Elements");
+	ImGui::Checkbox("Souls Per Minute", &bDrawSoulsPerMinute);
 
-		ImGui::SeparatorText("Performance Stats");
-		ImGui::Checkbox("Souls Per Minute", &bDrawSoulsPerMinute);
-
-		ImGui::Spacing();
-		ImGui::SeparatorText("Status Bars");
-		ImGui::Checkbox("Team Health Bar", &StatusBars::bRenderTeamHealthBar);
-		ImGui::Checkbox("Team Souls Bar", &StatusBars::bRenderTeamSoulsBar);
-		ImGui::Checkbox("Unspent Souls Bar", &StatusBars::bRenderUnspentSoulsBar);
-
-		ImGui::Unindent();
-	}
+	ImGui::Checkbox("Team Health Bar", &StatusBars::bRenderTeamHealthBar);
+	ImGui::Checkbox("Team Souls Bar", &StatusBars::bRenderTeamSoulsBar);
+	ImGui::Checkbox("Unspent Souls Bar", &StatusBars::bRenderUnspentSoulsBar);
 
 	ImGui::End();
 }

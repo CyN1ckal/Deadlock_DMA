@@ -37,30 +37,21 @@ void Radar::RenderSettings()
 	ImGui::Separator();
 	ImGui::Spacing();
 
-	if (ImGui::CollapsingHeader("Display Settings", ImGuiTreeNodeFlags_DefaultOpen))
+	ImGui::SeparatorText("Display Settings");
+
+	ImGui::Checkbox("MOBA Style", &bMobaStyle);
+	if (bMobaStyle)
 	{
-		ImGui::Indent();
-
-		ImGui::SeparatorText("Style");
-		ImGui::Checkbox("MOBA Style", &bMobaStyle);
-		if (bMobaStyle)
-		{
-			ImGui::Indent();
-			ImGui::TextDisabled("(Top-down minimap view)");
-			ImGui::Unindent();
-		}
-
-		ImGui::Spacing();
-		ImGui::SeparatorText("Scale & Range");
-		ImGui::SliderFloat("Radar Scale", &fRadarScale, 1.0f, 50.0f, "%.1f");
-		ImGui::SliderFloat("View Distance", &fRaySize, 0.0f, 500.0f, "%.1f");
-
-		ImGui::Spacing();
-		ImGui::SeparatorText("Filters");
-		ImGui::Checkbox("Hide Friendly Players", &bHideFriendly);
-
-		ImGui::Unindent();
+		ImGui::TextDisabled("(Top-down minimap view)");
 	}
+
+	ImGui::Spacing();
+	ImGui::SliderFloat("Radar Scale", &fRadarScale, 1.0f, 50.0f, "%.1f");
+	ImGui::SliderFloat("View Distance", &fRaySize, 0.0f, 500.0f, "%.1f");
+
+	ImGui::Spacing();
+	ImGui::SeparatorText("Filters");
+	ImGui::Checkbox("Hide Friendly Players", &bHideFriendly);
 
 	ImGui::End();
 }

@@ -20,82 +20,56 @@ void Aimbot::RenderSettings()
 	ImGui::Separator();
 	ImGui::Spacing();
 
-	if (ImGui::CollapsingHeader("Smoothing", ImGuiTreeNodeFlags_DefaultOpen))
+	ImGui::SeparatorText("Smoothing");
+	ImGui::SliderFloat("Smooth X", &fSmoothX, 1.0f, 50.0f, "%.1f");
+	ImGui::SliderFloat("Smooth Y", &fSmoothY, 1.0f, 50.0f, "%.1f");
+	ImGui::Checkbox("Independent Axes", &bIndependentSmoothing);
+	if (bIndependentSmoothing)
 	{
-		ImGui::Indent();
-
-		ImGui::SliderFloat("Smooth X", &fSmoothX, 1.0f, 50.0f, "%.1f");
-		ImGui::SliderFloat("Smooth Y", &fSmoothY, 1.0f, 50.0f, "%.1f");
-		ImGui::Checkbox("Independent Axes", &bIndependentSmoothing);
-		if (bIndependentSmoothing)
-		{
-			ImGui::Indent();
-			ImGui::TextDisabled("(Separate X/Y smoothing values)");
-			ImGui::Unindent();
-		}
-
-		ImGui::Unindent();
+		ImGui::TextDisabled("(Separate X/Y smoothing values)");
 	}
+
 
 	ImGui::Spacing();
 
-	if (ImGui::CollapsingHeader("Humanization", ImGuiTreeNodeFlags_DefaultOpen))
+	ImGui::SeparatorText("Humanization");
+	ImGui::Checkbox("Enable Humanization", &bHumanization);
+	if (bHumanization)
 	{
-		ImGui::Indent();
+		ImGui::Spacing();
 
-		ImGui::Checkbox("Enable Humanization", &bHumanization);
+		ImGui::SliderFloat("Randomness", &fRandomness, 0.0f, 5.0f, "%.2f");
+		ImGui::TextDisabled("Random micro-movements");
 
-		if (bHumanization)
-		{
-			ImGui::Spacing();
-			ImGui::SeparatorText("Movement Variance");
-
-			ImGui::SliderFloat("Randomness", &fRandomness, 0.0f, 5.0f, "%.2f");
-			ImGui::TextDisabled("Random micro-movements");
-
-			ImGui::SliderFloat("Micro Correction", &fMicroCorrection, 0.0f, 2.0f, "%.2f");
-			ImGui::TextDisabled("Small adjustments when near target");
-
-			ImGui::Spacing();
-			ImGui::SeparatorText("Overshoot");
-
-			ImGui::SliderFloat("Overshoot Chance", &fOvershootChance, 0.0f, 100.0f, "%.1f%%");
-			ImGui::SliderFloat("Overshoot Amount", &fOvershootAmount, 1.0f, 15.0f, "%.1f%%");
-			ImGui::TextDisabled("Occasionally move past target");
-
-			ImGui::Spacing();
-			ImGui::SeparatorText("Advanced");
-
-			ImGui::Checkbox("Distance-Based Smoothing", &bDistanceBasedSmoothing);
-			ImGui::TextDisabled("Adjust speed based on target distance");
-		}
-
-		ImGui::Unindent();
-	}
-
-	ImGui::Spacing();
-
-	if (ImGui::CollapsingHeader("Targeting", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		ImGui::Indent();
-
-		ImGui::SeparatorText("Target Selection");
-		ImGui::SliderFloat("FOV (Max Distance)", &fMaxPixelDistance, 10.0f, 500.0f, "%.0f px");
-		ImGui::Checkbox("Draw FOV Circle", &bDrawMaxFOV);
-		ImGui::Checkbox("Aim at Head", &bAimHead);
+		ImGui::SliderFloat("Micro Correction", &fMicroCorrection, 0.0f, 2.0f, "%.2f");
+		ImGui::TextDisabled("Small adjustments when near target");
 
 		ImGui::Spacing();
-		ImGui::SeparatorText("Prediction");
-		ImGui::Checkbox("Enable Prediction", &bPrediction);
-		if (bPrediction)
-		{
-			ImGui::Indent();
-			ImGui::SetNextItemWidth(150.0f);
-			ImGui::InputFloat("Bullet Velocity", &fBulletVelocity, 0.0f, 0.0f, "%.0f");
-			ImGui::Unindent();
-		}
 
-		ImGui::Unindent();
+		ImGui::SliderFloat("Overshoot Chance", &fOvershootChance, 0.0f, 100.0f, "%.1f%%");
+		ImGui::SliderFloat("Overshoot Amount", &fOvershootAmount, 1.0f, 15.0f, "%.1f%%");
+		ImGui::TextDisabled("Occasionally move past target");
+
+		ImGui::Spacing();
+
+		ImGui::Checkbox("Distance-Based Smoothing", &bDistanceBasedSmoothing);
+		ImGui::TextDisabled("Adjust speed based on target distance");
+	}
+
+	ImGui::Spacing();
+
+	ImGui::SeparatorText("Targeting");
+	ImGui::SliderFloat("FOV (Max Distance)", &fMaxPixelDistance, 10.0f, 500.0f, "%.0f px");
+	ImGui::Checkbox("Draw FOV Circle", &bDrawMaxFOV);
+	ImGui::Checkbox("Aim at Head", &bAimHead);
+
+	ImGui::Spacing();
+	ImGui::SeparatorText("Prediction");
+	ImGui::Checkbox("Enable Prediction", &bPrediction);
+	if (bPrediction)
+	{
+		ImGui::SetNextItemWidth(150.0f);
+		ImGui::InputFloat("Bullet Velocity", &fBulletVelocity, 0.0f, 0.0f, "%.0f");
 	}
 
 	ImGui::End();

@@ -67,6 +67,7 @@ void DMA_Thread_Main()
 		FullSinnerTimer.Tick(TimeNow);
 		FullUpdateTimer.Tick(TimeNow);
 		Keybinds.Tick(TimeNow);
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
 
 	Conn->EndConnection();
