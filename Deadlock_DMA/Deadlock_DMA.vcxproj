@@ -794,6 +794,7 @@
     <ClCompile Include="GUI\Debug GUI\Class List\Class List.cpp" />
     <ClCompile Include="GUI\Debug GUI\Player List\Player List.cpp" />
     <ClCompile Include="GUI\Debug GUI\Trooper List\Trooper List.cpp" />
+    <ClCompile Include="GUI\Fonts\Fonts.cpp" />
     <ClCompile Include="GUI\Fuser\ESP\Draw\Camps.cpp" />
     <ClCompile Include="GUI\Fuser\ESP\Draw\Players.cpp" />
     <ClCompile Include="GUI\Fuser\ESP\Draw\Sinners.cpp" />
@@ -802,10 +803,12 @@
     <ClCompile Include="GUI\Fuser\Fuser.cpp" />
     <ClCompile Include="GUI\Fuser\Status Bars\Status Bars.cpp" />
     <ClCompile Include="GUI\Keybinds\Keybinds.cpp" />
+    <ClCompile Include="GUI\Main Menu\Main Menu.cpp" />
     <ClCompile Include="GUI\Main Window\Main Window.cpp" />
     <ClCompile Include="GUI\Query.cpp" />
     <ClCompile Include="GUI\Radar\Radar.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Makcu\MyMakcu.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -824,9 +827,7 @@
     <ClInclude Include="DMA\Input Manager.h" />
     <ClInclude Include="GUI\Aimbot\Aimbot.h" />
     <ClInclude Include="GUI\Config\Config.h" />
-    <ClInclude Include="GUI\Fonts\Data\Font Data.h" />
-    <ClInclude Include="GUI\Fonts\Data\StackSans-Regular.h" />
-    <ClInclude Include="GUI\Fonts\Data\StackSans-SemiBold.h" />
+    <ClInclude Include="GUI\Fonts\Data\IBMPlexMono.h" />
     <ClInclude Include="GUI\Fonts\Fonts.h" />
     <ClInclude Include="GUI\Fuser\ESP\Draw\Camps.h" />
     <ClInclude Include="GUI\Fuser\ESP\Draw\Players.h" />
@@ -834,7 +835,9 @@
     <ClInclude Include="GUI\Fuser\ESP\Draw\Troopers.h" />
     <ClInclude Include="GUI\Fuser\Status Bars\Status Bars.h" />
     <ClInclude Include="GUI\Keybinds\Keybinds.h" />
+    <ClInclude Include="GUI\Main Menu\Main Menu.h" />
     <ClInclude Include="GUI\Query.h" />
+    <ClInclude Include="Makcu\MyMakcu.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Tests\All Tests.h" />
     <ClInclude Include="Tests\Class Tests\Test CBaseEntity.h" />
@@ -878,7 +881,6 @@
     <ClInclude Include="GUI\Fuser\ESP\ESP.h" />
     <ClInclude Include="GUI\Fuser\Fuser.h" />
     <ClInclude Include="GUI\Main Window\Main Window.h" />
-    <ClInclude Include="GUI\Main Window\Styles\DeepDark.hpp" />
     <ClInclude Include="GUI\Radar\Radar.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>

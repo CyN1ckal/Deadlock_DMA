@@ -6,9 +6,11 @@
 
 void PlayerList::Render()
 {
-	std::scoped_lock lock(EntityList::m_PawnMutex, EntityList::m_ControllerMutex);
+	if (!bSettings) return;
 
-	ImGui::Begin("Controller List");
+	ImGui::Begin("Controller List", &bSettings);
+
+	std::scoped_lock lock(EntityList::m_PawnMutex, EntityList::m_ControllerMutex);
 
 	if (ImGui::BeginTable("Players Table", 6))
 	{

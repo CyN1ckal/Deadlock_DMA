@@ -25,8 +25,8 @@ private:
 		return p;
 	};
 public:
-	static inline bool bDrawRadar{ true };
-	static inline bool bDrawRadarSettings{ true };
+	static inline bool bMasterToggle{ true };
+	static inline bool bSettings{ true };
 	static inline bool bHideFriendly{ false };
 	static inline bool bMobaStyle{ false };
 	static inline float fRadarScale{ 10.0f };

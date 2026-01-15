@@ -3,9 +3,11 @@
 class ColorPicker
 {
 public:
-	static void RenderColorPicker();
+	static void Render();
+	static void MyColorPicker(const char* label, ImColor& color);
 
 public:
+	static inline bool bMasterToggle{ true };
 	static inline ImColor FriendlyNameTagColor{ 0.29f,0.619f,0.6f,1.0f };
 	static inline ImColor EnemyNameTagColor{ 0.776f,0.223f,0.247f,1.0f };
 	static inline ImColor EnemyBoneColor{ 1.0f,0.0f,0.0f,1.0f };

@@ -7,6 +7,8 @@
 
 #include "GUI/Config/Config.h"
 
+#include "Makcu/MyMakcu.h"
+
 #ifdef CATCH_ENABLE
 #include "Tests/All Tests.h"
 #endif
@@ -19,17 +21,16 @@ int main()
 
 	Config::LoadConfig("default");
 
-	DMA_Connection* Conn = DMA_Connection::GetInstance();
-
-	Deadlock::Initialize(Conn);
-
-	std::println("Press END to exit...");
 
 #ifndef DEADLOCK_DLL
 	MainWindow::Initialize();
 #endif
 
-	std::thread DMAThreadHandle(DMAThread, Conn, &Deadlock::Proc());
+	MyMakcu::Initialize();
+
+	std::thread DMAThread(DMA_Thread_Main);
+
+	std::println("Press END to exit...");
 
 	while (bRunning)
 	{
@@ -43,9 +44,7 @@ int main()
 		FrameMark;
 	}
 
-	DMAThreadHandle.join();
-
-	Conn->EndConnection();
+	DMAThread.join();
 
 	system("pause");
 

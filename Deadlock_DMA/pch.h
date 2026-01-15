@@ -7,6 +7,9 @@
 #include <memory>
 #include <mutex>
 #include <iostream>
+#include <random>
+#define NOMINMAX
+#include <algorithm>
 
 #ifdef DBGPRINT
 #define DbgPrintln(...) std::println(__VA_ARGS__)

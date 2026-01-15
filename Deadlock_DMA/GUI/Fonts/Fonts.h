@@ -1,4 +1,10 @@
 #pragma once
 
-inline ImFont* g_StackedSans_Regular = nullptr;
-inline ImFont* g_StackedSans_SemiBold = nullptr;
+class Fonts
+{
+public:
+	static void Initialize(ImGuiIO& io);
+
+public:
+	static inline ImFont* m_IBMPlexMonoSemiBold{ nullptr };
+};

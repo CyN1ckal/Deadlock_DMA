@@ -148,33 +148,60 @@ void Keybinds::Render()
 	ImGui::Begin("Keybinds", &bSettings);
 
 	if (c_keys::IsInitialized() == false)
+	{
+		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.3f, 0.3f, 1.0f));
 		ImGui::Text("Input Manager not initialized!");
+		ImGui::PopStyleColor();
+		ImGui::End();
+		return;
+	}
 
-	Aimbot.Render();
+	ImGui::SeparatorText("Keybinds");
+	// Table for better layout
+	if (ImGui::BeginTable("##KeybindsTable", 4, ImGuiTableFlags_SizingStretchProp))
+	{
+		ImGui::TableSetupColumn("Action", ImGuiTableColumnFlags_WidthFixed, 120.0f);
+		ImGui::TableSetupColumn("Key", ImGuiTableColumnFlags_WidthFixed, 150.0f);
+		ImGui::TableSetupColumn("Target PC", ImGuiTableColumnFlags_WidthFixed, 80.0f);
+		ImGui::TableSetupColumn("Radar PC", ImGuiTableColumnFlags_WidthFixed, 80.0f);
+		ImGui::TableHeadersRow();
+
+		Aimbot.Render();
+
+		ImGui::EndTable();
+	}
 
 	ImGui::End();
 }
 
-void Keybinds::OnDMAFrame(DMA_Connection* Conn)
-{
-	if (Aimbot.IsActive(Conn))
-		Aimbot::OnFrame(Conn);
-}
-
 void CKeybind::Render()
 {
-	ImGui::Text("%s:", m_Name.c_str());
-	ImGui::SameLine();
+	ImGui::TableNextRow();
+
+	ImGui::TableNextColumn();
+	ImGui::AlignTextToFramePadding();
+	ImGui::Text("%s", m_Name.c_str());
+
+	ImGui::TableNextColumn();
 
 	if (m_bWaitingForKey)
 	{
-		if (ImGui::Button(("Press any key...##" + m_Name).c_str()))
-			m_bWaitingForKey = false;
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.3f, 0.6f, 1.0f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.4f, 0.7f, 1.0f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.2f, 0.5f, 0.9f, 1.0f));
 
+		if (ImGui::Button(("Press any key...##" + m_Name).c_str(), ImVec2(-1, 0)))
+		{
+			m_bWaitingForKey = false;
+		}
+
+		ImGui::PopStyleColor(3);
+
+		// Check for key press
 		for (int vk = 0; vk < 256; vk++)
 		{
-			// Skip mouse buttons 1-3 (can interfere with UI)
-			if (vk == VK_LBUTTON || vk == VK_RBUTTON || vk == VK_MBUTTON)
+			// Skip mouse buttons 1-3 and problematic keys
+			if (vk == VK_LBUTTON || vk == VK_RBUTTON || vk == VK_MBUTTON || vk == VK_ESCAPE)
 				continue;
 
 			if (GetAsyncKeyState(vk) & 0x8000)  // Key is pressed
@@ -188,14 +215,43 @@ void CKeybind::Render()
 	else
 	{
 		std::string buttonLabel = std::string(GetKeyName(m_Key)) + "##" + m_Name;
-		if (ImGui::Button(buttonLabel.c_str()))
+
+		if (ImGui::Button(buttonLabel.c_str(), ImVec2(-1, 0)))
+		{
 			m_bWaitingForKey = true;
+		}
+
+		// Right-click to clear
+		if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+		{
+			m_Key = 0;
+		}
+
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetTooltip("Left-click to rebind\nRight-click to clear");
+		}
 	}
 
-	ImGui::SameLine();
-	ImGui::Checkbox(("##Target" + m_Name).c_str(), &m_bTargetPC);
-	ImGui::SameLine();
-	ImGui::Checkbox(("##Radar" + m_Name).c_str(), &m_bRadarPC);
+	ImGui::TableNextColumn();
+	ImGui::Checkbox(("##TargetPC_" + m_Name).c_str(), &m_bTargetPC);
+	if (ImGui::IsItemHovered())
+	{
+		ImGui::SetTooltip("Read key state from target computer");
+	}
+
+	ImGui::TableNextColumn();
+	ImGui::Checkbox(("##RadarPC_" + m_Name).c_str(), &m_bRadarPC);
+	if (ImGui::IsItemHovered())
+	{
+		ImGui::SetTooltip("Read key state from radar computer");
+	}
+}
+
+void Keybinds::OnDMAFrame(DMA_Connection* Conn)
+{
+	if (Aimbot.IsActive(Conn))
+		Aimbot::OnFrame(Conn);
 }
 
 const bool CKeybind::IsActive(DMA_Connection* Conn) const

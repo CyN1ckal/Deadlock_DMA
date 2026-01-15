@@ -5,20 +5,18 @@
 #include "Status Bars/Status Bars.h"
 #include "GUI/Aimbot/Aimbot.h"
 
-void Fuser::OnFrame()
+void Fuser::Render() 
 {
 	if (!bMasterToggle) return;
 
-	ZoneScoped;
+	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowSize(Fuser::m_ScreenSize);
+	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 255.0f));
+	ImGui::Begin("Fuser", nullptr, ImGuiWindowFlags_NoDecoration);
+	auto WindowPos = ImGui::GetWindowPos();
+	auto DrawList = ImGui::GetWindowDrawList();
 
-	ImGui::SetNextWindowPos({ 100,100 }, ImGuiCond_FirstUseEver);
-
-	ImGui::PushStyleColor(ImGuiCol_WindowBg, IM_COL32(0, 0, 0, 0));
-
-	ImGui::SetNextWindowSize(ScreenSize, ImGuiCond_Always);
-
-	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar;
-	ImGui::Begin("Fuser", nullptr, window_flags);
+	Aimbot::RenderFOVCircle();
 
 	ESP::OnFrame();
 
@@ -26,34 +24,39 @@ void Fuser::OnFrame()
 
 	StatusBars::Render();
 
-	Aimbot::RenderFOVCircle();
-
 	ImGui::End();
-
-	ImGui::PopStyleColor(1);
+	ImGui::PopStyleColor();
 }
 
 void Fuser::RenderSettings()
 {
-	ImGui::Begin("Fuser Settings");
+	if (!bSettings) return;
+
+	ImGui::Begin("Fuser Settings", &bSettings);
 
 	ImGui::Checkbox("Enable Fuser", &bMasterToggle);
 
-	ImGui::PushItemWidth(60.0f);
+	ImGui::Spacing();
+	ImGui::Separator();
+	ImGui::Spacing();
 
-	ImGui::InputFloat("Screen Size X", &ScreenSize.x, 0.0f, 0.0f, "%.0f");
 
-	ImGui::InputFloat("Screen Size Y", &ScreenSize.y, 0.0f, 0.0f, "%.0f");
+	ImGui::SeparatorText("Screen Configuration");
+	ImGui::Text("Overlay Resolution");
+	ImGui::SetNextItemWidth(150.0f);
+	ImGui::InputFloat("Width##Screen", &m_ScreenSize.x, 0.0f, 0.0f, "%.0f");
+	ImGui::SetNextItemWidth(150.0f);
+	ImGui::InputFloat("Height##Screen", &m_ScreenSize.y, 0.0f, 0.0f, "%.0f");
+	ImGui::TextDisabled("(Match your game resolution)");
 
-	ImGui::Checkbox("Draw Souls Per Minute", &bDrawSoulsPerMinute);
+	ImGui::Spacing();
 
-	ImGui::Checkbox("Healh Status Bar", &StatusBars::bRenderTeamHealthBar);
+	ImGui::SeparatorText("HUD Elements");
+	ImGui::Checkbox("Souls Per Minute", &bDrawSoulsPerMinute);
 
-	ImGui::Checkbox("Souls Status Bar", &StatusBars::bRenderTeamSoulsBar);
-
-	ImGui::Checkbox("Unspent Souls Status Bar", &StatusBars::bRenderUnspentSoulsBar);
-
-	ImGui::PopItemWidth();
+	ImGui::Checkbox("Team Health Bar", &StatusBars::bRenderTeamHealthBar);
+	ImGui::Checkbox("Team Souls Bar", &StatusBars::bRenderTeamSoulsBar);
+	ImGui::Checkbox("Unspent Souls Bar", &StatusBars::bRenderUnspentSoulsBar);
 
 	ImGui::End();
 }
@@ -80,7 +83,7 @@ void Fuser::RenderSoulsPerMinute()
 
 	auto SoulsPerMinute = SoulsPerSecond * 60.0f;
 	ImGui::PushFont(nullptr, 24.0f);
-	ImGui::SetCursorPos({ 2.0f, ScreenSize.y - ImGui::GetTextLineHeight() });
+	ImGui::SetCursorPos({ 2.0f, m_ScreenSize.y - ImGui::GetTextLineHeight() });
 	ImGui::Text("%.1f Souls/Min", SoulsPerMinute);
 	ImGui::PopFont();
 }
