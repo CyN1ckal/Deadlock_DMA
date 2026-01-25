@@ -21,7 +21,6 @@ int main()
 
 	Config::LoadConfig("default");
 
-
 #ifndef DEADLOCK_DLL
 	MainWindow::Initialize();
 #endif

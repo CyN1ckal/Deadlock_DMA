@@ -42,7 +42,7 @@ namespace Aimpoints
 			return { 13,11 };
 
 		case HeroId::Infernus:
-			return { 30,11 };
+			return { 28,9 };
 
 		case HeroId::Ivy:
 			return { 13,10 };

@@ -18,8 +18,6 @@ bool Offsets::ResolveOffsets(DMA_Connection* Conn)
 
 	ResolvePredictionPtr(ms, Conn);
 
-	ResolveRotation(ms, Conn);
-
 	ms.Close();
 
 	DbgPrintln("All offsets resolved.");
@@ -66,13 +64,13 @@ bool Offsets::ResolveLocalController(MultiScan& ms, DMA_Connection* Conn)
 bool Offsets::ResolveViewMatrix(MultiScan& ms, DMA_Connection* Conn)
 {
 	PatternInfo pi;
-	pi.Mask = "xxx????xxx";
-	pi.Pattern = "\x49\x8D\x87????\x48\xC1\xE2";
+	pi.Mask = "xx????xx????xx?????xx????xxxxxxx?xx?????x????xxxxxxxxxx????xxx????xxxx?????xxxxx?????xx????xxx?????xxx????xxxx????xxx";
+	pi.Pattern = "\x39\x0D????\x0F\x8F????\x80\x3D?????\x0F\x85????\x48\x8B\xCB\x48\x89\x7C\x24?\xC6\x05?????\xE8????\x48\x8B\xD0\x45\x33\xC0\x48\x8B\xCE\xE8????\x48\x8D\x3D????\x48\xC7\x44\x24?????\x48\x8B\xD7\xC6\x05?????\x41\xB9????\xC7\x44\x24?????\x4C\x8D\x05????\x48\x8B\xCE\xE8????\x48\x8D\x05";
 	uint32_t PatternOffset = ms.ScanOffset(pi);
 
-	uint32_t Displacement = Deadlock::Proc().ReadMem<uint32_t>(Conn, Deadlock::Proc().GetClientBase() + PatternOffset + 3);
+	uint32_t Displacement = Deadlock::Proc().ReadMem<uint32_t>(Conn, Deadlock::Proc().GetClientBase() + PatternOffset + 2);
 
-	Offsets::ViewMatrix = Displacement;
+	Offsets::ViewMatrix = PatternOffset + 6 + Displacement - ms.GetSectionBase();
 
 	std::println("[+] ViewMatrix Offset: 0x{:X}", Offsets::ViewMatrix);
 
@@ -93,22 +91,6 @@ bool Offsets::ResolvePredictionPtr(MultiScan& ms, DMA_Connection* Conn)
 	Offsets::PredictionPtr = Final;
 
 	std::println("[+] PredictionPtr Offset: 0x{:X}", Offsets::PredictionPtr);
-
-	return true;
-}
-
-bool Offsets::ResolveRotation(MultiScan& ms, DMA_Connection* Conn)
-{
-	PatternInfo pi;
-	pi.Mask = "xxxx????xx????xxxx";
-	pi.Pattern = "\xF2\x0F\x11\x05????\x89\x05????\xF2\x0F\x10\x06";
-	uint32_t PatternOffset = ms.ScanOffset(pi);
-
-	uint32_t Displacement = Deadlock::Proc().ReadMem<uint32_t>(Conn, Deadlock::Proc().GetClientBase() + PatternOffset + 4);
-
-	Offsets::Rotation = PatternOffset + 8 + Displacement;
-
-	std::println("[+] Rotation Offset: 0x{:X}", Offsets::Rotation);
 
 	return true;
 }

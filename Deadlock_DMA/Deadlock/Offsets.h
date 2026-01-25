@@ -8,14 +8,12 @@ namespace Offsets
 	bool ResolveLocalController(MultiScan& ms, DMA_Connection* Conn);
 	bool ResolveViewMatrix(MultiScan& ms, DMA_Connection* Conn);
 	bool ResolvePredictionPtr(MultiScan& ms, DMA_Connection* Conn);
-	bool ResolveRotation(MultiScan& ms, DMA_Connection* Conn);
 
 	inline constexpr std::ptrdiff_t FirstEntityList = 0x10;
 	inline std::ptrdiff_t GameEntitySystem = 0;
 	inline std::ptrdiff_t LocalController = 0;
 	inline std::ptrdiff_t ViewMatrix = 0;
 	inline std::ptrdiff_t PredictionPtr = 0;
-	inline std::ptrdiff_t Rotation = 0;
 
 	namespace Prediction
 	{
@@ -24,9 +22,9 @@ namespace Offsets
 
 	namespace SceneNode
 	{
-		inline constexpr std::ptrdiff_t Position = 0xD0;
-		inline constexpr std::ptrdiff_t ModelState = 0x190;
-		inline constexpr std::ptrdiff_t Dormant = 0x10B;
+		inline constexpr std::ptrdiff_t Position = 0xC8;
+		inline constexpr std::ptrdiff_t Dormant = 0x103;
+		inline constexpr std::ptrdiff_t ModelState = 0x150;
 	}
 
 	namespace ModelState
@@ -37,22 +35,22 @@ namespace Offsets
 	namespace Pawn
 	{
 		inline constexpr std::ptrdiff_t Velocity = 0x438;
-		inline constexpr std::ptrdiff_t hController = 0x10F8;
-		inline constexpr std::ptrdiff_t TotalUnspentSouls = 0x1338;
-		inline constexpr std::ptrdiff_t UnsecuredSouls = 0x1344;
+		inline constexpr std::ptrdiff_t hController = 0x10A8;
+		inline constexpr std::ptrdiff_t TotalUnspentSouls = 0x12D8;
+		inline constexpr std::ptrdiff_t UnsecuredSouls = 0x12E4;
 	}
 
 	namespace BaseEntity
 	{
 		inline constexpr std::ptrdiff_t GameSceneNode = 0x330;
-		inline constexpr std::ptrdiff_t TeamNum = 0x3F3;
 		inline constexpr std::ptrdiff_t CurrentHealth = 0x354;
+		inline constexpr std::ptrdiff_t TeamNum = 0x3F3;
 	}
 
 	namespace Controller
 	{
-		inline constexpr std::ptrdiff_t PlayerData = 0x8E8;
-		inline constexpr std::ptrdiff_t m_hPawn = 0x8A4;
+		inline constexpr std::ptrdiff_t m_hPawn = 0x8AC;
+		inline constexpr std::ptrdiff_t PlayerData = 0x8F0;
 
 		namespace PlayerDataOffsets
 		{

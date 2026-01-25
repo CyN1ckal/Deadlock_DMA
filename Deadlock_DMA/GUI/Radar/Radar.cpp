@@ -16,42 +16,30 @@ void Radar::Render()
 
 	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(ColorPicker::RadarBackgroundColor));
 
-	ImGui::Begin("Radar", &bMasterToggle);
+	ImGui::Begin("Radar");
 
 	DrawEntities();
 
 	ImGui::End();
 
-	ImGui::PopStyleColor();
+	ImGui::PopStyleColor(1);
 }
 
 void Radar::RenderSettings()
 {
 	if (!bSettings) return;
 
-	ImGui::Begin("Radar Settings", &bSettings);
+	ImGui::Begin("Radar Settings");
 
 	ImGui::Checkbox("Enable Radar", &bMasterToggle);
 
-	ImGui::Spacing();
-	ImGui::Separator();
-	ImGui::Spacing();
+	ImGui::SliderFloat("Radar Scale", &fRadarScale, 1.0f, 50.0f, "%.1f");
 
-	ImGui::SeparatorText("Display Settings");
+	ImGui::SliderFloat("Ray Size", &fRaySize, 0.0f, 500.0f, "%.1f");
+
+	ImGui::Checkbox("Hide Friendly", &bHideFriendly);
 
 	ImGui::Checkbox("MOBA Style", &bMobaStyle);
-	if (bMobaStyle)
-	{
-		ImGui::TextDisabled("(Top-down minimap view)");
-	}
-
-	ImGui::Spacing();
-	ImGui::SliderFloat("Radar Scale", &fRadarScale, 1.0f, 50.0f, "%.1f");
-	ImGui::SliderFloat("View Distance", &fRaySize, 0.0f, 500.0f, "%.1f");
-
-	ImGui::Spacing();
-	ImGui::SeparatorText("Filters");
-	ImGui::Checkbox("Hide Friendly Players", &bHideFriendly);
 
 	ImGui::End();
 }
@@ -121,16 +109,9 @@ void Radar::DrawLocalPlayer(ImDrawList* DrawList, const ImVec2& Center)
 {
 	DrawList->AddCircleFilled(Center, 5.0f, IM_COL32(0, 255, 0, 255));
 
-	float Yaw = 0.0f;
-	{
-		std::scoped_lock Lock(Deadlock::m_ClientYawMutex);
-		Yaw = Deadlock::m_ClientYaw;
-	}
-	Yaw += 180.0f;
+	float Rad = Deadlock::GetClientYaw() + std::numbers::pi;
 
-	float Rad = DegToRad(Yaw);
-
-	ImVec2 LineEnd = { Center.x + (fRaySize * std::cos(Rad)), Center.y - (fRaySize * std::sin(Rad)) };
+	ImVec2 LineEnd = { Center.x - (fRaySize * std::sin(Rad)), Center.y - (fRaySize * std::cos(Rad)) };
 	DrawList->AddLine(Center, LineEnd, IM_COL32(0, 255, 0, 255), 2.0f);
 }
 
@@ -151,7 +132,7 @@ void Radar::DrawPlayer(const CCitadelPlayerController& PC, const CCitadelPlayerP
 void Radar::DrawNameTag(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& AnchorPos, int& LineNumber) {
 	std::string text;
 
-	if(bMobaStyle)
+	if (bMobaStyle)
 		text += std::format("({}) ", PC.m_CurrentLevel);
 
 	text += std::format("{} ", PC.GetHeroName());

@@ -245,30 +245,7 @@ json Config::SerializeConfig() {
 	// Aimbot
 	j["Aimbot"] = {
 		// General
-		{"bSettings", Aimbot::bSettings},
-		{"bMasterToggle", Aimbot::bMasterToggle},
-
-		// Smoothing
-		{"fSmoothX", Aimbot::fSmoothX},
-		{"fSmoothY", Aimbot::fSmoothY},
-		{"bIndependentSmoothing", Aimbot::bIndependentSmoothing},
-
-		// Humanization
-		{"bHumanization", Aimbot::bHumanization},
-		{"fRandomness", Aimbot::fRandomness},
-		{"fMicroCorrection", Aimbot::fMicroCorrection},
-		{"fOvershootChance", Aimbot::fOvershootChance},
-		{"fOvershootAmount", Aimbot::fOvershootAmount},
-		{"bDistanceBasedSmoothing", Aimbot::bDistanceBasedSmoothing},
-
-		// Targeting
-		{"fMaxPixelDistance", Aimbot::fMaxPixelDistance},
-		{"bAimHead", Aimbot::bAimHead},
-		{"bDrawMaxFOV", Aimbot::bDrawMaxFOV},
-
-		// Prediction
-		{"bPrediction", Aimbot::bPrediction},
-		{"fBulletVelocity", Aimbot::fBulletVelocity}
+		{"bSettings", Aimbot::bSettings}
 	};
 
 	j["Fuser"] = {
@@ -373,20 +350,6 @@ void Config::DeserializeConfig(const json& j) {
 
 		// General
 		if (ab.contains("bSettings")) Aimbot::bSettings = ab["bSettings"].get<bool>();
-		if (ab.contains("bMasterToggle")) Aimbot::bMasterToggle = ab["bMasterToggle"].get<bool>();
-
-		// Smoothing
-		if (ab.contains("fSmoothX")) Aimbot::fSmoothX = ab["fSmoothX"].get<float>();
-		if (ab.contains("fSmoothY")) Aimbot::fSmoothY = ab["fSmoothY"].get<float>();
-		if (ab.contains("bIndependentSmoothing")) Aimbot::bIndependentSmoothing = ab["bIndependentSmoothing"].get<bool>();
-
-		// Humanization
-		if (ab.contains("bHumanization")) Aimbot::bHumanization = ab["bHumanization"].get<bool>();
-		if (ab.contains("fRandomness")) Aimbot::fRandomness = ab["fRandomness"].get<float>();
-		if (ab.contains("fMicroCorrection")) Aimbot::fMicroCorrection = ab["fMicroCorrection"].get<float>();
-		if (ab.contains("fOvershootChance")) Aimbot::fOvershootChance = ab["fOvershootChance"].get<float>();
-		if (ab.contains("fOvershootAmount")) Aimbot::fOvershootAmount = ab["fOvershootAmount"].get<float>();
-		if (ab.contains("bDistanceBasedSmoothing")) Aimbot::bDistanceBasedSmoothing = ab["bDistanceBasedSmoothing"].get<bool>();
 
 		// Targeting
 		if (ab.contains("fMaxPixelDistance")) Aimbot::fMaxPixelDistance = ab["fMaxPixelDistance"].get<float>();

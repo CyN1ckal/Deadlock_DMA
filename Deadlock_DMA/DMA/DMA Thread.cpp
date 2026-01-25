@@ -23,7 +23,7 @@ void DMA_Thread_Main()
 
 	if (!Deadlock::Initialize(Conn))
 	{
-		std::println("[DMA Thread] EFT Initialization failed, requesting exit.");
+		std::println("[DMA Thread] Deadlock Initialization failed, requesting exit.");
 		bRunning = false;
 		return;
 	}
@@ -67,7 +67,6 @@ void DMA_Thread_Main()
 		FullSinnerTimer.Tick(TimeNow);
 		FullUpdateTimer.Tick(TimeNow);
 		Keybinds.Tick(TimeNow);
-		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
 
 	Conn->EndConnection();

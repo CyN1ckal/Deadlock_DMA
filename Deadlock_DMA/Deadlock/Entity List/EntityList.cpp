@@ -102,18 +102,18 @@ void EntityList::SortEntityList()
 		MonsterCampClassPtr = m_EntityClassMap["npc_trooper_neutral"];
 
 	uintptr_t SinnerClassPtr = 0;
-	if (m_EntityClassMap.find("npc_neutral_sinners_sacrifce") != m_EntityClassMap.end())
-		SinnerClassPtr = m_EntityClassMap["npc_neutral_sinners_sacrifce"];
+	if (m_EntityClassMap.find("npc_neutral_sinners_sacrifice") != m_EntityClassMap.end())
+		SinnerClassPtr = m_EntityClassMap["npc_neutral_sinners_sacrifice"];
 
 	for (auto& List : m_CompleteEntityList)
 	{
 		for (auto& Entry : List)
 		{
-			if (TrooperClassPtr && Entry.NamePtr == TrooperClassPtr) m_TrooperAddresses.push_back(Entry.pEntity);
-			else if (Entry.NamePtr == PlayerControllerClassPtr) m_PlayerController_Addresses.push_back(Entry.pEntity);
-			else if (Entry.NamePtr == PlayerPawnClassPtr) m_PlayerPawn_Addresses.push_back(Entry.pEntity);
-			else if (MonsterCampClassPtr && Entry.NamePtr == MonsterCampClassPtr) m_MonsterCampAddresses.push_back(Entry.pEntity);
-			else if (SinnerClassPtr && Entry.NamePtr == SinnerClassPtr) m_SinnersAddresses.push_back(Entry.pEntity);
+			if (TrooperClassPtr && Entry.pName == TrooperClassPtr) m_TrooperAddresses.push_back(Entry.pEnt);
+			else if (Entry.pName == PlayerControllerClassPtr) m_PlayerController_Addresses.push_back(Entry.pEnt);
+			else if (Entry.pName == PlayerPawnClassPtr) m_PlayerPawn_Addresses.push_back(Entry.pEnt);
+			else if (MonsterCampClassPtr && Entry.pName == MonsterCampClassPtr) m_MonsterCampAddresses.push_back(Entry.pEnt);
+			else if (SinnerClassPtr && Entry.pName == SinnerClassPtr) m_SinnersAddresses.push_back(Entry.pEnt);
 			else continue;
 		}
 	}
@@ -398,7 +398,7 @@ uintptr_t EntityList::GetEntityAddressFromHandle(CHandle Handle)
 	auto ListIndex = Handle.GetEntityListIndex();
 	auto EntityIndex = Handle.GetEntityEntryIndex();
 
-	return m_CompleteEntityList[ListIndex][EntityIndex].pEntity;
+	return m_CompleteEntityList[ListIndex][EntityIndex].pEnt;
 }
 
 void EntityList::UpdateEntityClassMap(DMA_Connection* Conn, Process* Proc)
@@ -409,12 +409,12 @@ void EntityList::UpdateEntityClassMap(DMA_Connection* Conn, Process* Proc)
 	{
 		for (auto& Entry : List)
 		{
-			if (Entry.pEntity == 0 || Entry.NamePtr == 0) continue;
+			if (Entry.pEnt == 0 || Entry.pName == 0) continue;
 
-			if (std::find(UniqueClassNames.begin(), UniqueClassNames.end(), Entry.NamePtr) != UniqueClassNames.end())
+			if (std::find(UniqueClassNames.begin(), UniqueClassNames.end(), Entry.pName) != UniqueClassNames.end())
 				continue;
 
-			UniqueClassNames.push_back(Entry.NamePtr);
+			UniqueClassNames.push_back(Entry.pName);
 		}
 	}
 

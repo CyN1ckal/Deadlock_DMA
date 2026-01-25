@@ -26,24 +26,22 @@ void Render(ImGuiContext* ctx)
 	ImGui::PushFont(Fonts::m_IBMPlexMonoSemiBold, 16.0f);
 	ImGui::DockSpaceOverViewport(ImGui::GetMainViewport()->ID, nullptr, ImGuiDockNodeFlags_PassthruCentralNode);
 
+	Fuser::Render();
+	Radar::Render();
 
-	Fuser::Render();           // Main overlay window
-	Radar::Render();           // Radar overlay
-	ESP::OnFrame();            // ESP rendering
+	PlayerList::Render();
+	TrooperList::Render();
+	ClassList::Render();
 
-	PlayerList::Render();      // Player debug info
-	TrooperList::Render();     // Trooper debug info
-	ClassList::Render();       // Class debug info
+	Radar::RenderSettings();
+	Fuser::RenderSettings();
+	ESP::RenderSettings();
+	Aimbot::RenderSettings();
 
-	Radar::RenderSettings();   // Radar configuration
-	Fuser::RenderSettings();   // Fuser configuration
-	ESP::RenderSettings();     // ESP configuration
-	Aimbot::RenderSettings();  // Aimbot configuration
-
-	ColorPicker::Render();     // Color picker window
-	Keybinds::Render();        // Keybind editor
-	Config::Render();          // Config manager
-	MainMenu::Render();        // Main menu
+	ColorPicker::Render();
+	Keybinds::Render();
+	Config::Render();
+	MainMenu::Render();
 
 	ImGui::PopFont();
 }

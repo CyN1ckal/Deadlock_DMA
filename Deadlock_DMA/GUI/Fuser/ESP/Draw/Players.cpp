@@ -132,8 +132,9 @@ void Draw_Players::DrawHeadCircle(const CCitadelPlayerController& PC, const CCit
 
 	ImVec2 HeadPos = ImVec2(Head2D.x + WindowPos.x, Head2D.y + WindowPos.y);
 
-	// Calculate dynamic radius based on distance
-	float Distance = Pawn.DistanceFromLocalPlayer(false); // Distance in Hammer units
+	float Distance = Pawn.DistanceFromLocalPlayer(false);
+	if (Distance < 0.1f) return;
+
 	float BaseRadius = 5.f;
 
 	// Scale radius inversely with distance

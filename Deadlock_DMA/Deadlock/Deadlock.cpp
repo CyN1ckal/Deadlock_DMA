@@ -10,6 +10,9 @@
 
 bool Deadlock::Initialize(DMA_Connection* Conn)
 {
+	if (c_keys::InitKeyboard(Conn))
+		std::println("[+] Target PC keyboard connected");
+
 	auto& Process = Deadlock::Proc();
 
 	Process.GetProcessInfo("deadlock.exe", Conn);
@@ -39,6 +42,12 @@ void Deadlock::UpdateViewMatrix(DMA_Connection* Conn)
 	std::scoped_lock lock(ViewMatrixMutex);
 	uintptr_t ViewMatrixAddress = Proc().GetClientBase() + Offsets::ViewMatrix;
 	m_ViewMatrix = Proc().ReadMem<Matrix44>(Conn, ViewMatrixAddress);
+}
+
+Matrix44 Deadlock::GetViewMatrix()
+{
+	std::scoped_lock lock(ViewMatrixMutex);
+	return m_ViewMatrix;
 }
 
 bool Deadlock::WorldToScreen(const Vector3& Pos, Vector2& ScreenPos)
@@ -115,7 +124,26 @@ void Deadlock::UpdateClientYaw(DMA_Connection* Conn)
 {
 	ZoneScoped;
 
+	auto Mat = GetViewMatrix();
+
+	SetClientYaw(atan2(Mat.m01, Mat.m00));
+}
+
+void Deadlock::SetClientYaw(float NewYaw)
+{
 	std::scoped_lock Lock(m_ClientYawMutex);
-	uintptr_t YawAddress = Proc().GetClientBase() + Offsets::Rotation + sizeof(float);
-	m_ClientYaw = Proc().ReadMem<float>(Conn, YawAddress);
+	m_ClientYaw = NewYaw;
+}
+
+float Deadlock::GetClientYaw()
+{
+	std::scoped_lock Lock(m_ClientYawMutex);
+	return m_ClientYaw;
+}
+
+float Deadlock::GetClientYawDegrees()
+{
+	std::scoped_lock Lock(m_ClientYawMutex);
+
+	return m_ClientYaw * (180.0 / std::numbers::pi);
 }
