@@ -15,7 +15,7 @@ namespace Aimpoints
 			return { 6,4 };
 
 		case HeroId::Billy:
-			return { 5,7 };
+			return { 7,6 };
 
 		case HeroId::Calico:
 			return { 13,11 };
