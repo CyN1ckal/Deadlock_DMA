@@ -52,11 +52,6 @@ int main()
 #endif
 
 #ifdef DEADLOCK_DLL
-extern "C" __declspec(dllexport) void Render(ImGuiContext* ctx)
-{
-	ImGui::SetCurrentContext(ctx);
-	MainWindow::RenderOnly();
-}
 DWORD WINAPI StartingThread(HMODULE hMod)
 {
 	return main();

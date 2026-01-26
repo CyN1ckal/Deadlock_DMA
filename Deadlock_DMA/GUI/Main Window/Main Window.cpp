@@ -15,7 +15,6 @@
 #include "GUI/Keybinds/Keybinds.h"
 #include "GUI/Config/Config.h"
 
-
 void Render(ImGuiContext* ctx)
 {
 	ImGui::SetCurrentContext(ctx);
