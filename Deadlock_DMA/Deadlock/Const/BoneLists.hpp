@@ -435,6 +435,28 @@ namespace BoneLists
 		{34,35},
 		{35,36}
 	};
+	const inline std::vector<std::pair<uint32_t, uint32_t>> Rem_BonePairs{
+		{4,6},
+		{6,8},
+		{8,9},
+		{9,10},
+		{9,29},
+		{29,30},
+		{30,31},
+		{31,32},
+		{9,16},
+		{16,17},
+		{17,18},
+		{4,37},
+		{37,38},
+		{38,39},
+		{39,40},
+		{4,33},
+		{33,34},
+		{34,35},
+		{35,36}
+
+	};
 	const inline std::vector<std::pair<uint32_t, uint32_t>> Seven_BonePairs{
 		{7,9},
 		{9,10},
@@ -652,6 +674,7 @@ const inline std::unordered_map<HeroId, std::vector<std::pair<uint32_t, uint32_t
 	{HeroId::Paige, BoneLists::Paige_BonePairs },
 	{HeroId::Paradox, BoneLists::Paradox_BonePairs  },
 	{HeroId::Pocket, BoneLists::Pocket_BonePairs  },
+	{HeroId::Rem, BoneLists::Rem_BonePairs  },
 	{HeroId::Seven, BoneLists::Seven_BonePairs  },
 	{HeroId::Shiv, BoneLists::Shiv_BonePairs  },
 	{HeroId::Sinclair, BoneLists::Sinclair_BonePairs  },

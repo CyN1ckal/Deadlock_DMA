@@ -27,6 +27,7 @@ namespace HeroNames
 	const inline std::string Paige = "Paige";
 	const inline std::string Paradox = "Paradox";
 	const inline std::string Pocket = "Pocket";
+	const inline std::string Rem = "Rem";
 	const inline std::string Seven = "Seven";
 	const inline std::string Shiv = "Shiv";
 	const inline std::string Sinclair = "Sinclair";
@@ -62,6 +63,7 @@ namespace HeroNames
 		{HeroId::Paige, Paige},
 		{HeroId::Paradox, Paradox},
 		{HeroId::Pocket, Pocket},
+		{HeroId::Rem, Rem},
 		{HeroId::Seven, Seven},
 		{HeroId::Shiv, Shiv},
 		{HeroId::Sinclair, Sinclair},

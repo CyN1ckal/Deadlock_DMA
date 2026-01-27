@@ -26,6 +26,7 @@ enum class HeroId : int32_t
 	Paige = 67,
 	Paradox = 10,
 	Pocket = 50,
+	Rem = 79,
 	Seven = 2,
 	Shiv = 19,
 	Sinclair = 60,

@@ -80,6 +80,9 @@ namespace Aimpoints
 		case HeroId::Seven:
 			return { 14,11 };
 
+		case HeroId::Rem:
+			return { 10,7 };
+
 		case HeroId::Shiv:
 			return { 13,11 };
 
