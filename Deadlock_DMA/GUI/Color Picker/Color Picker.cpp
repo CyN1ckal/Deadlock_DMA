@@ -46,6 +46,8 @@ void ColorPicker::Render()
 
 	MyColorPicker("Aimbot FOV Circle", ColorPicker::AimbotFOVCircle);
 
+	MyColorPicker("Aimbot FOV Circle Active", ColorPicker::AimbotFOVCircleActive);
+
 	MyColorPicker("Radar Background", ColorPicker::RadarBackgroundColor);
 
 	ImGui::End();

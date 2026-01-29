@@ -245,7 +245,19 @@ json Config::SerializeConfig() {
 	// Aimbot
 	j["Aimbot"] = {
 		// General
-		{"bSettings", Aimbot::bSettings}
+		{"bSettings", Aimbot::bSettings},
+
+		// Targetting
+		{"fSmoothX", Aimbot::fSmoothX},
+		{"fSmoothY", Aimbot::fSmoothY},
+		{"fGaussianNoise", Aimbot::fGaussianNoise},
+		{"fMaxPixelDistance", Aimbot::fMaxPixelDistance},
+		{"bAimHead", Aimbot::bAimHead},
+		{"bDrawMaxFOV", Aimbot::bDrawMaxFOV},
+
+		// Prediction
+		{"bPrediction", Aimbot::bPrediction},
+		{"fBulletVelocity", Aimbot::fBulletVelocity}
 	};
 
 	j["Fuser"] = {
@@ -352,6 +364,9 @@ void Config::DeserializeConfig(const json& j) {
 		if (ab.contains("bSettings")) Aimbot::bSettings = ab["bSettings"].get<bool>();
 
 		// Targeting
+		if (ab.contains("fSmoothX")) Aimbot::fSmoothX = ab["fSmoothX"].get<float>();
+		if (ab.contains("fSmoothY")) Aimbot::fSmoothY = ab["fSmoothY"].get<float>();
+		if (ab.contains("fGaussianNoise")) Aimbot::fGaussianNoise = ab["fGaussianNoise"].get<float>();
 		if (ab.contains("fMaxPixelDistance")) Aimbot::fMaxPixelDistance = ab["fMaxPixelDistance"].get<float>();
 		if (ab.contains("bAimHead")) Aimbot::bAimHead = ab["bAimHead"].get<bool>();
 		if (ab.contains("bDrawMaxFOV")) Aimbot::bDrawMaxFOV = ab["bDrawMaxFOV"].get<bool>();
@@ -465,6 +480,7 @@ void Config::DeserializeConfig(const json& j) {
 		if (colors.contains("HealthBarForegroundColor")) ColorPicker::HealthBarForegroundColor = colors["HealthBarForegroundColor"].get<uint32_t>();
 		if (colors.contains("HealthBarBackgroundColor")) ColorPicker::HealthBarBackgroundColor = colors["HealthBarBackgroundColor"].get<uint32_t>();
 		if (colors.contains("AimbotFOVCircle")) ColorPicker::AimbotFOVCircle = colors["AimbotFOVCircle"].get<uint32_t>();
+		if (colors.contains("AimbotFOVCircleActive")) ColorPicker::AimbotFOVCircleActive = colors["AimbotFOVCircleActive"].get<uint32_t>();
 		if (colors.contains("RadarBackgroundColor")) ColorPicker::RadarBackgroundColor = colors["RadarBackgroundColor"].get<uint32_t>();
 	}
 

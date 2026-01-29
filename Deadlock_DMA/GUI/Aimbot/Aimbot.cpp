@@ -26,7 +26,11 @@ void Aimbot::RenderSettings()
 		ImGui::TextColored(ImColor(255, 0, 0), "Makcu Disconnected!");
 	}
 
-	ImGui::SliderFloat("Dampen", &fDampen, 0.1f, 1.0f, "%.2f");
+	ImGui::SliderFloat("Smooth X", &fSmoothX, 1.0f, 50.0f, "%.1f");
+
+	ImGui::SliderFloat("Smooth Y", &fSmoothY, 1.0f, 50.0f, "%.1f");
+
+	ImGui::SliderFloat("Gaussian Noise", &fGaussianNoise, 0.0f, 2.0f, "%.2f");
 
 	ImGui::SliderFloat("Max Pixel Distance", &fMaxPixelDistance, 10.0f, 500.0f, "%.1f");
 
@@ -111,6 +115,8 @@ void Aimbot::OnFrame(DMA_Connection* Conn)
 
 	auto LastTime = std::chrono::steady_clock::time_point();
 
+	bIsActive = true;
+
 	do
 	{
 		auto CurrentTime = std::chrono::high_resolution_clock::now();
@@ -123,15 +129,25 @@ void Aimbot::OnFrame(DMA_Connection* Conn)
 
 		Vector2 Delta = GetAimDelta(CenterScreen);
 
-		Vector2 MoveAmount{ Delta.x * fDampen, Delta.y * fDampen };
+		Vector2 MoveAmount{
+			Delta.x / fSmoothX,
+			Delta.y / fSmoothY
+		};
+
+		// https://en.cppreference.com/w/cpp/numeric/random/normal_distribution.html
+		std::normal_distribution<float> noise(0.0f, fGaussianNoise);
+
+		MoveAmount.x += noise(gen);
+		MoveAmount.y += noise(gen);
 
 		MyMakcu::m_Device.mouseMove(MoveAmount.x, MoveAmount.y);
 
 		Deadlock::UpdateViewMatrix(Conn);
 		EntityList::QuickPawnRefresh(Conn, &Deadlock::Proc());
 		EntityList::QuickControllerRefresh(Conn, &Deadlock::Proc());
-
 	} while (Keybinds::Aimbot.IsActive(Conn));
+
+	bIsActive = false;
 }
 
 void Aimbot::RenderFOVCircle()
@@ -142,5 +158,8 @@ void Aimbot::RenderFOVCircle()
 	auto WindowSize = ImGui::GetWindowSize();
 	auto WindowPos = ImGui::GetWindowPos();
 	ImVec2 CenterScreen{ WindowPos.x + (WindowSize.x / 2.0f), WindowPos.y + (WindowSize.y / 2.0f) };
-	ImGui::GetWindowDrawList()->AddCircle(CenterScreen, fMaxPixelDistance, ColorPicker::AimbotFOVCircle, 100, 1.5f);
+
+	ImColor circleColor = bIsActive ? ColorPicker::AimbotFOVCircleActive : ColorPicker::AimbotFOVCircle;
+
+	ImGui::GetWindowDrawList()->AddCircle(CenterScreen, fMaxPixelDistance, circleColor, 100, 1.5f);
 }
