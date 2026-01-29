@@ -348,12 +348,12 @@ json Config::SerializeConfig() {
 
 void Config::DeserializeConfig(const json& j) {
 
-	// Main Menu
-	if (j.contains("Main Menu")) {
-		const auto m = j["Main Menu"];
+	// MainMenu
+	if (j.contains("MainMenu")) {
+		const auto m = j["MainMenu"];
 
 		if (m.contains("bVSync")) MainMenu::bVSync = m["bVSync"].get<bool>();
-		if (m.contains("iTargetFPS")) MainMenu::iTargetFPS = m["iTargetFPS"].get<bool>();
+		if (m.contains("iTargetFPS")) MainMenu::iTargetFPS = m["iTargetFPS"].get<int>();
 	}
 
 	// Aimbot

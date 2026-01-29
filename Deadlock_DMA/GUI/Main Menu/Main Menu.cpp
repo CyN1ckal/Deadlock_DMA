@@ -16,10 +16,10 @@ void MainMenu::Render()
 	ImGui::Begin("Main Menu", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 
 	ImGui::SeparatorText("Performance");
-	if (ImGui::Checkbox("VSync", &bVSync));
+	ImGui::Checkbox("VSync", &bVSync);
 	ImGui::SetNextItemWidth(100.0f);
 	// 1280x960@240Hz, 1920x1080@240/165/144/120Hz, 2560x1440@144/120Hz, 2560x1080@165/144Hz, 3440x1440@100/60Hz
-	if (ImGui::SliderInt("Target FPS", &iTargetFPS, 60, 240));
+	ImGui::SliderInt("Target FPS", &iTargetFPS, 60, 240);
 
 	ImGui::Spacing();
 	ImGuiIO& io = ImGui::GetIO();
