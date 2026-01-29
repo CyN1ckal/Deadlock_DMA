@@ -23,21 +23,30 @@ private:
 	bool PopulateModules(DMA_Connection* Conn);
 
 public:
-	template<typename T> inline T ReadMem(DMA_Connection* Conn, uintptr_t Address)
-	{
-		VMMDLL_SCATTER_HANDLE vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), m_PID, VMMDLL_FLAG_NOCACHE);
-		DWORD BytesRead{ 0 };
-		T Buffer{ 0 };
+    template<typename T> inline T ReadMem(DMA_Connection* Conn, uintptr_t Address)
+    {
+        try
+        {
+			VMMDLL_SCATTER_HANDLE vmsh = VMMDLL_Scatter_Initialize(Conn->GetHandle(), m_PID, VMMDLL_FLAG_NOCACHE);
+			DWORD BytesRead{ 0 };
+			T Buffer{ 0 };
 
-		VMMDLL_Scatter_PrepareEx(vmsh, Address, sizeof(T), reinterpret_cast<BYTE*>(&Buffer), &BytesRead);
+			VMMDLL_Scatter_PrepareEx(vmsh, Address, sizeof(T), reinterpret_cast<BYTE*>(&Buffer), &BytesRead);
 
-		VMMDLL_Scatter_Execute(vmsh);
+			VMMDLL_Scatter_Execute(vmsh);
 
-		VMMDLL_Scatter_CloseHandle(vmsh);
+			VMMDLL_Scatter_CloseHandle(vmsh);
 
-		if (BytesRead != sizeof(T))
-			std::println("Incomplete read: {}/{}", BytesRead, sizeof(T));
+			if (BytesRead != sizeof(T)) {
+				std::println("Incomplete read: {}/{}", BytesRead, sizeof(T));
+				return T{};
+			}
 
-		return Buffer;
-	}
+			return Buffer;
+        }
+        catch (...)
+        {
+            return T{};
+        }
+    }
 };

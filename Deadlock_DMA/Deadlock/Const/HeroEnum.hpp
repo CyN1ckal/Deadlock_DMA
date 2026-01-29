@@ -10,6 +10,7 @@ enum class HeroId : int32_t
 	Doorman = 69,
 	Drifter = 64,
 	Dynamo = 11,
+	Graves = 76,
 	Dummy = 55,
 	GreyTalon = 17,
 	Haze = 13,

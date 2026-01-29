@@ -4,6 +4,8 @@
 
 namespace Aimpoints
 {
+	// Returns optimal aim bone indices for each hero
+	// First value is head bone, second value is chest/torso bone
 	AimList GetAimpoints(HeroId ID)
 	{
 		switch (ID)
@@ -28,6 +30,9 @@ namespace Aimpoints
 
 		case HeroId::Dynamo:
 			return { 23,26 };
+
+		case HeroId::Graves:
+			return { 13, 9 };
 
 		case HeroId::Dummy:
 			return { 12,10 };

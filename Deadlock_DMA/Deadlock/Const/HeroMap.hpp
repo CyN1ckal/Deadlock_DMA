@@ -12,6 +12,7 @@ namespace HeroNames
 	const inline std::string Drifter = "Drifter";
 	const inline std::string Dummy = "Dummy";
 	const inline std::string Dynamo = "Dynamo";
+	const inline std::string Graves = "Graves";
 	const inline std::string GreyTalon = "Grey Talon";
 	const inline std::string Haze = "Haze";
 	const inline std::string Holliday = "Holliday";
@@ -48,6 +49,7 @@ namespace HeroNames
 		{HeroId::Drifter, Drifter},
 		{HeroId::Dummy, Dummy},
 		{HeroId::Dynamo, Dynamo},
+		{HeroId::Graves, Graves},
 		{HeroId::GreyTalon, GreyTalon},
 		{HeroId::Haze, Haze},
 		{HeroId::Holliday, Holliday},
