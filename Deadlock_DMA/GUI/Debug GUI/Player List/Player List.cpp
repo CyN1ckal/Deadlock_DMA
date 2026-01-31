@@ -12,7 +12,7 @@ void PlayerList::Render()
 
 	std::scoped_lock lock(EntityList::m_PawnMutex, EntityList::m_ControllerMutex);
 
-	if (ImGui::BeginTable("Players Table", 6))
+	if (ImGui::BeginTable("Players Table", 7))
 	{
 		ImGui::TableSetupColumn("Health");
 		ImGui::TableSetupColumn("Hero ID");
@@ -20,6 +20,7 @@ void PlayerList::Render()
 		ImGui::TableSetupColumn("Distance");
 		ImGui::TableSetupColumn("Souls");
 		ImGui::TableSetupColumn("Pawn Address");
+		ImGui::TableSetupColumn("Team ID");
 		ImGui::TableHeadersRow();
 
 		uint32_t PlayerNum = 0;
@@ -48,6 +49,8 @@ void PlayerList::Render()
 			ImGui::TableNextColumn();
 			if (ImGui::Button(std::format("Copy Address##{}", PlayerNum).c_str()))
 				ImGui::SetClipboardText(std::format("0x{:X}", Pawn.m_EntityAddress).c_str());
+			ImGui::TableNextColumn();
+			ImGui::Text("%d", Pawn.m_TeamNum);
 			PlayerNum++;
 		}
 

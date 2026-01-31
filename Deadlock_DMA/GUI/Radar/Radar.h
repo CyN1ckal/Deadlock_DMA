@@ -8,7 +8,7 @@ public:
 	static void RenderSettings();
 private:
 	static void DrawEntities();
-	static void DrawLocalPlayer(ImDrawList* DrawList, const ImVec2& Center);
+	static void DrawLocalPlayer(ImDrawList* DrawList, const ImVec2& Center, const CCitadelPlayerPawn& LocalPawn);
     static void DrawPlayer(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, const ImVec2& RadarPos);
     static void DrawNameTag(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& AnchorPos, int& LineNumber);
 	static void DrawHealthBar(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& AnchorPos, int& LineNumber);
@@ -24,6 +24,7 @@ private:
 		if (p.y > br.y) p.y = br.y;
 		return p;
 	};
+
 public:
 	static inline bool bMasterToggle{ true };
 	static inline bool bSettings{ true };

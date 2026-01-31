@@ -1,6 +1,12 @@
 #pragma once
 #include "Deadlock/Engine/Vector3.h"
-#
+
+enum class ETeam : uint8_t
+{
+	HIDDEN_KING = 2,
+	ARCH_MOTHER = 3
+};
+
 class CBaseEntity
 {
 public:
@@ -9,7 +15,7 @@ public:
 	uintptr_t m_GameSceneNodeAddress{ 0 };
 	int32_t m_CurrentHealth{ 0 };
 	uint8_t m_Flags{ 0 };
-	uint8_t m_TeamNum{ 0 };
+	ETeam m_TeamNum{ 0 };
 	uint8_t m_Dormant{ 0 };
 
 public:

@@ -54,13 +54,14 @@ void Radar::DrawEntities()
 
 	ImVec2 Center = { WindowPos.x + (WindowSize.x / 2.0f), WindowPos.y + (WindowSize.y / 2.0f) };
 
-	DrawLocalPlayer(DrawList, Center);
 
 	std::scoped_lock Lock(EntityList::m_PawnMutex, EntityList::m_ControllerMutex);
 
 	if (EntityList::m_LocalPawnIndex < 0) return;
 
 	auto& LocalPawn = EntityList::m_PlayerPawns[EntityList::m_LocalPawnIndex];
+
+	DrawLocalPlayer(DrawList, Center, LocalPawn);
 
 	Vector3& LocalPlayerPos = LocalPawn.m_Position;
 
@@ -72,6 +73,10 @@ void Radar::DrawEntities()
 		Vector3 RawRelativePos = { Pawn.m_Position.x - LocalPlayerPos.x, Pawn.m_Position.y - LocalPlayerPos.y, Pawn.m_Position.z - LocalPlayerPos.z };
 
 		ImVec2 EntityDrawPos = { Center.x - (RawRelativePos.x / fRadarScale), Center.y + (RawRelativePos.y / fRadarScale) };
+
+		if (LocalPawn.m_TeamNum == ETeam::HIDDEN_KING) {
+			EntityDrawPos = { Center.x + (RawRelativePos.x / fRadarScale), Center.y - (RawRelativePos.y / fRadarScale) };
+		}
 
 		// optional, MOBA-only clamp so dots stay inside window
 		if (bMobaStyle)
@@ -105,13 +110,18 @@ void Radar::DrawEntities()
 	}
 }
 
-void Radar::DrawLocalPlayer(ImDrawList* DrawList, const ImVec2& Center)
+void Radar::DrawLocalPlayer(ImDrawList* DrawList, const ImVec2& Center, const CCitadelPlayerPawn& LocalPawn)
 {
 	DrawList->AddCircleFilled(Center, 5.0f, IM_COL32(0, 255, 0, 255));
 
 	float Rad = Deadlock::GetClientYaw() + std::numbers::pi;
 
 	ImVec2 LineEnd = { Center.x - (fRaySize * std::sin(Rad)), Center.y - (fRaySize * std::cos(Rad)) };
+
+	if (LocalPawn.m_TeamNum == ETeam::HIDDEN_KING) {
+		LineEnd = { Center.x + (fRaySize * std::sin(Rad)), Center.y + (fRaySize * std::cos(Rad)) };
+	}
+
 	DrawList->AddLine(Center, LineEnd, IM_COL32(0, 255, 0, 255), 2.0f);
 }
 
