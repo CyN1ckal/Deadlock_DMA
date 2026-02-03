@@ -29,6 +29,10 @@ namespace HeroNames
 	const inline std::string Paradox = "Paradox";
 	const inline std::string Pocket = "Pocket";
 	const inline std::string Rem = "Rem";
+	const inline std::string Silver = "Silver";
+	const inline std::string Apollo = "Apollo";
+	const inline std::string Celeste = "Celeste";
+	const inline std::string Venator = "Venator";
 	const inline std::string Seven = "Seven";
 	const inline std::string Shiv = "Shiv";
 	const inline std::string Sinclair = "Sinclair";
@@ -67,6 +71,10 @@ namespace HeroNames
 		{HeroId::Pocket, Pocket},
 		{HeroId::Rem, Rem},
 		{HeroId::Seven, Seven},
+		{HeroId::Silver, Silver},
+		{HeroId::Celeste, Celeste},
+		{HeroId::Venator, Venator},
+		{HeroId::Apollo, Apollo},
 		{HeroId::Shiv, Shiv},
 		{HeroId::Sinclair, Sinclair},
 		{HeroId::Victor, Victor},
