@@ -70,4 +70,9 @@ public: /* Debug features */
 	static void PrintPlayerControllers();
 	static void PrintPlayerPawns();
 	static void PrintClassMap();
+
+public:
+	static ETeam GetLocalPlayerTeam();
+	static Vector3 GetLocalPawnPosition();
+	static 	CCitadelPlayerController* GetAssociatedPC(const CCitadelPlayerPawn& Pawn);
 };

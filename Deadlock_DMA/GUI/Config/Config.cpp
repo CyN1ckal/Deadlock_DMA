@@ -310,12 +310,10 @@ json Config::SerializeConfig() {
 
 	j["Radar"] = {
 		{"bMasterToggle", Radar::bMasterToggle},
-		{"bSettings", Radar::bSettings},
 		{"bHideFriendly", Radar::bHideFriendly},
 		{"bMobaStyle", Radar::bMobaStyle},
 		{"fRadarScale", Radar::fRadarScale},
-		{"fRaySize", Radar::fRaySize},
-		{"fRadarPadding", Radar::fRadarPadding}
+		{"fRaySize", Radar::fRaySize}
 	};
 
 	j["ColorPicker"] = {
@@ -450,12 +448,10 @@ void Config::DeserializeConfig(const json& j) {
 	if (j.contains("Radar")) {
 		const auto& radar = j["Radar"];
 		if (radar.contains("bMasterToggle")) Radar::bMasterToggle = radar["bMasterToggle"].get<bool>();
-		if (radar.contains("bSettings")) Radar::bSettings = radar["bSettings"].get<bool>();
 		if (radar.contains("bHideFriendly")) Radar::bHideFriendly = radar["bHideFriendly"].get<bool>();
 		if (radar.contains("bMobaStyle")) Radar::bMobaStyle = radar["bMobaStyle"].get<bool>();
 		if (radar.contains("fRadarScale")) Radar::fRadarScale = radar["fRadarScale"].get<float>();
 		if (radar.contains("fRaySize")) Radar::fRaySize = radar["fRaySize"].get<float>();
-		if (radar.contains("fRadarPadding")) Radar::fRadarPadding = radar["fRadarPadding"].get<float>();
 	}
 
 	// ColorPicker

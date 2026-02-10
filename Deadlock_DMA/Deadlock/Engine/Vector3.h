@@ -15,6 +15,10 @@ public:
 	{
 		return Vector3{ x + Other.x, y + Other.y, z + Other.z };
 	}
+	Vector3 operator-(const Vector3& Other) const
+	{
+		return Vector3{ x - Other.x, y - Other.y, z - Other.z };
+	}
 	Vector3 operator*(float Scalar) const
 	{
 		return Vector3{ x * Scalar, y * Scalar, z * Scalar };

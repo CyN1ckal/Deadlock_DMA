@@ -29,7 +29,6 @@ void MainMenu::Render()
 
 	ImGui::SeparatorText("Main Features");
 	ImGui::Checkbox("Aimbot Settings", &Aimbot::bSettings);
-	ImGui::Checkbox("Radar Settings", &Radar::bSettings);
 	ImGui::Checkbox("Fuser Settings", &Fuser::bSettings);
 	ImGui::Spacing();
 

@@ -1,12 +1,10 @@
 #include "pch.h"
-
 #include "Radar.h"
-
 #include "Deadlock/Deadlock.h"
-
 #include "Deadlock/Entity List/EntityList.h"
-
 #include "GUI/Color Picker/Color Picker.h"
+#include "GUI/Utils/ImageLoading.h"
+#include "Deadlock/Const/ETeam.h"
 
 void Radar::Render()
 {
@@ -16,7 +14,11 @@ void Radar::Render()
 
 	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(ColorPicker::RadarBackgroundColor));
 
-	ImGui::Begin("Radar");
+	ImGui::Begin("Radar", nullptr, ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoTitleBar);
+
+	DrawRadarBackground();
+
+	RenderSettings();
 
 	DrawEntities();
 
@@ -27,21 +29,71 @@ void Radar::Render()
 
 void Radar::RenderSettings()
 {
-	if (!bSettings) return;
-
-	ImGui::Begin("Radar Settings");
-
-	ImGui::Checkbox("Enable Radar", &bMasterToggle);
-
+	ImGui::PushFont(nullptr, 12.0f);
+	ImGui::SetCursorPos({ 10.0f, 10.0f });
+	ImGui::SetNextItemWidth(50.0f);
 	ImGui::SliderFloat("Radar Scale", &fRadarScale, 1.0f, 50.0f, "%.1f");
-
-	ImGui::SliderFloat("Ray Size", &fRaySize, 0.0f, 500.0f, "%.1f");
-
 	ImGui::Checkbox("Hide Friendly", &bHideFriendly);
-
 	ImGui::Checkbox("MOBA Style", &bMobaStyle);
+	ImGui::Checkbox("Player-Centered", &bPlayerCentered);
+	ImGui::PopFont();
+}
 
-	ImGui::End();
+ImVec2 Radar::GetLocalPlayerScreenPos(const ImVec2& RadarWindowCenter, const Vector3& RadarCenterGamePos) {
+	if (bPlayerCentered) {
+		return RadarWindowCenter;
+	}
+	else {
+		auto LocalPlayerPos = EntityList::GetLocalPawnPosition();
+
+		ImVec2 Delta = { LocalPlayerPos.x - RadarCenterGamePos.x, LocalPlayerPos.y - RadarCenterGamePos.y };
+
+		Delta.x /= fRadarScale;
+		Delta.y /= fRadarScale;
+
+		return ImVec2(RadarCenterGamePos.x + Delta.x, RadarCenterGamePos.y + Delta.y);
+	}
+}
+
+Vector3 Radar::FindRadarTopLeftCoords(const Vector3& CenterRadarGamePosition, const ETeam& LocalTeam)
+{
+	auto RadarSizeGameUnits = GetRadarSizeInGameUnits();
+
+	if (LocalTeam == ETeam::HIDDEN_KING) {
+		return Vector3{ CenterRadarGamePosition.x - (RadarSizeGameUnits.x / 2.0f), CenterRadarGamePosition.y + (RadarSizeGameUnits.y / 2.0f), 0.0f };
+	}
+	else if (LocalTeam == ETeam::ARCH_MOTHER) {
+		return Vector3{ CenterRadarGamePosition.x + (RadarSizeGameUnits.x / 2.0f), CenterRadarGamePosition.y - (RadarSizeGameUnits.y / 2.0f), 0.0f };
+	}
+
+	return Vector3();
+}
+
+Vector3 Radar::FindRadarBottomRightCoords(const Vector3& CenterRadarGamePosition, const ETeam& LocalTeam)
+{
+	auto RadarSizeGameUnits = GetRadarSizeInGameUnits();
+
+	if (LocalTeam == ETeam::HIDDEN_KING) {
+		return Vector3{ CenterRadarGamePosition.x + (RadarSizeGameUnits.x / 2.0f), CenterRadarGamePosition.y - (RadarSizeGameUnits.y / 2.0f), 0.0f };
+	}
+	else if (LocalTeam == ETeam::ARCH_MOTHER) {
+		return Vector3{ CenterRadarGamePosition.x - (RadarSizeGameUnits.x / 2.0f), CenterRadarGamePosition.y + (RadarSizeGameUnits.y / 2.0f), 0.0f };
+	}
+
+	return Vector3();
+}
+
+ImVec2 Radar::GetRadarSizeInGameUnits()
+{
+	auto WindowSize = ImGui::GetWindowSize();
+	return ImVec2(WindowSize.x * fRadarScale, WindowSize.y * fRadarScale);
+}
+
+ImColor GetRadarColor(const CCitadelPlayerPawn& Pawn) {
+	if (Pawn.IsLocalPlayer())
+		return ColorPicker::LocalPlayerRadar;
+
+	return Pawn.IsFriendly() ? ColorPicker::FriendlyRadarColor : ColorPicker::EnemyRadarColor;
 }
 
 void Radar::DrawEntities()
@@ -52,90 +104,80 @@ void Radar::DrawEntities()
 	auto WindowPos = ImGui::GetWindowPos();
 	auto WindowSize = ImGui::GetWindowSize();
 
-	ImVec2 Center = { WindowPos.x + (WindowSize.x / 2.0f), WindowPos.y + (WindowSize.y / 2.0f) };
+	const ImVec2 RadarWindowCenter = { WindowPos.x + (WindowSize.x / 2.0f), WindowPos.y + (WindowSize.y / 2.0f) };
 
+	auto LocalPlayerTeam = EntityList::GetLocalPlayerTeam();
 
-	std::scoped_lock Lock(EntityList::m_PawnMutex, EntityList::m_ControllerMutex);
+	if (LocalPlayerTeam == ETeam::UNKNOWN)
+		return;
 
-	if (EntityList::m_LocalPawnIndex < 0) return;
+	const auto RadarCenterGamePos = GetRadarCenterScreenPos();
 
-	auto& LocalPawn = EntityList::m_PlayerPawns[EntityList::m_LocalPawnIndex];
-
-	DrawLocalPlayer(DrawList, Center, LocalPawn);
-
-	Vector3& LocalPlayerPos = LocalPawn.m_Position;
+	std::scoped_lock Lock(EntityList::m_PawnMutex);
 
 	for (auto& Pawn : EntityList::m_PlayerPawns)
 	{
-		if (Pawn.IsInvalid() || Pawn.IsDormant() || Pawn.IsLocalPlayer())
+		if (Pawn.IsInvalid() || Pawn.IsDormant())
 			continue;
 
-		Vector3 RawRelativePos = { Pawn.m_Position.x - LocalPlayerPos.x, Pawn.m_Position.y - LocalPlayerPos.y, Pawn.m_Position.z - LocalPlayerPos.z };
+		const Vector3 RawRelativePos = { Pawn.m_Position.x - RadarCenterGamePos.x, Pawn.m_Position.y - RadarCenterGamePos.y, Pawn.m_Position.z - RadarCenterGamePos.z };
 
-		ImVec2 EntityDrawPos = { Center.x - (RawRelativePos.x / fRadarScale), Center.y + (RawRelativePos.y / fRadarScale) };
+		const auto GetFinalScreenPos = [](const Vector3& RawRelativePos, const ImVec2& RadarWindowCenter, float fRadarScale, const ETeam& LocalTeam) -> ImVec2 {
+			switch (LocalTeam) {
+			case ETeam::HIDDEN_KING:
+				return { RadarWindowCenter.x + (RawRelativePos.x / fRadarScale), RadarWindowCenter.y - (RawRelativePos.y / fRadarScale) };
+			case ETeam::ARCH_MOTHER:
+				return { RadarWindowCenter.x - (RawRelativePos.x / fRadarScale), RadarWindowCenter.y + (RawRelativePos.y / fRadarScale) };
+			default:
+				return ImVec2(0.0f, 0.0f);
+			}
+			};
 
-		if (LocalPawn.m_TeamNum == ETeam::HIDDEN_KING) {
-			EntityDrawPos = { Center.x + (RawRelativePos.x / fRadarScale), Center.y - (RawRelativePos.y / fRadarScale) };
+		const ImVec2 FinalScreenPos = GetFinalScreenPos(RawRelativePos, RadarWindowCenter, fRadarScale, LocalPlayerTeam);
+
+		if (Pawn.IsLocalPlayer()) {
+			DrawLocalPlayerViewRay(DrawList, FinalScreenPos, LocalPlayerTeam);
 		}
-
-		// optional, MOBA-only clamp so dots stay inside window
-		if (bMobaStyle)
-		{
-			const ImVec2 radarTL = { WindowPos.x + fRadarPadding, WindowPos.y + fRadarPadding };
-			const ImVec2 radarBR = { WindowPos.x + WindowSize.x - fRadarPadding, WindowPos.y + WindowSize.y - fRadarPadding };
-			EntityDrawPos = ClampToRect(EntityDrawPos, radarTL, radarBR);
-		}
-
-		ImU32 Color = Pawn.IsFriendly() ? ColorPicker::FriendlyRadarColor : ColorPicker::EnemyRadarColor;
 
 		if (bHideFriendly && Pawn.IsFriendly()) continue;
 
-		DrawList->AddCircleFilled(EntityDrawPos, 5.0f, Color);
+		DrawList->AddCircleFilled(FinalScreenPos, 5.0f, GetRadarColor(Pawn));
 
-		// controller lookup stays the same
-		auto AssociatedControllerAddr = EntityList::GetEntityAddressFromHandle(Pawn.m_hController);
-		if (!AssociatedControllerAddr) continue;
-
-		auto ControllerIt = std::find(
-			EntityList::m_PlayerControllers.begin(),
-			EntityList::m_PlayerControllers.end(),
-			AssociatedControllerAddr
-		);
-
-		if (ControllerIt == EntityList::m_PlayerControllers.end()) continue;
-		if (ControllerIt->IsInvalid()) continue;
-		if (ControllerIt->IsDead()) continue;
-
-		DrawPlayer(*ControllerIt, Pawn, EntityDrawPos);
+		DrawPlayer(Pawn, FinalScreenPos);
 	}
 }
 
-void Radar::DrawLocalPlayer(ImDrawList* DrawList, const ImVec2& Center, const CCitadelPlayerPawn& LocalPawn)
+void Radar::DrawLocalPlayerViewRay(ImDrawList* DrawList, const ImVec2& ScreenPos, const ETeam& LocalTeam)
 {
-	DrawList->AddCircleFilled(Center, 5.0f, IM_COL32(0, 255, 0, 255));
-
 	float Rad = Deadlock::GetClientYaw() + std::numbers::pi;
 
-	ImVec2 LineEnd = { Center.x - (fRaySize * std::sin(Rad)), Center.y - (fRaySize * std::cos(Rad)) };
+	ImVec2 LineEnd = { ScreenPos.x - (fRaySize * std::sin(Rad)), ScreenPos.y - (fRaySize * std::cos(Rad)) };
 
-	if (LocalPawn.m_TeamNum == ETeam::HIDDEN_KING) {
-		LineEnd = { Center.x + (fRaySize * std::sin(Rad)), Center.y + (fRaySize * std::cos(Rad)) };
+	if (LocalTeam == ETeam::HIDDEN_KING) {
+		LineEnd = { ScreenPos.x + (fRaySize * std::sin(Rad)), ScreenPos.y + (fRaySize * std::cos(Rad)) };
 	}
 
-	DrawList->AddLine(Center, LineEnd, IM_COL32(0, 255, 0, 255), 2.0f);
+	DrawList->AddLine(ScreenPos, LineEnd, IM_COL32(0, 255, 0, 255), 2.0f);
 }
 
-void Radar::DrawPlayer(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, const ImVec2& RadarPos)
+void Radar::DrawPlayer(const CCitadelPlayerPawn& Pawn, const ImVec2& RadarPos)
 {
-	if (bHideFriendly && PC.IsFriendly())
+	std::scoped_lock Lock(EntityList::m_ControllerMutex);
+
+	auto PC = EntityList::GetAssociatedPC(Pawn);
+
+	if (!PC)
+		return;
+
+	if (bHideFriendly && PC->IsFriendly())
 		return;
 
 	int LineNumber = 0;
 	auto DrawList = ImGui::GetWindowDrawList();
-	DrawNameTag(PC, Pawn, DrawList, RadarPos, LineNumber);
+	DrawNameTag(*PC, Pawn, DrawList, RadarPos, LineNumber);
 
 	if (bMobaStyle) {
-		DrawHealthBar(PC, Pawn, DrawList, RadarPos, LineNumber);
+		DrawHealthBar(*PC, Pawn, DrawList, RadarPos, LineNumber);
 	}
 }
 
@@ -197,4 +239,56 @@ void Radar::DrawHealthBar(const CCitadelPlayerController& PC, const CCitadelPlay
 	DrawList->AddText(textPos, IM_COL32(255, 255, 255, 255), hpText.c_str());
 
 	LineNumber++;
+}
+
+void Radar::DrawRadarBackground() {
+	static CTextureInfo RadarBackgroundTexture{};
+
+	if (!RadarBackgroundTexture.pTexture) {
+		auto Ret = LoadTextureFromFile("Resources/Map.png");
+		if (Ret) {
+			RadarBackgroundTexture = *Ret;
+		}
+	}
+
+	if (!RadarBackgroundTexture.pTexture) return;
+
+	auto DrawList = ImGui::GetWindowDrawList();
+	auto WindowPos = ImGui::GetWindowPos();
+	auto WindowSize = ImGui::GetWindowSize();
+
+	Vector3 CenterRadarGamePosition = GetRadarCenterScreenPos();
+
+	auto LocalTeam = EntityList::GetLocalPlayerTeam();
+
+	auto TopLeftGameCoords = FindRadarTopLeftCoords(CenterRadarGamePosition, LocalTeam);
+	auto BottomRightGameCoords = FindRadarBottomRightCoords(CenterRadarGamePosition, LocalTeam);
+
+	auto UV_TL = GetUVFromCoords(TopLeftGameCoords, LocalTeam);
+	auto UV_BR = GetUVFromCoords(BottomRightGameCoords, LocalTeam);
+
+	ImGui::SetCursorPos({ 0.0f, 0.0f });
+	ImGui::Image(RadarBackgroundTexture.pTexture, WindowSize, UV_TL, UV_BR);
+	ImGui::GetWindowDrawList()->AddRectFilled(WindowPos, { WindowPos.x + WindowSize.x, WindowPos.y + WindowSize.y }, IM_COL32(55, 55, 55, 100));
+}
+
+Vector3 Radar::GetRadarCenterScreenPos()
+{
+	static const Vector3 DefaultCenter{ 0.0f, 0.0f, 0.0f };
+
+	if (bPlayerCentered) {
+		return EntityList::GetLocalPawnPosition();
+	}
+
+	return DefaultCenter;
+}
+
+ImVec2 Radar::GetUVFromCoords(const Vector3& GameCoords, ETeam LocalTeam)
+{
+	/* In range of (0,MapSize) */
+	ImVec2 NormalizedCoords = { GameCoords.x + (MapSize.x / 2.0f), GameCoords.y + (MapSize.y / 2.0f) };
+
+	ImVec2 UV = { NormalizedCoords.x / MapSize.x, 1.0f - (NormalizedCoords.y / MapSize.y) };
+
+	return UV;
 }

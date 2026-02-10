@@ -375,7 +375,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp23</LanguageStandard>
       <LanguageStandard_C>stdclatest</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Tracy\0.13.0;$(SolutionDir)Dependencies\ImGui;$(SolutionDir)Dependencies\MemProcFS;$(ProjectDir);%(AdditionalIncludeDirectories);$(SolutionDir)Dependencies\Makcu\include;$(SolutionDir)Dependencies\nlohmann</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\Tracy\0.13.0;$(SolutionDir)Dependencies\ImGui;$(SolutionDir)Dependencies\MemProcFS;$(ProjectDir);%(AdditionalIncludeDirectories);$(SolutionDir)Dependencies\Makcu\include;$(SolutionDir)Dependencies\nlohmann;$(SolutionDir)Dependencies\stb</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -775,6 +775,7 @@
     <ClCompile Include="Deadlock\Classes\CCitadelPlayerPawn.cpp" />
     <ClInclude Include="Deadlock\Classes\CTrooperEntity.h" />
     <ClInclude Include="Deadlock\Const\Aimpoints.h" />
+    <ClInclude Include="Deadlock\Const\ETeam.h" />
     <ClInclude Include="Deadlock\Const\HeroEnum.hpp">
       <FileType>CppCode</FileType>
     </ClInclude>
@@ -807,6 +808,7 @@
     <ClCompile Include="GUI\Main Window\Main Window.cpp" />
     <ClCompile Include="GUI\Query.cpp" />
     <ClCompile Include="GUI\Radar\Radar.cpp" />
+    <ClCompile Include="GUI\Utils\ImageLoading.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Makcu\MyMakcu.cpp" />
     <ClCompile Include="pch.cpp">
@@ -837,6 +839,7 @@
     <ClInclude Include="GUI\Keybinds\Keybinds.h" />
     <ClInclude Include="GUI\Main Menu\Main Menu.h" />
     <ClInclude Include="GUI\Query.h" />
+    <ClInclude Include="GUI\Utils\ImageLoading.h" />
     <ClInclude Include="Makcu\MyMakcu.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Tests\All Tests.h" />

@@ -1,11 +1,6 @@
 #pragma once
 #include "Deadlock/Engine/Vector3.h"
-
-enum class ETeam : uint8_t
-{
-	HIDDEN_KING = 2,
-	ARCH_MOTHER = 3
-};
+#include "Deadlock/Const/ETeam.h"
 
 class CBaseEntity
 {

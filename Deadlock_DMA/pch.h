@@ -9,6 +9,8 @@
 #include <iostream>
 #include <random>
 #include <numbers>
+#include <expected>
+#include <fstream>
 
 #define NOMINMAX
 #include <algorithm>

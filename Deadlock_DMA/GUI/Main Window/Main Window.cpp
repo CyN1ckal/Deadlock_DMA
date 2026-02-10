@@ -32,7 +32,6 @@ void Render(ImGuiContext* ctx)
 	TrooperList::Render();
 	ClassList::Render();
 
-	Radar::RenderSettings();
 	Fuser::RenderSettings();
 	ESP::RenderSettings();
 	Aimbot::RenderSettings();

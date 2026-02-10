@@ -493,3 +493,41 @@ void EntityList::PrintClassMap()
 	for (auto& [name, addr] : m_EntityClassMap)
 		std::println("Class: {} | Address: 0x{:X}", name, addr);
 }
+
+ETeam EntityList::GetLocalPlayerTeam()
+{
+	auto Return = ETeam::UNKNOWN;
+
+	std::scoped_lock Lock(m_PawnMutex);
+
+	if (m_LocalPawnIndex == -1)
+		return Return;
+
+	return m_PlayerPawns[m_LocalPawnIndex].m_TeamNum;
+}
+
+Vector3 EntityList::GetLocalPawnPosition()
+{
+	auto Return = Vector3();
+
+	std::scoped_lock Lock(m_PawnMutex);
+
+	if (m_LocalPawnIndex == -1)
+		return Return;
+
+	return m_PlayerPawns[m_LocalPawnIndex].m_Position;
+}
+
+/* m_ControllerMutex must be locked! */
+CCitadelPlayerController* EntityList::GetAssociatedPC(const CCitadelPlayerPawn& Pawn)
+{
+	auto PCAddress = EntityList::GetEntityAddressFromHandle(Pawn.m_hController);
+
+	for (auto& PC : m_PlayerControllers)
+	{
+		if (PC.m_EntityAddress == PCAddress)
+			return &PC;
+	}
+
+	return nullptr;
+}
