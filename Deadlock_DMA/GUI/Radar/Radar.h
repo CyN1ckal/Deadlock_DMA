@@ -32,7 +32,7 @@ public:
 	static inline bool bMobaStyle{ false };
 	static inline float fRadarScale{ 10.0f };
 	static inline float fRaySize{ 100.0f };
-	static inline bool bPlayerCentered{ true };
+	static inline bool bPlayerCentered{ false };
 
 private:
 	static Vector3 GetRadarCenterScreenPos();

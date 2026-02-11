@@ -8,25 +8,9 @@ void ColorPicker::Render()
 
 	ImGui::Begin("Color Picker", &bMasterToggle);
 
-	MyColorPicker("Friendly Name Tag", ColorPicker::FriendlyNameTagColor);
-
-	MyColorPicker("Enemy Name Tag", ColorPicker::EnemyNameTagColor);
-
-	MyColorPicker("Friendly Bone", ColorPicker::FriendlyBoneColor);
-
-	MyColorPicker("Enemy Bone", ColorPicker::EnemyBoneColor);
-
 	MyColorPicker("Sinner's Sacrifice", ColorPicker::SinnersColor);
 
 	MyColorPicker("Monster Camp", ColorPicker::MonsterCampColor);
-
-	MyColorPicker("Friendly Radar", ColorPicker::FriendlyRadarColor);
-
-	MyColorPicker("Enemy Radar", ColorPicker::EnemyRadarColor);
-
-	MyColorPicker("Friendly Trooper", ColorPicker::FriendlyTrooperColor);
-
-	MyColorPicker("Enemy Trooper", ColorPicker::EnemyTrooperColor);
 
 	MyColorPicker("Unsecured Souls Text", ColorPicker::UnsecuredSoulsTextColor);
 

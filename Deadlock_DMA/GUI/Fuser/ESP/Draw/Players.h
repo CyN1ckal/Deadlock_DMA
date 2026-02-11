@@ -19,7 +19,6 @@ public:
 	static inline bool bBoneNumbers{ false };
 	static inline bool bDrawHealthBar{ true };
 	static inline bool bHideLocalPlayer{ true };
-	static inline bool bShowLevel{ true };
 	static inline bool bShowDistance{ true };
 
 private:

@@ -286,7 +286,6 @@ json Config::SerializeConfig() {
 			{"bBoneNumbers", Draw_Players::bBoneNumbers},
 			{"bDrawHealthBar", Draw_Players::bDrawHealthBar},
 			{"bHideLocalPlayer", Draw_Players::bHideLocalPlayer},
-			{"bShowLevel", Draw_Players::bShowLevel},
 			{"bShowDistance", Draw_Players::bShowDistance}
 		}},
 
@@ -317,16 +316,8 @@ json Config::SerializeConfig() {
 	};
 
 	j["ColorPicker"] = {
-		{"FriendlyNameTagColor", static_cast<uint32_t>(ColorPicker::FriendlyNameTagColor)},
-		{"EnemyNameTagColor", static_cast<uint32_t>(ColorPicker::EnemyNameTagColor)},
-		{"EnemyBoneColor", static_cast<uint32_t>(ColorPicker::EnemyBoneColor)},
-		{"FriendlyBoneColor", static_cast<uint32_t>(ColorPicker::FriendlyBoneColor)},
 		{"SinnersColor", static_cast<uint32_t>(ColorPicker::SinnersColor)},
 		{"MonsterCampColor", static_cast<uint32_t>(ColorPicker::MonsterCampColor)},
-		{"FriendlyRadarColor", static_cast<uint32_t>(ColorPicker::FriendlyRadarColor)},
-		{"EnemyRadarColor", static_cast<uint32_t>(ColorPicker::EnemyRadarColor)},
-		{"FriendlyTrooperColor", static_cast<uint32_t>(ColorPicker::FriendlyTrooperColor)},
-		{"EnemyTrooperColor", static_cast<uint32_t>(ColorPicker::EnemyTrooperColor)},
 		{"UnsecuredSoulsTextColor", static_cast<uint32_t>(ColorPicker::UnsecuredSoulsTextColor)},
 		{"UnsecuredSoulsHighlightedTextColor", static_cast<uint32_t>(ColorPicker::UnsecuredSoulsHighlightedTextColor)},
 		{"FriendlyHealthStatusBarColor", static_cast<uint32_t>(ColorPicker::FriendlyHealthStatusBarColor)},
@@ -416,7 +407,6 @@ void Config::DeserializeConfig(const json& j) {
 			if (players.contains("bBoneNumbers")) Draw_Players::bBoneNumbers = players["bBoneNumbers"].get<bool>();
 			if (players.contains("bDrawHealthBar")) Draw_Players::bDrawHealthBar = players["bDrawHealthBar"].get<bool>();
 			if (players.contains("bHideLocalPlayer")) Draw_Players::bHideLocalPlayer = players["bHideLocalPlayer"].get<bool>();
-			if (players.contains("bShowLevel")) Draw_Players::bShowLevel = players["bShowLevel"].get<bool>();
 			if (players.contains("bShowDistance")) Draw_Players::bShowDistance = players["bShowDistance"].get<bool>();
 		}
 
@@ -457,16 +447,8 @@ void Config::DeserializeConfig(const json& j) {
 	// ColorPicker
 	if (j.contains("ColorPicker")) {
 		const auto& colors = j["ColorPicker"];
-		if (colors.contains("FriendlyNameTagColor")) ColorPicker::FriendlyNameTagColor = colors["FriendlyNameTagColor"].get<uint32_t>();
-		if (colors.contains("EnemyNameTagColor")) ColorPicker::EnemyNameTagColor = colors["EnemyNameTagColor"].get<uint32_t>();
-		if (colors.contains("EnemyBoneColor")) ColorPicker::EnemyBoneColor = colors["EnemyBoneColor"].get<uint32_t>();
-		if (colors.contains("FriendlyBoneColor")) ColorPicker::FriendlyBoneColor = colors["FriendlyBoneColor"].get<uint32_t>();
 		if (colors.contains("SinnersColor")) ColorPicker::SinnersColor = colors["SinnersColor"].get<uint32_t>();
 		if (colors.contains("MonsterCampColor")) ColorPicker::MonsterCampColor = colors["MonsterCampColor"].get<uint32_t>();
-		if (colors.contains("FriendlyRadarColor")) ColorPicker::FriendlyRadarColor = colors["FriendlyRadarColor"].get<uint32_t>();
-		if (colors.contains("EnemyRadarColor")) ColorPicker::EnemyRadarColor = colors["EnemyRadarColor"].get<uint32_t>();
-		if (colors.contains("FriendlyTrooperColor")) ColorPicker::FriendlyTrooperColor = colors["FriendlyTrooperColor"].get<uint32_t>();
-		if (colors.contains("EnemyTrooperColor")) ColorPicker::EnemyTrooperColor = colors["EnemyTrooperColor"].get<uint32_t>();
 		if (colors.contains("UnsecuredSoulsTextColor")) ColorPicker::UnsecuredSoulsTextColor = colors["UnsecuredSoulsTextColor"].get<uint32_t>();
 		if (colors.contains("UnsecuredSoulsHighlightedTextColor")) ColorPicker::UnsecuredSoulsHighlightedTextColor = colors["UnsecuredSoulsHighlightedTextColor"].get<uint32_t>();
 		if (colors.contains("FriendlyHealthStatusBarColor")) ColorPicker::FriendlyHealthStatusBarColor = colors["FriendlyHealthStatusBarColor"].get<uint32_t>();

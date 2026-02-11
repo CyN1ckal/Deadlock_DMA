@@ -59,28 +59,26 @@ Vector3 Radar::FindRadarTopLeftCoords(const Vector3& CenterRadarGamePosition, co
 {
 	auto RadarSizeGameUnits = GetRadarSizeInGameUnits();
 
-	if (LocalTeam == ETeam::HIDDEN_KING) {
+	switch (LocalTeam) {
+	case ETeam::ARCH_MOTHER:
+		return Vector3{ CenterRadarGamePosition.x + (RadarSizeGameUnits.x / 2.0f), CenterRadarGamePosition.y - (RadarSizeGameUnits.y / 2.0f), 0.0f };
+	case ETeam::HIDDEN_KING:
+	default:
 		return Vector3{ CenterRadarGamePosition.x - (RadarSizeGameUnits.x / 2.0f), CenterRadarGamePosition.y + (RadarSizeGameUnits.y / 2.0f), 0.0f };
 	}
-	else if (LocalTeam == ETeam::ARCH_MOTHER) {
-		return Vector3{ CenterRadarGamePosition.x + (RadarSizeGameUnits.x / 2.0f), CenterRadarGamePosition.y - (RadarSizeGameUnits.y / 2.0f), 0.0f };
-	}
-
-	return Vector3();
 }
 
 Vector3 Radar::FindRadarBottomRightCoords(const Vector3& CenterRadarGamePosition, const ETeam& LocalTeam)
 {
 	auto RadarSizeGameUnits = GetRadarSizeInGameUnits();
 
-	if (LocalTeam == ETeam::HIDDEN_KING) {
+	switch (LocalTeam) {
+	case ETeam::ARCH_MOTHER:
+		return Vector3{ CenterRadarGamePosition.x - (RadarSizeGameUnits.x / 2.0f), CenterRadarGamePosition.y + (RadarSizeGameUnits.y / 2.0f), 0.0f };
+	case ETeam::HIDDEN_KING:
+	default:
 		return Vector3{ CenterRadarGamePosition.x + (RadarSizeGameUnits.x / 2.0f), CenterRadarGamePosition.y - (RadarSizeGameUnits.y / 2.0f), 0.0f };
 	}
-	else if (LocalTeam == ETeam::ARCH_MOTHER) {
-		return Vector3{ CenterRadarGamePosition.x - (RadarSizeGameUnits.x / 2.0f), CenterRadarGamePosition.y + (RadarSizeGameUnits.y / 2.0f), 0.0f };
-	}
-
-	return Vector3();
 }
 
 ImVec2 Radar::GetRadarSizeInGameUnits()
@@ -93,7 +91,12 @@ ImColor GetRadarColor(const CCitadelPlayerPawn& Pawn) {
 	if (Pawn.IsLocalPlayer())
 		return ColorPicker::LocalPlayerRadar;
 
-	return Pawn.IsFriendly() ? ColorPicker::FriendlyRadarColor : ColorPicker::EnemyRadarColor;
+	if (Pawn.m_TeamNum == ETeam::HIDDEN_KING) {
+		return ColorPicker::HiddenKingTeamColor;
+	}
+	else {
+		return ColorPicker::ArchMotherTeamColor;
+	}
 }
 
 void Radar::DrawEntities()
@@ -108,9 +111,6 @@ void Radar::DrawEntities()
 
 	auto LocalPlayerTeam = EntityList::GetLocalPlayerTeam();
 
-	if (LocalPlayerTeam == ETeam::UNKNOWN)
-		return;
-
 	const auto RadarCenterGamePos = GetRadarCenterScreenPos();
 
 	std::scoped_lock Lock(EntityList::m_PawnMutex);
@@ -124,12 +124,11 @@ void Radar::DrawEntities()
 
 		const auto GetFinalScreenPos = [](const Vector3& RawRelativePos, const ImVec2& RadarWindowCenter, float fRadarScale, const ETeam& LocalTeam) -> ImVec2 {
 			switch (LocalTeam) {
-			case ETeam::HIDDEN_KING:
-				return { RadarWindowCenter.x + (RawRelativePos.x / fRadarScale), RadarWindowCenter.y - (RawRelativePos.y / fRadarScale) };
 			case ETeam::ARCH_MOTHER:
 				return { RadarWindowCenter.x - (RawRelativePos.x / fRadarScale), RadarWindowCenter.y + (RawRelativePos.y / fRadarScale) };
+			case ETeam::HIDDEN_KING:
 			default:
-				return ImVec2(0.0f, 0.0f);
+				return { RadarWindowCenter.x + (RawRelativePos.x / fRadarScale), RadarWindowCenter.y - (RawRelativePos.y / fRadarScale) };
 			}
 			};
 
@@ -182,25 +181,14 @@ void Radar::DrawPlayer(const CCitadelPlayerPawn& Pawn, const ImVec2& RadarPos)
 }
 
 void Radar::DrawNameTag(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& AnchorPos, int& LineNumber) {
-	std::string text;
+	ImVec2 TextSize = ImGui::CalcTextSize(PC.GetHeroName().data());
 
-	if (bMobaStyle)
-		text += std::format("({}) ", PC.m_CurrentLevel);
+	ImU32 TextColor = GetRadarColor(Pawn);
 
-	text += std::format("{} ", PC.GetHeroName());
+	ImVec2 FinalPos = { AnchorPos.x - (TextSize.x * 0.5f), AnchorPos.y + (LineNumber * TextSize.y) };
 
-	ImVec2 size = ImGui::CalcTextSize(text.c_str());
+	DrawList->AddText(FinalPos, TextColor, PC.GetHeroName().data());
 
-	ImU32 color = PC.IsFriendly()
-		? ColorPicker::FriendlyNameTagColor
-		: ColorPicker::EnemyNameTagColor;
-
-	ImVec2 pos = {
-		AnchorPos.x - size.x * 0.5f,
-		AnchorPos.y + LineNumber * size.y
-	};
-
-	DrawList->AddText(pos, color, text.c_str());
 	LineNumber++;
 }
 

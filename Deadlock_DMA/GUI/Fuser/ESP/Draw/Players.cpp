@@ -106,8 +106,6 @@ void Draw_Players::DrawSkeleton(const CCitadelPlayerController& PC, const CCitad
 	auto It = g_HeroBoneMap.find(PC.m_HeroID);
 	if (It == g_HeroBoneMap.end()) return;
 
-	auto SkeletonColor = PC.IsFriendly() ? ColorPicker::FriendlyBoneColor : ColorPicker::EnemyBoneColor;
-
 	for (const auto& [StartBone, EndBone] : It->second)
 	{
 		Vector2 Start2D, End2D;
@@ -117,14 +115,12 @@ void Draw_Players::DrawSkeleton(const CCitadelPlayerController& PC, const CCitad
 
 		ImVec2 Start = ImVec2(Start2D.x + WindowPos.x, Start2D.y + WindowPos.y);
 		ImVec2 End = ImVec2(End2D.x + WindowPos.x, End2D.y + WindowPos.y);
-		DrawList->AddLine(Start, End, SkeletonColor, fBonesThickness);
+		DrawList->AddLine(Start, End, ColorPicker::SkeletonColor, fBonesThickness);
 	}
 }
 
 void Draw_Players::DrawHeadCircle(const CCitadelPlayerController& PC, const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos)
 {
-	auto HeadColor = PC.IsFriendly() ? ColorPicker::FriendlyBoneColor : ColorPicker::EnemyBoneColor;
-
 	auto HeadBoneIndex = Aimpoints::GetAimpoints(PC.m_HeroID).first;
 
 	Vector2 Head2D;
@@ -141,7 +137,7 @@ void Draw_Players::DrawHeadCircle(const CCitadelPlayerController& PC, const CCit
 	float DistanceScale = 1000.f / (Distance + 100.f);
 	float HeadRadius = BaseRadius * DistanceScale;
 
-	DrawList->AddCircle(HeadPos, HeadRadius, HeadColor, 32, fBonesThickness);
+	DrawList->AddCircle(HeadPos, HeadRadius, ColorPicker::SkeletonColor, 32, fBonesThickness);
 }
 
 void Draw_Players::DrawVelocityVector(const CCitadelPlayerPawn& Pawn, ImDrawList* DrawList, const ImVec2& WindowPos)
@@ -181,9 +177,6 @@ void Draw_Players::DrawNameTag(const CCitadelPlayerController& PC, const CCitade
 
 	std::string NameTagString{};
 
-	if (bShowLevel)
-		NameTagString += std::format("({0:d}) ", PC.m_CurrentLevel);
-
 	NameTagString += std::format("{0:s} ", PC.GetHeroName());
 
 	if (bShowDistance)
@@ -193,14 +186,10 @@ void Draw_Players::DrawNameTag(const CCitadelPlayerController& PC, const CCitade
 
 	auto TextSize = ImGui::CalcTextSize(NameTagString.c_str());
 
-	auto BackgroundColor = PC.IsFriendly() ? ColorPicker::FriendlyNameTagColor : ColorPicker::EnemyNameTagColor;
-
-	//ImVec2 UpperLeft = ImVec2(ScreenPos.x - (TextSize.x / 2.0f) + WindowPos.x, ScreenPos.y + WindowPos.y + (LineNumber * TextSize.y));
-	//ImVec2 LowerRight = ImVec2(ScreenPos.x + (TextSize.x / 2.0f) + WindowPos.x, ScreenPos.y + TextSize.y + WindowPos.y + (LineNumber * TextSize.y));
-	//DrawList->AddRectFilled(UpperLeft, LowerRight, ImGui::GetColorU32(BackgroundColor));
+	auto NameTagColor = PC.m_TeamNum == ETeam::HIDDEN_KING ? ColorPicker::HiddenKingTeamColor : ColorPicker::ArchMotherTeamColor;
 
 	ImGui::SetCursorPos(ImVec2(ScreenPos.x - (TextSize.x / 2.0f), ScreenPos.y + (LineNumber * TextSize.y)));
-	ImGui::Text(NameTagString.c_str());
+	ImGui::TextColored(NameTagColor, NameTagString.c_str());
 
 	LineNumber++;
 

@@ -32,6 +32,6 @@ void Draw_Troopers::operator()()
 		std::string TrooperString = std::format("{}", Trooper.m_CurrentHealth);
 		auto TextSize = ImGui::CalcTextSize(TrooperString.c_str());
 		ImGui::SetCursorPos({ ScreenPos.x - (TextSize.x / 2.0f), ScreenPos.y });
-		ImGui::TextColored((bIsFriend) ? ColorPicker::FriendlyTrooperColor : ColorPicker::EnemyTrooperColor, TrooperString.c_str());
+		ImGui::TextColored((Trooper.m_TeamNum == ETeam::HIDDEN_KING) ? ColorPicker::HiddenKingTeamColor : ColorPicker::ArchMotherTeamColor, TrooperString.c_str());
 	}
 }
