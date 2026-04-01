@@ -1,3 +1,6 @@
+# Update
+This project is now archived. I hope it is useful to those wanting to learn.
+
 # Deadlock_DMA
 
 This is an open-source DMA client for Valve's latest game, **Deadlock**. The project is written using **C++23**.
