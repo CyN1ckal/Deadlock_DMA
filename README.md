@@ -1,7 +1,7 @@
 # Update
 This project is now archived. I hope it is useful to those wanting to learn.
 
-If you just want something to use that has a more refined set of features, check out https://deadlock.cynickal.com/
+If you just want something to use that has a more refined set of features, check out https://cynickalsoftware.com/deadlock.html
 
 # Deadlock_DMA
 
